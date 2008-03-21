@@ -1,12 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="300">
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="640" height="480">
+	<mx:TileList itemRenderer="rider.RiderListItem" x="0" y="0" width="640" height="480">
 	<mx:XMLList id="riders" xmlns="">
 		<rider>
 			<name>Geert Van Bastelaere</name>
 			<image>geert.jpg</image>
 		</rider>
+		<rider>
+			<name>Jochen Wylin</name>
+			<image>jochen.jpg</image>
+		</rider>
+		<rider>
+			<name>Danny Gorissen</name>
+			<image>danny.jpg</image>
+		</rider>
+		<rider>
+			<name>Koen Ermgodts</name>
+			<image>koen.jpg</image>
+		</rider>
+		<rider>
+			<name>Frederic Tytga</name>
+			<image>frederic.jpg</image>
+		</rider>
 	</mx:XMLList>
-	<mx:TileList itemRenderer="RiderThumbnail" x="10" y="10" width="380" height="280" dataProvider="{riders.rider}">
 	</mx:TileList>
 	
 </mx:Canvas>
