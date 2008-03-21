@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="180" height="180">
+	<mx:Image x="10" y="10" width="160" height="160" source="images/tracks/{data.image}"/>
+	<mx:Label x="10" y="149" text="{data.name}" width="160" textAlign="right" color="#FFFFFF" fontSize="12" fontWeight="normal" fontStyle="normal"/>
+	
+</mx:Canvas>

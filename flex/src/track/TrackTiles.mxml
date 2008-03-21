@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml">
+	<mx:TileList itemRenderer="track.TrackThumbnail" x="0" y="0" width="800">
+	<mx:XMLList id="tracks" xmlns="">
+		<rider>
+			<name>Zolder</name>
+			<image>zolder.jpg</image>
+		</rider>
+		<rider>
+			<name>Spa-Francorchamps</name>
+			<image>francorchamps.jpg</image>
+		</rider>
+		<rider>
+			<name>Zandvoort</name>
+			<image>zandvoort.jpg</image>
+		</rider>
+		<rider>
+			<name>Assen</name>
+			<image>koen.jpg</image>
+		</rider>
+		<rider>
+			<name>Croix-en-Ternois</name>
+			<image>croix.jpg</image>
+		</rider>
+		<rider>
+			<name>Folembray</name>
+			<image>folembray.jpg</image>
+		</rider>
+		<rider>
+			<name>Ecuyers</name>
+			<image>frederic.jpg</image>
+		</rider>
+		<rider>
+			<name>Carole</name>
+			<image>frederic.jpg</image>
+		</rider>
+		<rider>
+			<name>Hockenheim</name>
+			<image>frederic.jpg</image>
+		</rider>
+		<rider>
+			<name>Nurburgring</name>
+			<image>frederic.jpg</image>
+		</rider>
+	</mx:XMLList>
+	</mx:TileList>
+	
+</mx:Canvas>
