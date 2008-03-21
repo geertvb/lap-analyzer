@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="300">
+	<mx:Image x="10" y="10" width="94" height="131" themeColor="#000000"/>
+	<mx:Label x="112" y="10" text="Geert Van Bastelaere" width="278" textAlign="center" fontSize="14"/>
+	<mx:Label x="112" y="41" text="Adres"/>
+	<mx:Label x="156" y="41" text="Vlinderlaan 6/2"/>
+	<mx:Label x="156" y="67" text="3000 Leuven"/>
+	<mx:Label x="156" y="93" text="Belgium"/>
+	
+</mx:Canvas>
