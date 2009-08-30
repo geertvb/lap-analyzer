@@ -7,6 +7,9 @@
 
 	<fx:Script>
 		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import com.google.maps.MapMouseEvent;
+			import com.google.maps.InfoWindowOptions;
 			import com.google.maps.geom.Attitude;
 			import mx.events.ListEvent;
 			import com.google.maps.LatLngBounds;
@@ -27,6 +30,8 @@
 			import com.google.maps.MapType;
 			
 			public var bb: LatLngBounds;
+			
+			public var trackMarkers: ArrayCollection = new ArrayCollection();
 			
 			private function onMapReady(event:Event):void {
 				with (this.map) {
@@ -52,6 +57,7 @@
 			
 			protected function onBothReady() : void {
 				bb = new LatLngBounds();
+				trackMarkers = new ArrayCollection();
 				for each (var track: Track in findAllResult.lastResult) {
 					if (track.lat != 0  && track.lng != 0) {
 						var latLng: LatLng = new LatLng(track.lat, track.lng);
@@ -64,23 +70,64 @@
 								radius: 7,
 								hasShadow: true
 							}));
+						
+						marker.addEventListener(MapMouseEvent.CLICK, onMarkerClick);  
 						this.map.addOverlay(marker);
+						
+						trackMarkers.addItem({track: track, marker: marker});
 					}
 				}
 				this.map.setCenter(bb.getCenter(), this.map.getBoundsZoomLevel(bb), MapType.NORMAL_MAP_TYPE);
 			}
 			
-			protected function zoomOut() : void {
-				this.map.setCenter(bb.getCenter(), this.map.getBoundsZoomLevel(bb));
+			public function onMarkerClick(event: Event) : void {
+				var marker: Marker = Marker(event.target);
+
+				var track: Track = null;
+				for each (var o: Object in trackMarkers) {
+					if (o.marker == marker) {
+						track = o.track;
+						break;
+					}
+				}
+				
+				showInfoWindow(marker, track);
+				
+				dataGrid.selectedItem = track;
 			}
 			
 			protected function onItemClick(event: ListEvent) : void {
 				var track: Track = Track(dataGrid.selectedItem);
-				var latLng: LatLng = new LatLng(track.lat, track.lng);
+				//var latLng: LatLng = new LatLng(track.lat, track.lng);
 				
-				this.map.setCenter(latLng, 14);
+				//this.map.setCenter(latLng);
 				
-				//this.map.flyTo(latLng, 14, this.map.getAttitude(), 10);
+				var marker: Marker = null;
+				for each (var o: Object in trackMarkers) {
+					if (o.track == track) {
+						marker = o.marker;
+						break;
+					}
+				}
+
+				showInfoWindow(marker, track);
+				
+			}
+			
+			protected function showInfoWindow(marker: Marker, track: Track) : void {
+				var trackInfoWindow: TrackInfoWindow = new TrackInfoWindow();
+				trackInfoWindow.data = track;
+				
+				var infoWindowOptions: InfoWindowOptions = new InfoWindowOptions({
+					customContent: trackInfoWindow, 
+					width: 200, 
+					drawDefaultFrame:true})
+				
+				marker.openInfoWindow(infoWindowOptions);
+			}
+
+			protected function zoomOut() : void {
+				this.map.setCenter(bb.getCenter(), this.map.getBoundsZoomLevel(bb));
 			}
 			
 		]]>

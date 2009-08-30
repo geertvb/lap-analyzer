@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/halo" 
+		 xmlns:net="flash.net.*"
+		 width="200" height="160">
+
+	
+	<s:VGroup width="200">
+		
+		<mx:Label
+			width="100%"
+			text="{data.name}"
+			fontWeight="bold" textAlign="center"/>
+
+		<mx:Image
+			width="160" height="120"
+			source="download_thumb.php?picture_id=7" />
+		
+	</s:VGroup>
+
+</mx:Canvas>
