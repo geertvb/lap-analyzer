@@ -15,8 +15,23 @@ class TrackService {
 	public function findAll() {
 		$connection = mysqli_connect($this->server, $this->username, $this->password, $this->databasename, $this->port);
 		$this->throwExceptionOnError($connection);
+		
+		$cols = array();
+		$cols[] = "track_id";
+		$cols[] = "name";
+		$cols[] = "url";
+		$cols[] = "lat";
+		$cols[] = "lng";
+
+		$sql = array();
+		$sql[] = "SELECT";
+		$sql[] = implode(", ", $cols);
+		$sql[] = "FROM";
+		$sql[] = $this->tablename;
+		$sql[] = "ORDER BY";
+		$sql[] = "name asc";
 	
-		$stmt = mysqli_prepare($connection, "SELECT * FROM $this->tablename order by name asc");		
+		$stmt = mysqli_prepare($connection, implode(" ", $sql));		
 		$this->throwExceptionOnError($connection);
 		
 		mysqli_stmt_execute($stmt);
