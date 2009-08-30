@@ -102,7 +102,7 @@
 		key="ABQIAAAARHlxm1tnIyh53Qky1yRvaxQRM90ZMLGmypNtl0aCSyUOIyb2sxQJCMaQB88DzEFGpMHAzTs5sB2Wpw"/>
 	
 	<s:HGroup width="100%">
-		<s:Button label="Zoom out" click="zoomOut();" />
+		<s:Button label="Overview" click="zoomOut();" />
 	</s:HGroup>
 	
 	<mx:DataGrid 

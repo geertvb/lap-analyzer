@@ -63,4 +63,65 @@
     <property name="url" type="string" required="true"/>
     <property name="track_id" type="integer" required="true"/>
   </entity>
+  <service name="RiderService">
+    <annotation name="ActionScriptGeneration">
+      <item name="Source">RiderService</item>
+      <item name="ServiceType">RemoteObject</item>
+      <item name="Package">services.riderservice</item>
+      <item name="Endpoint">gateway.php</item>
+      <item name="Destination">RiderService</item>
+    </annotation>
+    <annotation name="ASFilesGenerated">
+      <item name="ASFilesGenerated">services/riderservice/_Super_RiderService.as;services/riderservice/RiderService.as;</item>
+    </annotation>
+    <annotation name="ServiceTypeGroup">
+      <item name="ServiceBackendType">PHP</item>
+    </annotation>
+    <annotation name="ServiceConfig">
+      <item name="PHP_RELATIVE_LOCATION">trackfreaks-debug/services/RiderService.php</item>
+      <item name="PHP_SERVER_ROOT">C:/xampp/htdocs</item>
+      <item name="DEFAULT_ENTITY_PACKAGE">valueObjects</item>
+      <item name="PHP_SERVICES_FOLDER">C:/xampp/htdocs/trackfreaks-debug/services</item>
+      <item name="PHP_LOCATION">C:/xampp/htdocs/trackfreaks-debug/services/RiderService.php</item>
+      <item name="LINKED_FILE">RiderService.php</item>
+      <item name="PHP_SERVER_ROOT_URL">http://develop.trackfreaks.eu/</item>
+      <item name="ABSOLUTE_ENDPOINT">http://develop.trackfreaks.eu/trackfreaks-debug/gateway.php</item>
+      <item name="PHP_CLASS_NAME">RiderService</item>
+    </annotation>
+    <function name="findAll" return-type="Rider[]">
+      <annotation name="original signature">
+        <item name="returnType">opaque</item>
+      </annotation>
+      <annotation name="ValidProperties">
+        <item name="propertySpecifier">picture_id,lastname,firstname,rider_id</item>
+      </annotation>
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+    </function>
+  </service>
+  <entity name="Rider">
+    <annotation name="EntityProperties">
+      <item name="EntityOriginalName">Rider</item>
+    </annotation>
+    <annotation name="service Group">
+      <item name="service">RiderService</item>
+    </annotation>
+    <annotation name="ServerProperties">
+      <item name="IncludeRemoteClass">nonempty</item>
+    </annotation>
+    <annotation name="findAll">
+      <item name="propertySpecifier">picture_id,lastname,firstname,rider_id</item>
+    </annotation>
+    <annotation name="ActionScriptGeneration">
+      <item name="Package">valueObjects</item>
+    </annotation>
+    <annotation name="ASFilesGenerated">
+      <item name="ASFilesGenerated">valueObjects/_Super_Rider.as;valueObjects/Rider.as;valueObjects/_RiderEntityMetadata.as;</item>
+    </annotation>
+    <property name="picture_id" type="integer" required="true"/>
+    <property name="lastname" type="string" required="true"/>
+    <property name="firstname" type="string" required="true"/>
+    <property name="rider_id" type="integer" required="true"/>
+  </entity>
 </model>
