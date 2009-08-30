@@ -27,6 +27,11 @@
 			<location>C:/xampp/htdocs/trackfreaks</location>
 		</link>
 		<link>
+			<name>services/RiderService.php</name>
+			<type>1</type>
+			<location>C:/xampp/htdocs/trackfreaks-debug/services/RiderService.php</location>
+		</link>
+		<link>
 			<name>services/TrackService.php</name>
 			<type>1</type>
 			<location>C:/xampp/htdocs/trackfreaks-debug/services/TrackService.php</location>

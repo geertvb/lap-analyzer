@@ -8,12 +8,14 @@
 
 	<s:VGroup>
 		
-		<mx:ToggleButtonBar dataProvider="viewstack1" selectedIndex="0">
+		<mx:ToggleButtonBar 
+			dataProvider="viewstack1" 
+			selectedIndex="0">
 		</mx:ToggleButtonBar>
 	
-		<mx:ViewStack id="viewstack1">
+		<mx:ViewStack id="viewstack1" resizeToContent="true">
 			<mx:Canvas label="Tracks"><local:Tracks /></mx:Canvas>
-			<mx:Canvas label="Riders"></mx:Canvas>
+			<mx:Canvas label="Riders"><local:Riders /></mx:Canvas>
 			<mx:Canvas label="Events"></mx:Canvas>
 			<mx:Canvas label="Organizations"></mx:Canvas>
 			<mx:Canvas label="Hotels"></mx:Canvas>

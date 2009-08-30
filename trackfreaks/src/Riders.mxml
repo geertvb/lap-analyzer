@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup 
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/halo"
+	xmlns:riderservice="services.riderservice.*">
+
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			import mx.controls.Alert;
+
+			protected function tileList_creationCompleteHandler(event:FlexEvent):void
+			{
+				findAllResult.token = riderService.findAll();
+			}
+
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<s:CallResponder id="findAllResult"/>
+		<riderservice:RiderService id="riderService" fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"/>
+	</fx:Declarations>
+	
+	<mx:TileList 
+		itemRenderer="RiderTile" 
+		columnCount="4" rowCount="2" 
+		id="tileList" 
+		creationComplete="tileList_creationCompleteHandler(event)" 
+		dataProvider="{findAllResult.lastResult}">
+	</mx:TileList>
+
+	<mx:DataGrid
+		rowCount="5"
+		dataProvider="{findAllResult.lastResult}">
+		<mx:columns>
+			<mx:DataGridColumn headerText="First name" dataField="firstname" />
+			<mx:DataGridColumn headerText="Last name" dataField="lastname" />
+		</mx:columns>
+	</mx:DataGrid>
+	
+</s:VGroup>
