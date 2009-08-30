@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup 
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/halo" 
+	xmlns:trackservice="services.trackservice.*">
+
+	<fx:Script>
+		<![CDATA[
+			import com.google.maps.geom.Attitude;
+			import mx.events.ListEvent;
+			import com.google.maps.LatLngBounds;
+			import com.google.maps.controls.MapTypeControl;
+			import com.google.maps.controls.PositionControl;
+			import com.google.maps.controls.ZoomControl;
+			import com.google.maps.styles.StrokeStyle;
+			import com.google.maps.styles.FillStyle;
+			import com.google.maps.overlays.MarkerOptions;
+			import com.google.maps.overlays.Marker;
+			import valueObjects.Track;
+			import mx.events.FlexEvent;
+			import mx.controls.Alert;
+			
+			import com.google.maps.LatLng;
+			import com.google.maps.Map;
+			import com.google.maps.MapEvent;
+			import com.google.maps.MapType;
+			
+			public var bb: LatLngBounds;
+			
+			private function onMapReady(event:Event):void {
+				with (this.map) {
+					addControl(new ZoomControl());
+					addControl(new PositionControl());
+					addControl(new MapTypeControl());
+				}
+				if (findAllResult.lastResult) {
+					onBothReady();
+				}
+			}
+			
+			
+			protected function dataGrid_creationCompleteHandler(event:FlexEvent):void {
+				findAllResult.token = trackService.findAll();
+			}
+			
+			protected function onDataReady(event: Event) : void {
+				if (this.map.isLoaded()) {
+					onBothReady();
+				}
+			}
+			
+			protected function onBothReady() : void {
+				bb = new LatLngBounds();
+				for each (var track: Track in findAllResult.lastResult) {
+					if (track.lat != 0  && track.lng != 0) {
+						var latLng: LatLng = new LatLng(track.lat, track.lng);
+						bb.extend(latLng);
+						var marker: Marker = new Marker(
+							latLng,
+							new MarkerOptions({
+								strokeStyle: new StrokeStyle({thickness:1, color: 0x000000}),
+								fillStyle: new FillStyle({color: 0xff0000}),
+								radius: 7,
+								hasShadow: true
+							}));
+						this.map.addOverlay(marker);
+					}
+				}
+				this.map.setCenter(bb.getCenter(), this.map.getBoundsZoomLevel(bb), MapType.NORMAL_MAP_TYPE);
+			}
+			
+			protected function zoomOut() : void {
+				this.map.setCenter(bb.getCenter(), this.map.getBoundsZoomLevel(bb));
+			}
+			
+			protected function onItemClick(event: ListEvent) : void {
+				var track: Track = Track(dataGrid.selectedItem);
+				var latLng: LatLng = new LatLng(track.lat, track.lng);
+				
+				this.map.setCenter(latLng, 14);
+				
+				//this.map.flyTo(latLng, 14, this.map.getAttitude(), 10);
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<s:CallResponder id="findAllResult" result="onDataReady(event)"/>
+		<trackservice:TrackService 
+			id="trackService" 
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" 
+			showBusyCursor="true"/>
+	</fx:Declarations>
+	
+	<maps:Map3D 
+		xmlns:maps="com.google.maps.*" 
+		id="map" 
+		mapevent_mapready="onMapReady(event)" 
+		width="640" height="480" 
+		key="ABQIAAAARHlxm1tnIyh53Qky1yRvaxQRM90ZMLGmypNtl0aCSyUOIyb2sxQJCMaQB88DzEFGpMHAzTs5sB2Wpw"/>
+	
+	<s:HGroup width="100%">
+		<s:Button label="Zoom out" click="zoomOut();" />
+	</s:HGroup>
+	
+	<mx:DataGrid 
+		id="dataGrid" 
+		width="640"
+		creationComplete="dataGrid_creationCompleteHandler(event)" 
+		dataProvider="{findAllResult.lastResult}" 
+		rowCount="5"
+		itemClick="onItemClick(event);">
+		<mx:columns>
+			<mx:DataGridColumn headerText="track_id" dataField="track_id" visible="false"/>
+			<mx:DataGridColumn headerText="Name" dataField="name" width="160"/>
+			<mx:DataGridColumn headerText="URL" dataField="url"/>
+			<mx:DataGridColumn headerText="Latitude" dataField="lat" width="80"/>
+			<mx:DataGridColumn headerText="Longitude" dataField="lng" width="80"/>
+		</mx:columns>
+	</mx:DataGrid>
+	
+</s:VGroup>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<model xmlns="http://ns.adobe.com/Fiber/1.0">
+  <service name="TrackService">
+    <annotation name="ActionScriptGeneration">
+      <item name="Source">TrackService</item>
+      <item name="ServiceType">RemoteObject</item>
+      <item name="Package">services.trackservice</item>
+      <item name="Endpoint">gateway.php</item>
+      <item name="Destination">TrackService</item>
+    </annotation>
+    <annotation name="ASFilesGenerated">
+      <item name="ASFilesGenerated">services/trackservice/_Super_TrackService.as;services/trackservice/TrackService.as;</item>
+    </annotation>
+    <annotation name="ServiceTypeGroup">
+      <item name="ServiceBackendType">PHP</item>
+    </annotation>
+    <annotation name="ServiceConfig">
+      <item name="PHP_RELATIVE_LOCATION">trackfreaks-debug/services/TrackService.php</item>
+      <item name="PHP_SERVER_ROOT">C:\xampp\htdocs</item>
+      <item name="DEFAULT_ENTITY_PACKAGE">valueObjects</item>
+      <item name="PHP_SERVICES_FOLDER">C:\xampp\htdocs\trackfreaks-debug\services</item>
+      <item name="PHP_LOCATION">C:\xampp\htdocs\trackfreaks-debug\services\TrackService.php</item>
+      <item name="LINKED_FILE">TrackService.php</item>
+      <item name="PHP_SERVER_ROOT_URL">http://develop.trackfreaks.eu/</item>
+      <item name="ABSOLUTE_ENDPOINT">http://develop.trackfreaks.eu/trackfreaks-debug/gateway.php</item>
+      <item name="PHP_CLASS_NAME">TrackService</item>
+    </annotation>
+    <function name="findAll" return-type="Track[]">
+      <annotation name="original signature">
+        <item name="returnType">opaque</item>
+      </annotation>
+      <annotation name="ValidProperties">
+        <item name="propertySpecifier">name,lng,lat,url,track_id</item>
+      </annotation>
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+    </function>
+  </service>
+  <entity name="Track">
+    <annotation name="EntityProperties">
+      <item name="EntityOriginalName">Track</item>
+    </annotation>
+    <annotation name="service Group">
+      <item name="service">TrackService</item>
+    </annotation>
+    <annotation name="ServerProperties">
+      <item name="IncludeRemoteClass">nonempty</item>
+    </annotation>
+    <annotation name="findAll">
+      <item name="propertySpecifier">name,lng,lat,url,track_id</item>
+    </annotation>
+    <annotation name="ActionScriptGeneration">
+      <item name="Package">valueObjects</item>
+    </annotation>
+    <annotation name="ASFilesGenerated">
+      <item name="ASFilesGenerated">valueObjects/Track.as;valueObjects/_TrackEntityMetadata.as;valueObjects/_Super_Track.as;</item>
+    </annotation>
+    <property name="name" type="string" required="true"/>
+    <property name="lng" type="double" required="true" default="0"/>
+    <property name="lat" type="double" required="true" default="0"/>
+    <property name="url" type="string" required="true"/>
+    <property name="track_id" type="integer" required="true"/>
+  </entity>
+</model>
