@@ -161,8 +161,10 @@
 		itemClick="onItemClick(event);">
 		<mx:columns>
 			<mx:DataGridColumn headerText="track_id" dataField="track_id" visible="false"/>
-			<mx:DataGridColumn headerText="Name" dataField="name" width="160"/>
+			<mx:DataGridColumn headerText="Name" dataField="name" width="140"/>
 			<mx:DataGridColumn headerText="URL" dataField="url"/>
+			<mx:DataGridColumn headerText="Length" dataField="length" width="60"/>
+			<mx:DataGridColumn headerText="Country" dataField="country" width="80"/>
 			<mx:DataGridColumn headerText="Latitude" dataField="lat" width="80"/>
 			<mx:DataGridColumn headerText="Longitude" dataField="lng" width="80"/>
 		</mx:columns>

@@ -92,7 +92,7 @@
         <item name="returnType">opaque</item>
       </annotation>
       <annotation name="ValidProperties">
-        <item name="propertySpecifier">name,lng,lat,url,track_id</item>
+        <item name="propertySpecifier">name,picture_id,length,lng,lat,url,track_id,country</item>
       </annotation>
       <annotation name="analyze group">
         <item name="analyzed">true</item>
@@ -110,7 +110,7 @@
       <item name="IncludeRemoteClass">nonempty</item>
     </annotation>
     <annotation name="findAll">
-      <item name="propertySpecifier">name,lng,lat,url,track_id</item>
+      <item name="propertySpecifier">name,picture_id,length,lng,lat,url,track_id,country</item>
     </annotation>
     <annotation name="ActionScriptGeneration">
       <item name="Package">valueObjects</item>
@@ -119,9 +119,12 @@
       <item name="ASFilesGenerated">valueObjects/Track.as;valueObjects/_TrackEntityMetadata.as;valueObjects/_Super_Track.as;</item>
     </annotation>
     <property name="name" type="string" required="true"/>
-    <property name="lng" type="double" required="true" default="0"/>
-    <property name="lat" type="double" required="true" default="0"/>
+    <property name="picture_id" type="integer" required="true"/>
+    <property name="length" type="integer" required="true"/>
+    <property name="lng" type="double" required="true"/>
+    <property name="lat" type="double" required="true"/>
     <property name="url" type="string" required="true"/>
     <property name="track_id" type="integer" required="true"/>
+    <property name="country" type="string" required="true"/>
   </entity>
 </model>

@@ -3,7 +3,7 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/halo" 
 		 xmlns:net="flash.net.*"
-		 width="200" height="160">
+		 width="200" height="180">
 
 	
 	<s:VGroup width="200">
@@ -15,7 +15,9 @@
 
 		<mx:Image
 			width="160" height="120"
-			source="download_thumb.php?picture_id=7" />
+			source="download_thumb.php?picture_id={data.picture_id}" />
+		
+		<mx:Label text="Length: {data.length}"/>
 		
 	</s:VGroup>
 

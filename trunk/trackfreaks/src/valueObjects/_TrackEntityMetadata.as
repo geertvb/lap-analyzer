@@ -21,12 +21,12 @@ internal class _TrackEntityMetadata extends AbstractEntityMetadata
 {
 	private static var emptyArray:Array = new Array();
 
-    model_internal static var allProperties:Array = new Array("name", "lng", "lat", "url", "track_id");
+    model_internal static var allProperties:Array = new Array("name", "picture_id", "length", "lng", "lat", "url", "track_id", "country");
     model_internal static var allAssociationProperties:Array = new Array();
-    model_internal static var allRequiredProperties:Array = new Array("name", "lng", "lat", "url", "track_id");
-    model_internal static var allAlwaysAvailableProperties:Array = new Array("name", "lng", "lat", "url", "track_id");
+    model_internal static var allRequiredProperties:Array = new Array("name", "picture_id", "length", "lng", "lat", "url", "track_id", "country");
+    model_internal static var allAlwaysAvailableProperties:Array = new Array("name", "picture_id", "length", "lng", "lat", "url", "track_id", "country");
     model_internal static var guardedProperties:Array = new Array();
-    model_internal static var dataProperties:Array = new Array("name", "lng", "lat", "url", "track_id");
+    model_internal static var dataProperties:Array = new Array("name", "picture_id", "length", "lng", "lat", "url", "track_id", "country");
     model_internal static var derivedProperties:Array = new Array();
     model_internal static var collectionProperties:Array = new Array();
     model_internal static var collectionBaseMap:Object;    
@@ -46,10 +46,13 @@ internal class _TrackEntityMetadata extends AbstractEntityMetadata
             // depenents map
             model_internal::dependentsOnMap = new Object();
             model_internal::dependentsOnMap["name"] = new Array();
+            model_internal::dependentsOnMap["picture_id"] = new Array();
+            model_internal::dependentsOnMap["length"] = new Array();
             model_internal::dependentsOnMap["lng"] = new Array();
             model_internal::dependentsOnMap["lat"] = new Array();
             model_internal::dependentsOnMap["url"] = new Array();
             model_internal::dependentsOnMap["track_id"] = new Array();
+            model_internal::dependentsOnMap["country"] = new Array();
                         
             // collection base map
             model_internal::collectionBaseMap = new Object()
@@ -273,6 +276,18 @@ internal class _TrackEntityMetadata extends AbstractEntityMetadata
      }                       
                   
      [Bindable(event="propertyChange")] 
+     public function get isPicture_idAvailable():Boolean
+     {
+        return true;
+     }                       
+                  
+     [Bindable(event="propertyChange")] 
+     public function get isLengthAvailable():Boolean
+     {
+        return true;
+     }                       
+                  
+     [Bindable(event="propertyChange")] 
      public function get isLngAvailable():Boolean
      {
         return true;
@@ -296,6 +311,12 @@ internal class _TrackEntityMetadata extends AbstractEntityMetadata
         return true;
      }                       
                   
+     [Bindable(event="propertyChange")] 
+     public function get isCountryAvailable():Boolean
+     {
+        return true;
+     }                       
+                  
 
     /**
      * derived property recalculation
@@ -308,6 +329,18 @@ internal class _TrackEntityMetadata extends AbstractEntityMetadata
 
     [Bindable(event="propertyChange")]   
     public function get nameStyle():Style
+    {
+		return model_internal::_nullStyle;		
+    }      
+    
+    [Bindable(event="propertyChange")]   
+    public function get picture_idStyle():Style
+    {
+		return model_internal::_nullStyle;		
+    }      
+    
+    [Bindable(event="propertyChange")]   
+    public function get lengthStyle():Style
     {
 		return model_internal::_nullStyle;		
     }      
@@ -332,6 +365,12 @@ internal class _TrackEntityMetadata extends AbstractEntityMetadata
     
     [Bindable(event="propertyChange")]   
     public function get track_idStyle():Style
+    {
+		return model_internal::_nullStyle;		
+    }      
+    
+    [Bindable(event="propertyChange")]   
+    public function get countryStyle():Style
     {
 		return model_internal::_nullStyle;		
     }      

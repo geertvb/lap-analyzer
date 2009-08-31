@@ -31,10 +31,13 @@ public class _Super_Track extends EventDispatcher implements IValueObject
 	 * properties
 	 */
 	private var _internal_name : String;
-	private var _internal_lng : Number = 0;
-	private var _internal_lat : Number = 0;
+	private var _internal_picture_id : int;
+	private var _internal_length : int;
+	private var _internal_lng : Number;
+	private var _internal_lat : Number;
 	private var _internal_url : String;
 	private var _internal_track_id : int;
+	private var _internal_country : String;
 
     private static var emptyArray:Array = new Array();
 
@@ -62,6 +65,16 @@ public class _Super_Track extends EventDispatcher implements IValueObject
             return _internal_name;
     }    
 	[Bindable(event="propertyChange")] 
+    public function get picture_id() : int    
+    {
+            return _internal_picture_id;
+    }    
+	[Bindable(event="propertyChange")] 
+    public function get length() : int    
+    {
+            return _internal_length;
+    }    
+	[Bindable(event="propertyChange")] 
     public function get lng() : Number    
     {
             return _internal_lng;
@@ -81,6 +94,11 @@ public class _Super_Track extends EventDispatcher implements IValueObject
     {
             return _internal_track_id;
     }    
+	[Bindable(event="propertyChange")] 
+    public function get country() : String    
+    {
+            return _internal_country;
+    }    
 
     /**
      * data property setters
@@ -99,6 +117,40 @@ public class _Super_Track extends EventDispatcher implements IValueObject
         {
         	_internal_name = value;
         	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "name", oldValue, _internal_name));
+        }    	     
+        
+        if (recalcValid && model_internal::_cacheInitialized_isValid)
+        {
+            model_internal::isValid_der = model_internal::calculateIsValid();
+        }  
+    }    
+    public function set picture_id(value:int) : void 
+    {    	
+        var recalcValid:Boolean = false;
+    	
+    	
+    	var oldValue:int = _internal_picture_id;               
+        if (oldValue !== value)
+        {
+        	_internal_picture_id = value;
+        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "picture_id", oldValue, _internal_picture_id));
+        }    	     
+        
+        if (recalcValid && model_internal::_cacheInitialized_isValid)
+        {
+            model_internal::isValid_der = model_internal::calculateIsValid();
+        }  
+    }    
+    public function set length(value:int) : void 
+    {    	
+        var recalcValid:Boolean = false;
+    	
+    	
+    	var oldValue:int = _internal_length;               
+        if (oldValue !== value)
+        {
+        	_internal_length = value;
+        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "length", oldValue, _internal_length));
         }    	     
         
         if (recalcValid && model_internal::_cacheInitialized_isValid)
@@ -178,6 +230,27 @@ public class _Super_Track extends EventDispatcher implements IValueObject
             model_internal::isValid_der = model_internal::calculateIsValid();
         }  
     }    
+    public function set country(value:String) : void 
+    {    	
+        var recalcValid:Boolean = false;
+    	if (value == null || _internal_country == null)
+    	{
+    		recalcValid = true;
+    	}	
+    	
+    	
+    	var oldValue:String = _internal_country;               
+        if (oldValue !== value)
+        {
+        	_internal_country = value;
+        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "country", oldValue, _internal_country));
+        }    	     
+        
+        if (recalcValid && model_internal::_cacheInitialized_isValid)
+        {
+            model_internal::isValid_der = model_internal::calculateIsValid();
+        }  
+    }    
 
     /**
      * data property setter listeners
@@ -220,8 +293,16 @@ public class _Super_Track extends EventDispatcher implements IValueObject
 			violatedConsts.push("urlIsRequired");
 			validationFailureMessages.push("url is required");
 		}
+		if (_model.isCountryAvailable && _internal_country == null)
+		{
+			violatedConsts.push("countryIsRequired");
+			validationFailureMessages.push("country is required");
+		}
 
 		var styleValidity:Boolean = true;
+	
+	
+	
 	
 	
 	
