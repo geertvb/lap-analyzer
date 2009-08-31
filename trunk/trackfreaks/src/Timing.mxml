@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	creationComplete="trackLoader.load(trackURL);"
+	xmlns:net="flash.net.*">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.utils.StringUtil;
+			import mx.controls.Alert;
+			import mx.messaging.AbstractConsumer;
+			import __AS3__.vec.Vector;
+			
+			public var minX: Number;
+			public var maxX: Number;
+			public var minY: Number;
+			public var maxY: Number;
+			public var dX: Number;
+			public var dY: Number;
+			public var d: Number;
+			
+			
+			
+			[Bindable] 
+			private var commands: Vector.<int> = new Vector.<int>();
+
+			[Bindable] 
+			private var thedata: Vector.<Number> = new Vector.<Number>();
+			
+			public function dataReady() : void {
+				var s: String = trackLoader.data;
+				var lines: Array = s.split("\n");
+				var i: uint;
+				
+				var headings: Array = lines[0].split(",");
+				//INDEX,RCR,DATE,TIME,VALID,LATITUDE,N/S,LONGITUDE,E/W,HEIGHT,SPEED,DISTANCE,
+				var latIndex: uint = headings.indexOf("LATITUDE");
+				var lngIndex: uint = headings.indexOf("LONGITUDE");
+				var spdIndex: uint = headings.indexOf("SPEED");
+				var timeIndex: uint = headings.indexOf("TIME");
+				
+				minX = Number.MAX_VALUE;
+				maxX = Number.MIN_VALUE;
+				minY = Number.MAX_VALUE;
+				maxY = Number.MIN_VALUE;
+				
+				var points: Array = new Array();
+				for (i = 1; i<lines.length; i++) {
+					var line: String = lines[i];
+					var values: Array = line.split(",");
+					if (values.length >= 2) {
+						var lat: Number = values[latIndex];
+						var lng: Number = values[lngIndex];
+						
+						var p: Point = GeoFlatten.convert(lat, lng);
+						
+						minX = Math.min(minX, p.x);
+						maxX = Math.max(maxX, p.x);
+						minY = Math.min(minY, p.y);
+						maxY = Math.max(maxY, p.y);
+						
+						//var point: Point = new Point(lat, lng);
+						points.push(p);
+					}
+				}
+				dX = maxX - minX;
+				dY = maxY - minY;
+				d = Math.max(dX, dY);
+				
+				thedata = new Vector.<Number>();
+				for each (var point: Point in points) {
+					thedata.push((point.x - minX) * 400 / d);
+					thedata.push((point.y - minY) * 400 / d);
+				}
+				//Alert.show(minLat + " " + maxLat + " " + minLng + " " + maxLng);
+
+				commands = new Vector.<int>();
+				commands.push(GraphicsPathCommand.MOVE_TO);
+				for (i = 2; i < thedata.length; i += 2) {
+					commands.push(GraphicsPathCommand.LINE_TO);
+				}
+				
+				drawTrack();
+			}
+			
+			public function drawTrack() :void {
+				
+				var m: Matrix = new Matrix();
+				m.translate(-200,-200);
+				m.rotate(hslider.value * 2);
+				m.translate(300,300);
+
+				c1.graphics.lineStyle(1,0,1);
+				//m.scale(1.5, 1.5);
+				c1.transform.matrix = m;
+				//var t0: Date = new Date();
+				c1.graphics.drawPath(commands, thedata);
+				//var t1: Date = new Date();
+				//Alert.show("" + (t1.getTime() - t0.getTime()));
+			}
+			public function drawTrack2() :void {
+				
+				var m: Matrix = new Matrix();
+				m.translate(-200,-200);
+				m.rotate(hslider.value * 2);
+				m.translate(300,300);
+				m.scale(vslider.value, vslider.value);
+
+				//c1.graphics.lineStyle(1,0,1);
+				//m.scale(1.5, 1.5);
+				c1.transform.matrix = m;
+				//var t0: Date = new Date();
+				//c1.graphics.drawPath(commands, thedata);
+				//var t1: Date = new Date();
+				//Alert.show("" + (t1.getTime() - t0.getTime()));
+			}
+			public function showCoo(event: MouseEvent) : void {
+				
+				var x: Number = minX + event.localX / 400 * d;
+				var y: Number = minY + event.localY / 400 * d;
+
+				var p: Point = GeoFlatten.convertBack(x, y);
+				var lat: Number = p.x;
+				var lng: Number = p.y;
+				
+			}
+			public function findNearest(event: MouseEvent) : void {
+				var min: Number = Number.MAX_VALUE;
+				var best: int = -1;
+				
+				for (var i:uint = 2; i < thedata.length-2; i += 2) {
+					var cd: Number = (thedata[i] - event.localX) * (thedata[i] - event.localX)
+						+ (thedata[i+1] - event.localY) * (thedata[i+1] - event.localY);
+					if (cd < min) {
+						min = cd;
+						best = i;
+					}
+				}
+				
+				var vx: Number = thedata[best+2] - thedata[best-2];
+				var vy: Number = thedata[best+3] - thedata[best-1];
+				
+				var vd: Number = Math.sqrt(vx * vx + vy * vy);
+				vx = vx / vd * 10;
+				vy = vy / vd * 10;
+				
+				var x1: Number = thedata[best] - vy;
+				var y1: Number = thedata[best+1] + vx;
+				
+				var x2: Number = thedata[best] + vy;
+				var y2: Number = thedata[best+1] - vx;
+
+				//c1.graphics.clear();
+				c1.graphics.lineStyle(2,0xFF0000,1);
+				/*
+				var v1: Vector.<int> = new Vector.<int>();
+				v1.push([GraphicsPathCommand.MOVE_TO,GraphicsPathCommand.LINE_TO]);
+				var v2: Vector.<Number> = new Vector.<Number>();
+				v2.push([x1,y1,x2,y2]);*/
+				c1.graphics.drawPath(
+					Vector.<int>([GraphicsPathCommand.MOVE_TO,GraphicsPathCommand.LINE_TO]),
+					Vector.<Number>([x1,y1,x2,y2])
+				);
+				c1.graphics.drawCircle(x1, y1, 5);
+				c1.graphics.drawCircle(x2, y2, 5);
+			}
+		]]>
+	</mx:Script>
+	
+	<net:URLLoader id="trackLoader" complete="dataReady()" >
+	</net:URLLoader>
+	
+	<net:URLRequest id="trackURL" url="track.csv" />
+	
+	<mx:Canvas 
+		x="0" y="0" 
+		width="800" height="800" 
+		id="c1" 
+		mouseMove="showCoo(event);" 
+		mouseUp="findNearest(event);">
+	</mx:Canvas>
+	
+	<mx:HSlider 
+		id="hslider" 
+		liveDragging="true" 
+		x="30" y="10" 
+		minimum="0" maximum="3.1415" 
+		value="0" 
+		change="drawTrack2();"/>
+	
+	<mx:VSlider 
+		x="10" y="30" 
+		liveDragging="true" 
+		minimum="1" maximum="2" 
+		id="vslider" 
+		value="1" 
+		change="drawTrack2();"/>
+	
+</mx:Canvas>
