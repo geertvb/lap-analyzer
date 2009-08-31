@@ -22,6 +22,9 @@ class TrackService {
 		$cols[] = "url";
 		$cols[] = "lat";
 		$cols[] = "lng";
+		$cols[] = "country";
+		$cols[] = "length";
+		$cols[] = "picture_id";
 
 		$sql = array();
 		$sql[] = "SELECT";
@@ -44,7 +47,10 @@ class TrackService {
 			$row->name, 
 			$row->url, 
 			$row->lat, 
-			$row->lng);
+			$row->lng,
+			$row->country,
+			$row->length,
+			$row->picture_id);
 		
 	    while (mysqli_stmt_fetch($stmt)) {
 	      $rows[] = $row;
@@ -54,7 +60,10 @@ class TrackService {
 			$row->name,
 			$row->url,
 			$row->lat,
-			$row->lng
+			$row->lng,
+			$row->country,
+			$row->length,
+			$row->picture_id
 			);
 	    }
 		
