@@ -26,7 +26,7 @@
 		<mx:Canvas label="Events"></mx:Canvas>
 		<mx:Canvas label="Organizations"></mx:Canvas>
 		<mx:Canvas label="Hotels"></mx:Canvas>
-		<mx:Canvas label="Timing"></mx:Canvas>
+		<mx:Canvas label="Timing"><local:Timing /></mx:Canvas>
 		<mx:Canvas label="Calendar"></mx:Canvas>
 	</mx:ViewStack>
 
