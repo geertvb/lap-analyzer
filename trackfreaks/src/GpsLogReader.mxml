@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	creationComplete="trackLoader.load(trackURL);"
+	xmlns:net="flash.net.*">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.utils.StringUtil;
+			import mx.controls.Alert;
+			import mx.messaging.AbstractConsumer;
+			
+			[Bindable] 
+			private var commands: Vector.<int> = new Vector.<int>();
+			
+			[Bindable] 
+			private var thedata: Vector.<Number> = new Vector.<Number>();
+			
+			public function dataReady() : void {
+				var s: String = trackLoader.data;
+				var lines: Array = s.split("\n");
+				var gpsLine: GpsLine;
+				var values: GpsLine;
+
+				var iterator: GpsLineIterator = new GpsLineIterator(lines);
+				
+				var s0: *;
+				var s1: *;
+				
+				gpsLine = iterator.next();
+				while (gpsLine != null) {
+					if (gpsLine.speed >= 25) {
+						i0 = iterator.current;
+						s0 = gpsLine.time;
+						
+						gpsLine = iterator.next();
+						while (gpsLine != null && gpsLine.speed >= 25 && gpsLine.time - s0 < 3) {
+							gpsLine = iterator.next();
+						}
+						if (gpsLine == null || gpsLine.speed < 25) break;
+						
+						
+						
+					}
+				}
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<net:URLLoader id="trackLoader" complete="dataReady()" />
+	
+	<net:URLRequest id="trackURL" url="track.csv" />
+	
+</mx:Canvas>
