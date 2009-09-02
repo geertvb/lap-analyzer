@@ -1,4 +1,5 @@
 package {
+	import mx.formatters.DateFormatter;
 
 	public class GpsLineIterator {
 		
@@ -11,6 +12,7 @@ package {
 			latIndex = headings.indexOf("LATITUDE");
 			lngIndex = headings.indexOf("LONGITUDE");
 			spdIndex = headings.indexOf("SPEED");
+			dateIndex = headings.indexOf("DATE");
 			timeIndex = headings.indexOf("TIME");
 		}
 		
@@ -19,6 +21,7 @@ package {
 		public var latIndex: uint;
 		public var lngIndex: uint;
 		public var spdIndex: uint;
+		public var dateIndex: uint;
 		public var timeIndex: uint;
 		
 		public var lines: Array;
@@ -36,28 +39,39 @@ package {
 			return i < lines.length;
 		}
 		
-		public function getGpsLine(line: String) : GpsLine {
-			if (line != null) {
+		public function getGpsLine() : GpsLine {
+			if (current >= 0  && current < lines.length) {
 				var result: GpsLine = new GpsLine();
+
+				var line: String = lines[current];
 				var values: Array = line.split(",");
+				result.index = current;
 				result.lat = values[latIndex];
 				result.lng = values[lngIndex];
-				result.time = values[timeIndex];
-				result.speed = values[spdIndex];
+				result.time = parseTime(values[timeIndex]);
+				result.speed = parseFloat(values[spdIndex]);
+				
+				return result;
 			} else {
 				return null;
 			}
 		}
 		
 		public function next() : GpsLine {
-			while (current < lines.length && isEmpty(lines[current])) {
-				current++;
-			}
 			if (current < lines.length) {
-				return getGpsLine(lines[current]);
-			} else {
-				return null;
+				do {
+					current++;
+				} while (current < lines.length && isEmpty(lines[current]));
 			}
+			return getGpsLine();
+		}
+		
+		public function parseTime(time: String) : uint {
+			var h: uint = parseInt(time.substr(0,2));
+			var m: uint = parseInt(time.substr(3,2));
+			var s: uint = parseInt(time.substr(6,2));
+			var ms: uint = parseInt(time.substr(9,3));
+			return ms + 1000 * (s + 60 * (m + 60 * h));
 		}
 
 	}

@@ -6,43 +6,115 @@
 	
 	<mx:Script>
 		<![CDATA[
-			import mx.utils.StringUtil;
-			import mx.controls.Alert;
-			import mx.messaging.AbstractConsumer;
+			private var processGpsLine: Function = pglWaiting;
 			
-			[Bindable] 
-			private var commands: Vector.<int> = new Vector.<int>();
+			[Bindable]
+			private var sessions: Array = new Array();
 			
-			[Bindable] 
-			private var thedata: Vector.<Number> = new Vector.<Number>();
+			private var i0: uint;
+			private var i1: uint;
+
+			private var t0: uint;
+			private var t1: uint;
+			
+			private var pt: uint;
+			
+			public function pglWaiting(gpsLine: GpsLine) : void {
+				if (gpsLine == null) {
+					processGpsLine = pglFinished;
+					return;
+				}
+				if (gpsLine.speed >= 25) {
+					// Mark start
+					i0 = gpsLine.index;
+					t0 = gpsLine.time;
+					processGpsLine = pglInitiating;
+					return;
+				}
+			}
+			
+			public function pglInitiating(gpsLine: GpsLine) : void {
+				if (gpsLine == null) {
+					processGpsLine = pglFinished;
+					return;
+				}
+				if (gpsLine.time > pt + 3000) {
+					processGpsLine = pglWaiting;
+					return;
+				}
+				if (gpsLine.speed < 25) {
+					processGpsLine = pglWaiting;
+					return;
+				}
+				if (gpsLine.time >= t0 + 3000) {
+					// 
+					processGpsLine = pglProcessing;
+					return;
+				}
+			}
+			
+			public function pglProcessing(gpsLine: GpsLine) : void {
+				if (gpsLine == null) {
+					// Store session
+					storeSession();
+					processGpsLine = pglFinished;
+					return;
+				}
+				if (gpsLine.time > pt + 5000) {
+					// Store session
+					storeSession();
+					processGpsLine = pglWaiting;
+					return;
+				}
+				if (gpsLine.speed < 10) {
+					processGpsLine = pglFinalizing;
+					return;
+				}
+				i1 = gpsLine.index;
+				t1 = gpsLine.time;
+			}
+			
+			public function pglFinalizing(gpsLine: GpsLine) : void {
+				if (gpsLine == null) {
+					// Store session
+					storeSession();
+					processGpsLine = pglFinished;
+					return;
+				}
+				if (gpsLine.time >= t1 + 5000) {
+					// Store session
+					storeSession();
+					processGpsLine = pglWaiting;
+					return;
+				}
+				if (gpsLine.speed >= 10) {
+					processGpsLine = pglProcessing;
+					return;
+				}
+			}
+			
+			public function pglFinished(gpsLine: GpsLine) : void {
+				// Do nothing
+			}
+			
+			public function storeSession() : void {
+				sessions.push({startIndex: i0, endIndex: i1});
+			}
 			
 			public function dataReady() : void {
 				var s: String = trackLoader.data;
 				var lines: Array = s.split("\n");
 				var gpsLine: GpsLine;
-				var values: GpsLine;
 
 				var iterator: GpsLineIterator = new GpsLineIterator(lines);
 				
-				var s0: *;
-				var s1: *;
-				
-				gpsLine = iterator.next();
-				while (gpsLine != null) {
-					if (gpsLine.speed >= 25) {
-						i0 = iterator.current;
-						s0 = gpsLine.time;
-						
-						gpsLine = iterator.next();
-						while (gpsLine != null && gpsLine.speed >= 25 && gpsLine.time - s0 < 3) {
-							gpsLine = iterator.next();
-						}
-						if (gpsLine == null || gpsLine.speed < 25) break;
-						
-						
-						
+				do {
+					gpsLine = iterator.next();
+					processGpsLine(gpsLine);
+					if (gpsLine != null) {
+						pt = gpsLine.time;
 					}
-				}
+				} while (gpsLine != null);
 			}
 			
 		]]>
@@ -51,5 +123,12 @@
 	<net:URLLoader id="trackLoader" complete="dataReady()" />
 	
 	<net:URLRequest id="trackURL" url="track.csv" />
+	
+	<mx:DataGrid dataProvider="{sessions}">
+		<mx:columns>
+			<mx:DataGridColumn dataField="startIndex" />
+			<mx:DataGridColumn dataField="endIndex" />
+		</mx:columns>
+	</mx:DataGrid>
 	
 </mx:Canvas>
