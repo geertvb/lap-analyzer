@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas
-	xmlns:mx="http://www.adobe.com/2006/mxml" 
-	creationComplete="trackLoader.load(trackURL);"
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:mx="library://ns.adobe.com/flex/halo" 
+	xmlns:s="library://ns.adobe.com/flex/spark"
 	xmlns:net="flash.net.*">
 	
-	<mx:Script>
+	<fx:Script>
 		<![CDATA[
 			private var processGpsLine: Function = pglWaiting;
 			
@@ -101,8 +102,8 @@
 				sessions.push({startIndex: i0, endIndex: i1});
 			}
 			
-			public function dataReady() : void {
-				var s: String = trackLoader.data;
+			public function dataReady(data: ByteArray) : void {
+				var s: String = String(data);
 				var lines: Array = s.split("\n");
 				var gpsLine: GpsLine;
 
@@ -115,20 +116,112 @@
 						pt = gpsLine.time;
 					}
 				} while (gpsLine != null);
+				
 			}
 			
 		]]>
-	</mx:Script>
+	</fx:Script>
 	
-	<net:URLLoader id="trackLoader" complete="dataReady()" />
+	<fx:Script>
+		<![CDATA[
+		
+		import mx.core.Application;
+		import mx.controls.Alert;
+		
+		public function onLoadProgress(event : ProgressEvent) : void {
+			progressBar.setProgress(event.bytesLoaded, event.bytesTotal);
+		}
+		
+		public function onLoadComplete(event : Event) : void {
+			dataReady(fileReference.data);
+		}
+		
+		public function onLoadIoError(event : IOErrorEvent) : void {
+			Alert.show(event.text);
+		}
+		
+		public function onSelect(event: Event) : void {
+			fileReference.load();
+		}
+		
+		public function click_load(event : Event) : void {
+			fileReference.browse();
+		}
+		
+		private function click_cancel(event : Event) : void {
+			fileReference.cancel();
+		}
+		
+		]]>
+	</fx:Script>
 	
-	<net:URLRequest id="trackURL" url="track.csv" />
-	
-	<mx:DataGrid dataProvider="{sessions}">
-		<mx:columns>
-			<mx:DataGridColumn dataField="startIndex" />
-			<mx:DataGridColumn dataField="endIndex" />
-		</mx:columns>
-	</mx:DataGrid>
-	
+	<fx:Declarations>
+		<net:FileReference 
+			id="fileReference"
+			select="onSelect(event)"
+			progress="onLoadProgress(event)"
+			complete="onLoadComplete(event)"
+			ioError="onLoadIoError(event)" />
+	</fx:Declarations>
+
+	<s:VGroup>
+		
+		<mx:Form>
+			
+			<mx:FormItem label="Rider">
+				<mx:ComboBox />
+			</mx:FormItem>
+			
+			<mx:FormItem label="Track">
+				<mx:ComboBox />
+			</mx:FormItem>
+			
+			<mx:FormItem label="Organization">
+				<mx:ComboBox />
+			</mx:FormItem>
+			
+			<mx:FormItem label="Date">
+				<mx:DateField />
+			</mx:FormItem>
+			
+			<mx:FormItem label="Group">
+				<mx:ComboBox />
+			</mx:FormItem>
+			
+		</mx:Form>
+		
+		<mx:DataGrid
+			id="dataGrid"
+			dataProvider="{sessions}">
+			<mx:columns>
+				<mx:DataGridColumn headerText="Save" dataField="save" width="40" />
+				<mx:DataGridColumn headerText="Start" dataField="startIndex" />
+				<mx:DataGridColumn headerText="End" dataField="endIndex" />
+				<mx:DataGridColumn headerText="Session" dataField="session" />
+			</mx:columns>
+		</mx:DataGrid>
+		
+		<mx:ProgressBar 
+			labelPlacement="left" 
+			id="progressBar" 
+			mode="manual" 
+			width="100%"/>
+
+		<s:HGroup>
+			
+			<mx:Button 
+				label="Load GPS log" 
+				click="click_load(event)"/>
+			
+			<mx:Button 
+				label="Cancel" 
+				click="click_cancel(event)"/>
+		
+			<mx:Button 
+				label="Save" />
+			
+		</s:HGroup>
+
+	</s:VGroup>
+
 </mx:Canvas>
