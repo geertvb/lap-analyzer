@@ -14,13 +14,18 @@
 		<mx:Label text="TrackFreaks"  fontFamily="Arial" fontSize="18" fontWeight="bold"/>
 		
 		<mx:ToggleButtonBar 
+			creationPolicy="all"
 			dataProvider="viewstack1" 
 			selectedIndex="0">
 		</mx:ToggleButtonBar>
 		
 	</mx:ApplicationControlBar>
 	
-	<mx:ViewStack id="viewstack1" resizeToContent="true">
+	<mx:ViewStack 
+		id="viewstack1" 
+		resizeToContent="true"
+		creationPolicy="all"
+		>
 		<mx:Canvas label="Tracks"><local:Tracks /></mx:Canvas>
 		<mx:Canvas label="Riders"><local:Riders /></mx:Canvas>
 		<mx:Canvas label="Events"></mx:Canvas>
