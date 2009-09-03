@@ -4,7 +4,7 @@ package {
 
 		public var index: uint;
 		public var speed: Number;
-		public var time: uint;
+		public var time: Number;
 		public var lat: Number;
 		public var lng: Number;
 

@@ -7,6 +7,7 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import valueObjects.Track;
 			private var processGpsLine: Function = pglWaiting;
 			
 			[Bindable]
@@ -15,10 +16,12 @@
 			private var i0: uint;
 			private var i1: uint;
 
-			private var t0: uint;
-			private var t1: uint;
+			private var t0: Number;
+			private var t1: Number;
 			
-			private var pt: uint;
+			private var pt: Number;
+			
+			private var iterator: GpsLineIterator
 			
 			public function pglWaiting(gpsLine: GpsLine) : void {
 				if (gpsLine == null) {
@@ -99,7 +102,19 @@
 			}
 			
 			public function storeSession() : void {
-				sessions.push({startIndex: i0, endIndex: i1});
+				var l0: GpsLine = iterator.getGpsLine(i0);
+				var l1: GpsLine = iterator.getGpsLine(i1);
+				var i2: uint = uint((i0 + i1) / 2);
+				var l2: GpsLine = iterator.getGpsLine(i2);
+				var track: Track = null; //trackService.findByLatLng(l2.lat, l2.lng);
+				sessions.push({
+					save: (l1.time - l0.time) >= 5*60*1000,
+					startIndex: i0, 
+					endIndex: i1, 
+					t0: new Date(l0.time), 
+					t1: new Date(l1.time),
+					trackName: track == null ? "" : track.name});
+				df_GpsLogDate.selectedDate = new Date(l0.time);
 			}
 			
 			public function dataReady(data: ByteArray) : void {
@@ -107,7 +122,7 @@
 				var lines: Array = s.split("\n");
 				var gpsLine: GpsLine;
 
-				var iterator: GpsLineIterator = new GpsLineIterator(lines);
+				iterator = new GpsLineIterator(lines);
 				
 				do {
 					gpsLine = iterator.next();
@@ -181,7 +196,7 @@
 			</mx:FormItem>
 			
 			<mx:FormItem label="Date">
-				<mx:DateField />
+				<mx:DateField id="df_GpsLogDate"/>
 			</mx:FormItem>
 			
 			<mx:FormItem label="Group">
@@ -195,8 +210,10 @@
 			dataProvider="{sessions}">
 			<mx:columns>
 				<mx:DataGridColumn headerText="Save" dataField="save" width="40" />
-				<mx:DataGridColumn headerText="Start" dataField="startIndex" />
-				<mx:DataGridColumn headerText="End" dataField="endIndex" />
+				<mx:DataGridColumn headerText="Start" dataField="startIndex" visible="false" />
+				<mx:DataGridColumn headerText="End" dataField="endIndex" visible="false"/>
+				<mx:DataGridColumn headerText="From" dataField="t0" />
+				<mx:DataGridColumn headerText="To" dataField="t1" />
 				<mx:DataGridColumn headerText="Session" dataField="session" />
 			</mx:columns>
 		</mx:DataGrid>
