@@ -37,6 +37,7 @@ class TrackService {
 		$sql[] = "lat <= $maxlat AND";
 		$sql[] = "lng >= $minlng AND";
 		$sql[] = "lng <= $maxlng";
+		$sql[] = "LIMIT 1";
 				
 		$stmt = mysqli_prepare($connection, implode(" ", $sql));		
 		$this->throwExceptionOnError($connection);
@@ -44,8 +45,7 @@ class TrackService {
 		mysqli_stmt_execute($stmt);
 		$this->throwExceptionOnError($connection);
 		
-		$rows = array();
-		
+		$row = new stdClass();
 		mysqli_stmt_bind_result($stmt, 
 			$row->track_id, 
 			$row->name, 
@@ -55,27 +55,16 @@ class TrackService {
 			$row->country,
 			$row->length,
 			$row->picture_id);
-		
-	    while (mysqli_stmt_fetch($stmt)) {
-	      $rows[] = $row;
-	      $row = new stdClass();
-	      mysqli_stmt_bind_result($stmt,  
-			$row->track_id,
-			$row->name,
-			$row->url,
-			$row->lat,
-			$row->lng,
-			$row->country,
-			$row->length,
-			$row->picture_id
-			);
-	    }
+
+		if (!mysqli_stmt_fetch($stmt)) {
+			$row = null;
+		}
 		
 		mysqli_stmt_free_result($stmt);
 		
 	    mysqli_close($connection);
 	
-	    return $rows;
+	    return $row;
 	}
 	
 	public function findAll() {

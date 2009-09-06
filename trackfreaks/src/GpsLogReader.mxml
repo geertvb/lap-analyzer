@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas
+<s:VGroup
 	xmlns:fx="http://ns.adobe.com/mxml/2009"
 	xmlns:mx="library://ns.adobe.com/flex/halo" 
 	xmlns:s="library://ns.adobe.com/flex/spark"
-	xmlns:net="flash.net.*" xmlns:trackservice="services.trackservice.*">
+	xmlns:net="flash.net.*" xmlns:trackservice="services.trackservice.*" xmlns:riderservice="services.riderservice.*">
 	
 	<fx:Script>
 		<![CDATA[
+			import mx.collections.ArrayCollection;
 			import valueObjects.Track;
-			private var processGpsLine: Function = pglWaiting;
+			private var processGpsLine: Function;
 			
 			[Bindable]
-			private var sessions: Array = new Array();
+			private var sessions: ArrayCollection = new ArrayCollection();
 			
 			private var i0: uint;
 			private var i1: uint;
@@ -106,14 +107,14 @@
 				var l1: GpsLine = iterator.getGpsLine(i1);
 				var i2: uint = uint((i0 + i1) / 2);
 				var l2: GpsLine = iterator.getGpsLine(i2);
-				sessions.push({
+				sessions.addItem({
 					save: (l1.time - l0.time) >= 5*60*1000,
 					startIndex: i0, 
 					endIndex: i1, 
 					t0: new Date(l0.time), 
 					t1: new Date(l1.time)});
-				var w: Number = 1 * 360 / 44000;
-				var h: Number = 1 * 360 / 44000;
+				var w: Number = 2.5 * 360 / 44000;
+				var h: Number = 2.5 * 360 / 44000;
 				findByLatLng.token = trackService.findByLatLng(l0.lat - w, l0.lng - h, l0.lat + w, l0.lng + h);
 				df_GpsLogDate.selectedDate = new Date(l0.time);
 			}
@@ -125,6 +126,8 @@
 
 				iterator = new GpsLineIterator(lines);
 				
+				sessions.removeAll();
+				processGpsLine = pglWaiting;
 				do {
 					gpsLine = iterator.next();
 					processGpsLine(gpsLine);
@@ -133,6 +136,17 @@
 					}
 				} while (gpsLine != null);
 				
+			}
+			
+			public function findTrackIndex(track: Track) : int {
+				if (track != null) {
+					for (var i: int = 0; i < cb_tracks.dataProvider.length; i++) {
+						if (track.track_id == cb_tracks.dataProvider.getItemAt(i).track_id) {
+							return i;
+						}
+					}
+				}
+				return -1;
 			}
 			
 		]]>
@@ -168,53 +182,69 @@
 		private function click_cancel(event : Event) : void {
 			fileReference.cancel();
 		}
+			
+		private function dateLabel( item:Object, column:DataGridColumn):String {
+			return df.format(item[column.dataField]);
+		} 
 
 		]]>
 	</fx:Script>
 	
 	<fx:Declarations>
-		<s:CallResponder id="findByLatLng" result="Alert.show('' + event.result)"/>
-		<s:CallResponder id="findAll"/>
+		<s:CallResponder id="findByLatLng" />
+		<s:CallResponder id="findAllTracks"/>
+		<s:CallResponder id="findAllRiders"/>
 		<trackservice:TrackService 
 			id="trackService" 
 			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" 
-			showBusyCursor="true"/>
+			showBusyCursor="true" />
+		<riderservice:RiderService
+			id="riderService"
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" 
+			showBusyCursor="true" />
 		<net:FileReference 
 			id="fileReference"
 			select="onSelect(event)"
 			progress="onLoadProgress(event)"
 			complete="onLoadComplete(event)"
 			ioError="onLoadIoError(event)" />
+		<mx:DateFormatter
+			id="df"
+			formatString="HH:NN:SS" />
 	</fx:Declarations>
 
-	<s:VGroup>
-		
 		<mx:Form>
 			
 			<mx:FormItem label="Rider">
-				<mx:ComboBox />
+				<s:DropDownList id="cb_riders"
+					width="160"
+					dataProvider="{findAllRiders.lastResult}"
+					creationComplete="findAllRiders.token = riderService.findAll();"
+					labelField="firstname" />
 			</mx:FormItem>
 			
 			<mx:FormItem label="Track">
-				<mx:ComboBox
-					id="cb_tracks"
-					dataProvider="{findAll.lastResult}"
-					creationComplete="findAll.token = trackService.findAll();"
+				<s:DropDownList id="cb_tracks"
+					width="160"
+					dataProvider="{findAllTracks.lastResult}"
+					creationComplete="findAllTracks.token = trackService.findAll();"
 					labelField="name"
-					/>
-			</mx:FormItem>
-			
-			<mx:FormItem label="Organization">
-				<mx:ComboBox />
+					selectedIndex="{findTrackIndex(findByLatLng.lastResult)}"/>
 			</mx:FormItem>
 			
 			<mx:FormItem label="Date">
 				<mx:DateField id="df_GpsLogDate"/>
 			</mx:FormItem>
+
+			<!--
+			<mx:FormItem label="Organization">
+				<mx:ComboBox />
+			</mx:FormItem>
 			
 			<mx:FormItem label="Group">
 				<mx:ComboBox />
 			</mx:FormItem>
+			-->
 			
 		</mx:Form>
 		
@@ -225,14 +255,12 @@
 				<mx:DataGridColumn headerText="Save" dataField="save" width="40" />
 				<mx:DataGridColumn headerText="Start" dataField="startIndex" visible="false" />
 				<mx:DataGridColumn headerText="End" dataField="endIndex" visible="false"/>
-				<mx:DataGridColumn headerText="From" dataField="t0" />
-				<mx:DataGridColumn headerText="To" dataField="t1" />
-				<mx:DataGridColumn headerText="Session" dataField="session" />
+				<mx:DataGridColumn headerText="From" dataField="t0" labelFunction="dateLabel" />
+				<mx:DataGridColumn headerText="To" dataField="t1" labelFunction="dateLabel" />
 			</mx:columns>
 		</mx:DataGrid>
 		
 		<mx:ProgressBar 
-			labelPlacement="left" 
 			id="progressBar" 
 			mode="manual" 
 			width="100%"/>
@@ -252,10 +280,4 @@
 			
 		</s:HGroup>
 		
-		<mx:DataGrid dataProvider="{findByLatLng.lastResult}">
-			
-		</mx:DataGrid>
-
-	</s:VGroup>
-
-</mx:Canvas>
+</s:VGroup>
