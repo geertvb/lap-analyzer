@@ -12,6 +12,72 @@ class TrackService {
 	// Table information
 	var $tablename = "track";
 	
+	public function findByLatLng($minlat, $minlng, $maxlat, $maxlng) {
+		$connection = mysqli_connect($this->server, $this->username, $this->password, $this->databasename, $this->port);
+		$this->throwExceptionOnError($connection);
+		
+		$cols = array();
+		$cols[] = "track_id";
+		$cols[] = "name";
+		$cols[] = "url";
+		$cols[] = "lat";
+		$cols[] = "lng";
+		$cols[] = "country";
+		$cols[] = "length";
+		$cols[] = "picture_id";
+		
+		$sql = array();
+		$sql[] = "SELECT";
+		$sql[] = implode(", ", $cols);
+		$sql[] = "FROM";
+		$sql[] = $this->tablename;
+
+		$sql[] = "WHERE";
+		$sql[] = "lat >= $minlat AND";
+		$sql[] = "lat <= $maxlat AND";
+		$sql[] = "lng >= $minlng AND";
+		$sql[] = "lng <= $maxlng";
+				
+		$stmt = mysqli_prepare($connection, implode(" ", $sql));		
+		$this->throwExceptionOnError($connection);
+		
+		mysqli_stmt_execute($stmt);
+		$this->throwExceptionOnError($connection);
+		
+		$rows = array();
+		
+		mysqli_stmt_bind_result($stmt, 
+			$row->track_id, 
+			$row->name, 
+			$row->url, 
+			$row->lat, 
+			$row->lng,
+			$row->country,
+			$row->length,
+			$row->picture_id);
+		
+	    while (mysqli_stmt_fetch($stmt)) {
+	      $rows[] = $row;
+	      $row = new stdClass();
+	      mysqli_stmt_bind_result($stmt,  
+			$row->track_id,
+			$row->name,
+			$row->url,
+			$row->lat,
+			$row->lng,
+			$row->country,
+			$row->length,
+			$row->picture_id
+			);
+	    }
+		
+		mysqli_stmt_free_result($stmt);
+		
+	    mysqli_close($connection);
+	
+	    return $rows;
+	}
+	
 	public function findAll() {
 		$connection = mysqli_connect($this->server, $this->username, $this->password, $this->databasename, $this->port);
 		$this->throwExceptionOnError($connection);

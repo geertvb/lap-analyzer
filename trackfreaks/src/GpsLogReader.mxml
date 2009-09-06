@@ -3,7 +3,7 @@
 	xmlns:fx="http://ns.adobe.com/mxml/2009"
 	xmlns:mx="library://ns.adobe.com/flex/halo" 
 	xmlns:s="library://ns.adobe.com/flex/spark"
-	xmlns:net="flash.net.*">
+	xmlns:net="flash.net.*" xmlns:trackservice="services.trackservice.*">
 	
 	<fx:Script>
 		<![CDATA[
@@ -106,14 +106,15 @@
 				var l1: GpsLine = iterator.getGpsLine(i1);
 				var i2: uint = uint((i0 + i1) / 2);
 				var l2: GpsLine = iterator.getGpsLine(i2);
-				var track: Track = null; //trackService.findByLatLng(l2.lat, l2.lng);
 				sessions.push({
 					save: (l1.time - l0.time) >= 5*60*1000,
 					startIndex: i0, 
 					endIndex: i1, 
 					t0: new Date(l0.time), 
-					t1: new Date(l1.time),
-					trackName: track == null ? "" : track.name});
+					t1: new Date(l1.time)});
+				var w: Number = 1 * 360 / 44000;
+				var h: Number = 1 * 360 / 44000;
+				findByLatLng.token = trackService.findByLatLng(l0.lat - w, l0.lng - h, l0.lat + w, l0.lng + h);
 				df_GpsLogDate.selectedDate = new Date(l0.time);
 			}
 			
@@ -139,6 +140,7 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import mx.rpc.events.ResultEvent;
 		
 		import mx.core.Application;
 		import mx.controls.Alert;
@@ -166,11 +168,17 @@
 		private function click_cancel(event : Event) : void {
 			fileReference.cancel();
 		}
-		
+
 		]]>
 	</fx:Script>
 	
 	<fx:Declarations>
+		<s:CallResponder id="findByLatLng" result="Alert.show('' + event.result)"/>
+		<s:CallResponder id="findAll"/>
+		<trackservice:TrackService 
+			id="trackService" 
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" 
+			showBusyCursor="true"/>
 		<net:FileReference 
 			id="fileReference"
 			select="onSelect(event)"
@@ -188,7 +196,12 @@
 			</mx:FormItem>
 			
 			<mx:FormItem label="Track">
-				<mx:ComboBox />
+				<mx:ComboBox
+					id="cb_tracks"
+					dataProvider="{findAll.lastResult}"
+					creationComplete="findAll.token = trackService.findAll();"
+					labelField="name"
+					/>
 			</mx:FormItem>
 			
 			<mx:FormItem label="Organization">
@@ -235,9 +248,13 @@
 				click="click_cancel(event)"/>
 		
 			<mx:Button 
-				label="Save" />
+				label="Save"/>
 			
 		</s:HGroup>
+		
+		<mx:DataGrid dataProvider="{findByLatLng.lastResult}">
+			
+		</mx:DataGrid>
 
 	</s:VGroup>
 
