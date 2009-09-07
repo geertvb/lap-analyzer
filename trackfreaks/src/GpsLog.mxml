@@ -3,7 +3,9 @@
 	xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/halo" 
-	xmlns:gpslogservice="services.gpslogservice.*" xmlns:trackservice="services.trackservice.*" xmlns:riderservice="services.riderservice.*">
+	xmlns:gpslogservice="services.gpslogservice.*" 
+	xmlns:trackservice="services.trackservice.*" 
+	xmlns:riderservice="services.riderservice.*">
 	
 	<fx:Script>
 		<![CDATA[
@@ -22,9 +24,25 @@
 				if (cb_tracks.selectedIndex >= 0) {
 					result &&= cb_tracks.selectedItem.track_id == item.track_id;
 				}
+				if (cb_dates.selectedIndex >= 0) {
+					result &&= cb_dates.selectedItem == item.date;
+				}
 				return result;
 			}
 
+			private function riderLabel(item:Object, column:DataGridColumn) : String {
+				if (item != null) {
+					return item.rider_firstname + " " + item.rider_lastname;
+				} else {
+					return "";
+				}
+				
+			}
+
+			protected function dropDownList_creationCompleteHandler(event:FlexEvent):void
+			{
+				findAllDatesResult.token = gpslogService.findAllDates();
+			}
 
 		]]>
 	</fx:Script>
@@ -49,6 +67,7 @@
 			id="gpslogs"
 			filterFunction="filterGpslogs" 
 			list="{findAllResult.lastResult}" />
+		<s:CallResponder id="findAllDatesResult"/>
 
 	</fx:Declarations>
 	
@@ -75,8 +94,14 @@
 				labelField="name" />
 			<s:Button label="All" click="cb_tracks.selectedIndex = -1" />
 		</mx:FormItem>
-		<mx:FormItem label="Date">
-			<s:DropDownList></s:DropDownList>
+		<mx:FormItem label="Date" direction="horizontal">
+			<s:DropDownList 
+				id="cb_dates" 
+				creationComplete="dropDownList_creationCompleteHandler(event)" 
+				dataProvider="{findAllDatesResult.lastResult}" 
+				change="gpslogs.refresh()"
+				prompt="Select one ..." />
+			<s:Button label="All" click="cb_dates.selectedIndex = -1" />
 		</mx:FormItem>
 	</mx:Form>
 	
@@ -86,10 +111,7 @@
 		dataProvider="{gpslogs}">
 		<mx:columns>
 			<mx:DataGridColumn headerText="gpslog_id" dataField="gpslog_id" visible="false"/>
-			<mx:DataGridColumn headerText="rider_id" dataField="rider_id" visible="false"/>
-			<mx:DataGridColumn headerText="First name" dataField="rider_firstname"/>
-			<mx:DataGridColumn headerText="Last name" dataField="rider_lastname"/>
-			<mx:DataGridColumn headerText="track_id" dataField="track_id" visible="false"/>
+			<mx:DataGridColumn headerText="Rider" labelFunction="riderLabel"/>
 			<mx:DataGridColumn headerText="Track" dataField="track_name"/>
 			<mx:DataGridColumn headerText="Date" dataField="date"/>
 			<mx:DataGridColumn headerText="Start time" dataField="start_time"/>
