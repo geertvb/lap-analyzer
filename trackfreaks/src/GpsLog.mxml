@@ -3,7 +3,7 @@
 	xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/halo" 
-	xmlns:gpslogservice="services.gpslogservice.*">
+	xmlns:gpslogservice="services.gpslogservice.*" xmlns:trackservice="services.trackservice.*" xmlns:riderservice="services.riderservice.*">
 	
 	<fx:Script>
 		<![CDATA[
@@ -13,16 +13,77 @@
 			protected function dataGrid_creationCompleteHandler(event:FlexEvent):void {
 				findAllResult.token = gpslogService.findAll();
 			}
+			
+			private function filterGpslogs(item:Object) : Boolean {
+				var result: Boolean = true;
+				if (cb_riders.selectedIndex >= 0) {
+					result &&= cb_riders.selectedItem.rider_id == item.rider_id;
+				}
+				if (cb_tracks.selectedIndex >= 0) {
+					result &&= cb_tracks.selectedItem.track_id == item.track_id;
+				}
+				return result;
+			}
+
 
 		]]>
 	</fx:Script>
 	
 	<fx:Declarations>
 		<s:CallResponder id="findAllResult"/>
-		<gpslogservice:GpslogService id="gpslogService" fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"/>
+		<gpslogservice:GpslogService 
+			id="gpslogService" 
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"/>
+		<s:CallResponder id="findAllTracks"/>
+		<s:CallResponder id="findAllRiders"/>
+		<trackservice:TrackService 
+			id="trackService" 
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" 
+			showBusyCursor="true" />
+		<riderservice:RiderService
+			id="riderService"
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" 
+			showBusyCursor="true" />
+		
+		<mx:ArrayCollection
+			id="gpslogs"
+			filterFunction="filterGpslogs" 
+			list="{findAllResult.lastResult}" />
+
 	</fx:Declarations>
 	
-	<mx:DataGrid x="10" y="10" id="dataGrid" creationComplete="dataGrid_creationCompleteHandler(event)" dataProvider="{findAllResult.lastResult}">
+	<mx:Form>
+		<mx:FormItem label="Rider" direction="horizontal">
+			<s:DropDownList 
+				id="cb_riders"
+				width="160"
+				prompt="Select one ..."
+				dataProvider="{findAllRiders.lastResult}"
+				change="gpslogs.refresh()"
+				creationComplete="findAllRiders.token = riderService.findAll();"
+				labelField="firstname" />
+			<s:Button label="All" click="cb_riders.selectedIndex = -1" />
+		</mx:FormItem>
+		<mx:FormItem label="Track" direction="horizontal">
+			<s:DropDownList 
+				id="cb_tracks"
+				width="160"
+				prompt="Select one ..."
+				dataProvider="{findAllTracks.lastResult}"
+				change="gpslogs.refresh()"
+				creationComplete="findAllTracks.token = trackService.findAll();"
+				labelField="name" />
+			<s:Button label="All" click="cb_tracks.selectedIndex = -1" />
+		</mx:FormItem>
+		<mx:FormItem label="Date">
+			<s:DropDownList></s:DropDownList>
+		</mx:FormItem>
+	</mx:Form>
+	
+	<mx:DataGrid 
+		id="dataGrid" 
+		creationComplete="dataGrid_creationCompleteHandler(event)" 
+		dataProvider="{gpslogs}">
 		<mx:columns>
 			<mx:DataGridColumn headerText="gpslog_id" dataField="gpslog_id" visible="false"/>
 			<mx:DataGridColumn headerText="rider_id" dataField="rider_id" visible="false"/>

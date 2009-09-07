@@ -102,7 +102,7 @@ package {
 			var sec: uint = parseInt(dateTime.substr(17,2));
 			var ms: uint = parseInt(dateTime.substr(20,3));
 
-			var dt: Date = new Date(year,month,day,hour,min,sec,ms);
+			var dt: Date = new Date(year,month-1,day,hour,min,sec,ms);
 			
 			return dt.getTime();
 		}

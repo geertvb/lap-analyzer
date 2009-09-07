@@ -76,7 +76,7 @@ internal class _Super_GpslogService extends RemoteObjectServiceWrapper
       *
       * @return an AsyncToken whose result property will be populated with the result of the operation when the server response is received.
 	  */          
-	public function createGpslog(rider_id:int, track_id:int, date:Date, start_time:Date, end_time:Date, data:String) : AsyncToken
+	public function createGpslog(rider_id:int, track_id:int, date:String, start_time:String, end_time:String, data:String) : AsyncToken
 	{
 		var _internal_operation:AbstractOperation = _serviceControl.getOperation("createGpslog");
 		var _internal_token:AsyncToken = _internal_operation.send(rider_id,track_id,date,start_time,end_time,data) ;
