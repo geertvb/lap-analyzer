@@ -113,7 +113,7 @@
 					endIndex: i1, 
 					t0: new Date(l0.time), 
 					t1: new Date(l1.time),
-					data: iterator.lines.slice(i0, i1).join("\n")});
+					data: iterator.lines[0] + "\n" + iterator.lines.slice(i0, i1).join("\n")});
 				var w: Number = 2.5 * 360 / 44000;
 				var h: Number = 2.5 * 360 / 44000;
 				findByLatLng.token = trackService.findByLatLng(l0.lat - w, l0.lng - h, l0.lat + w, l0.lng + h);
@@ -262,7 +262,7 @@
 			</mx:FormItem>
 			
 			<mx:FormItem label="Date">
-				<mx:DateField id="df_GpsLogDate"/>
+				<mx:DateField id="df_GpsLogDate" formatString="YYYY-MM-DD"/>
 			</mx:FormItem>
 
 			<!--
