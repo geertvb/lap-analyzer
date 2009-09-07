@@ -197,15 +197,43 @@
 				return m + "m " + s + "s";
 			} 
 			
+			private function getDropDownListSelectedItemProperty(ddl: DropDownList, propertyname: String) : * {
+				if (ddl.selectedItem != null) {
+					return ddl.selectedItem[propertyname];
+				} else {
+					return null;
+				}
+			}
+			
+			private function getDateFieldSelectedDate(df: DateField) : * {
+				return formatDate(df.selectedDate);
+			}
+			
+			private function formatDate(dt: Date) : String {
+				if (dt != null) {
+					return phpDateFormatter.format(dt);
+				} else {
+					return null;
+				}
+			}
+			
+			private function formatTime(dt: Date) : String {
+				if (dt != null) {
+					return phpTimeFormatter.format(dt);
+				} else {
+					return null;
+				}
+			}
+			
 			private function click_save(event: Event) : void {
 				for each (var session: Object in sessions) {
 					if (session.save) {
 						gpslogService.createGpslog(
-							cb_riders.selectedItem.rider_id,
-							cb_tracks.selectedItem.track_id,
-							df_GpsLogDate.selectedDate,
-							session.t0,
-							session.t1,
+							getDropDownListSelectedItemProperty(cb_riders, "rider_id"),
+							getDropDownListSelectedItemProperty(cb_tracks, "track_id"),
+							getDateFieldSelectedDate(df_GpsLogDate),
+							formatTime(session.t0),
+							formatTime(session.t1),
 							session.data
 							);
 					}
@@ -240,6 +268,12 @@
 		<mx:DateFormatter
 			id="df"
 			formatString="HH:NN" />
+		<mx:DateFormatter
+			id="phpDateFormatter"
+			formatString="YYYY-MM-DD" />
+		<mx:DateFormatter
+			id="phpTimeFormatter"
+			formatString="HH:NN:SS" />
 	</fx:Declarations>
 
 		<mx:Form>
