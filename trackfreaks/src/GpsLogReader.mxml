@@ -3,7 +3,7 @@
 	xmlns:fx="http://ns.adobe.com/mxml/2009"
 	xmlns:mx="library://ns.adobe.com/flex/halo" 
 	xmlns:s="library://ns.adobe.com/flex/spark"
-	xmlns:net="flash.net.*" xmlns:trackservice="services.trackservice.*" xmlns:riderservice="services.riderservice.*">
+	xmlns:net="flash.net.*" xmlns:trackservice="services.trackservice.*" xmlns:riderservice="services.riderservice.*" xmlns:gpslogservice="services.gpslogservice.*">
 	
 	<fx:Script>
 		<![CDATA[
@@ -112,7 +112,8 @@
 					startIndex: i0, 
 					endIndex: i1, 
 					t0: new Date(l0.time), 
-					t1: new Date(l1.time)});
+					t1: new Date(l1.time),
+					data: iterator.lines.slice(i0, i1).join("\n")});
 				var w: Number = 2.5 * 360 / 44000;
 				var h: Number = 2.5 * 360 / 44000;
 				findByLatLng.token = trackService.findByLatLng(l0.lat - w, l0.lng - h, l0.lat + w, l0.lng + h);
@@ -154,39 +155,63 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import services.gpslogservice.GpslogService;
 			import mx.rpc.events.ResultEvent;
 		
-		import mx.core.Application;
-		import mx.controls.Alert;
-		
-		public function onLoadProgress(event : ProgressEvent) : void {
-			progressBar.setProgress(event.bytesLoaded, event.bytesTotal);
-		}
-		
-		public function onLoadComplete(event : Event) : void {
-			dataReady(fileReference.data);
-		}
-		
-		public function onLoadIoError(event : IOErrorEvent) : void {
-			Alert.show(event.text);
-		}
-		
-		public function onSelect(event: Event) : void {
-			fileReference.load();
-		}
-		
-		public function click_load(event : Event) : void {
-			fileReference.browse();
-		}
-		
-		private function click_cancel(event : Event) : void {
-			fileReference.cancel();
-		}
+			import mx.core.Application;
+			import mx.controls.Alert;
 			
-		private function dateLabel( item:Object, column:DataGridColumn):String {
-			return df.format(item[column.dataField]);
-		} 
-
+			public function onLoadProgress(event : ProgressEvent) : void {
+				progressBar.setProgress(event.bytesLoaded, event.bytesTotal);
+			}
+			
+			public function onLoadComplete(event : Event) : void {
+				dataReady(fileReference.data);
+			}
+			
+			public function onLoadIoError(event : IOErrorEvent) : void {
+				Alert.show(event.text);
+			}
+			
+			public function onSelect(event: Event) : void {
+				fileReference.load();
+			}
+			
+			public function click_load(event : Event) : void {
+				fileReference.browse();
+			}
+			
+			private function click_cancel(event : Event) : void {
+				fileReference.cancel();
+			}
+			
+			private function dateLabel( item:Object, column:DataGridColumn):String {
+				return df.format(item[column.dataField]);
+			} 
+			
+			private function durationLabel(item:Object, column:DataGridColumn) : String {
+				var duration: Number = item.t1.getTime() - item.t0.getTime();
+				var seconds: Number = Math.floor(duration / 1000);
+				var m: Number = Math.floor(seconds / 60);
+				var s: Number = seconds - m * 60;
+				return m + "m " + s + "s";
+			} 
+			
+			private function click_save(event: Event) : void {
+				for each (var session: Object in sessions) {
+					if (session.save) {
+						gpslogService.createGpslog(
+							cb_riders.selectedItem.rider_id,
+							cb_tracks.selectedItem.track_id,
+							df_GpsLogDate.selectedDate,
+							session.t0,
+							session.t1,
+							session.data
+							);
+					}
+				}
+			}
+			
 		]]>
 	</fx:Script>
 	
@@ -196,6 +221,10 @@
 		<s:CallResponder id="findAllRiders"/>
 		<trackservice:TrackService 
 			id="trackService" 
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" 
+			showBusyCursor="true" />
+		<gpslogservice:GpslogService 
+			id="gpslogService" 
 			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" 
 			showBusyCursor="true" />
 		<riderservice:RiderService
@@ -210,7 +239,7 @@
 			ioError="onLoadIoError(event)" />
 		<mx:DateFormatter
 			id="df"
-			formatString="HH:NN:SS" />
+			formatString="HH:NN" />
 	</fx:Declarations>
 
 		<mx:Form>
@@ -252,11 +281,39 @@
 			id="dataGrid"
 			dataProvider="{sessions}">
 			<mx:columns>
-				<mx:DataGridColumn headerText="Save" dataField="save" width="40" />
+				<mx:DataGridColumn 
+					headerText="Save" 
+					dataField="save" 
+					width="40">
+					<mx:itemRenderer>
+						<fx:Component>
+							<mx:Box 
+								width="100%" height="100%" 
+								horizontalAlign="center"
+								verticalAlign="middle">
+								<mx:CheckBox
+									click="data.save = !data.save"
+									selected="{data.save}" />
+							</mx:Box>
+						</fx:Component>
+					</mx:itemRenderer>
+				</mx:DataGridColumn>
 				<mx:DataGridColumn headerText="Start" dataField="startIndex" visible="false" />
 				<mx:DataGridColumn headerText="End" dataField="endIndex" visible="false"/>
-				<mx:DataGridColumn headerText="From" dataField="t0" labelFunction="dateLabel" />
-				<mx:DataGridColumn headerText="To" dataField="t1" labelFunction="dateLabel" />
+				<mx:DataGridColumn 
+					width="64"
+					headerText="From" 
+					dataField="t0" 
+					labelFunction="dateLabel" />
+				<mx:DataGridColumn 
+					width="64"
+					headerText="To" 
+					dataField="t1" 
+					labelFunction="dateLabel" />
+				<mx:DataGridColumn 
+					width="64"
+					headerText="Duration" 
+					labelFunction="durationLabel" />
 			</mx:columns>
 		</mx:DataGrid>
 		
@@ -268,7 +325,7 @@
 		<s:HGroup>
 			
 			<mx:Button 
-				label="Load GPS log" 
+				label="Load GPS log file" 
 				click="click_load(event)"/>
 			
 			<mx:Button 
@@ -276,7 +333,8 @@
 				click="click_cancel(event)"/>
 		
 			<mx:Button 
-				label="Save"/>
+				label="Save sessions"
+				click="click_save(event)"/>
 			
 		</s:HGroup>
 		

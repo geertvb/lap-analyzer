@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup 
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/halo" 
+	xmlns:gpslogservice="services.gpslogservice.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			import mx.controls.Alert;
+
+			protected function dataGrid_creationCompleteHandler(event:FlexEvent):void {
+				findAllResult.token = gpslogService.findAll();
+			}
+
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<s:CallResponder id="findAllResult"/>
+		<gpslogservice:GpslogService id="gpslogService" fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"/>
+	</fx:Declarations>
+	
+	<mx:DataGrid x="10" y="10" id="dataGrid" creationComplete="dataGrid_creationCompleteHandler(event)" dataProvider="{findAllResult.lastResult}">
+		<mx:columns>
+			<mx:DataGridColumn headerText="gpslog_id" dataField="gpslog_id" visible="false"/>
+			<mx:DataGridColumn headerText="rider_id" dataField="rider_id" visible="false"/>
+			<mx:DataGridColumn headerText="First name" dataField="rider_firstname"/>
+			<mx:DataGridColumn headerText="Last name" dataField="rider_lastname"/>
+			<mx:DataGridColumn headerText="track_id" dataField="track_id" visible="false"/>
+			<mx:DataGridColumn headerText="Track" dataField="track_name"/>
+			<mx:DataGridColumn headerText="Date" dataField="date"/>
+			<mx:DataGridColumn headerText="Start time" dataField="start_time"/>
+			<mx:DataGridColumn headerText="End time" dataField="end_time"/>
+		</mx:columns>
+	</mx:DataGrid>
+	
+	<s:Button label="Upload logs"/>
+	
+</s:VGroup>
