@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas
-	xmlns:mx="http://www.adobe.com/2006/mxml" 
+<s:VGroup
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/halo" 
 	creationComplete="trackLoader.load(trackURL);"
-	xmlns:net="flash.net.*">
+	xmlns:net="flash.net.*" xmlns:trackservice="services.trackservice.*" xmlns:intersectionservice="services.intersectionservice.*">
 	
-	<mx:Script>
+	<fx:Script>
 		<![CDATA[
+			import mx.events.FlexEvent;
 			import mx.utils.StringUtil;
 			import mx.controls.Alert;
 			import mx.messaging.AbstractConsumer;
@@ -164,36 +167,82 @@
 				c1.graphics.drawCircle(x1, y1, 5);
 				c1.graphics.drawCircle(x2, y2, 5);
 			}
+
+			protected function cb_tracks_creationCompleteHandler(event:FlexEvent):void
+			{
+				findAllResult.token = trackService.findAll();
+			}
+
+
+			protected function dataGrid_refresh():void {
+				if (cb_tracks.selectedItem != null) {
+					findByTrackResult.token = intersectionService.findByTrack(cb_tracks.selectedItem.track_id);
+				}
+			}
+
 		]]>
-	</mx:Script>
+	</fx:Script>
 	
-	<net:URLLoader id="trackLoader" complete="dataReady()" >
-	</net:URLLoader>
+	<fx:Declarations>
+		<net:URLLoader id="trackLoader" complete="dataReady()" />
+		<net:URLRequest id="trackURL" url="track.csv" />
+		<s:CallResponder id="findAllResult" result="cb_tracks.selectedIndex = 0"/>
+		<trackservice:TrackService id="trackService" fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"/>
+		<s:CallResponder id="findByTrackResult"/>
+		<intersectionservice:IntersectionService id="intersectionService" fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"/>
+	</fx:Declarations>
 	
-	<net:URLRequest id="trackURL" url="track.csv" />
+	<mx:Form>
+		<mx:FormItem label="Track">
+			<s:DropDownList
+				id="cb_tracks" 
+				width="160"
+				creationComplete="cb_tracks_creationCompleteHandler(event)" 
+				dataProvider="{findAllResult.lastResult}"
+				change="dataGrid_refresh()"
+				labelField="name"/>
+		</mx:FormItem>
+	</mx:Form>
+	
+	<mx:DataGrid 
+		id="dataGrid" 
+		creationComplete="dataGrid_refresh()" 
+		dataProvider="{findByTrackResult.lastResult}">
+		<mx:columns>
+			<mx:DataGridColumn headerText="intersection_id" dataField="intersection_id" visible="false"/>
+			<mx:DataGridColumn headerText="index" dataField="index"/>
+			<mx:DataGridColumn headerText="lat" dataField="lat"/>
+			<mx:DataGridColumn headerText="lng" dataField="lng"/>
+			<mx:DataGridColumn headerText="angle" dataField="angle"/>
+			<mx:DataGridColumn headerText="track_id" dataField="track_id" visible="false"/>
+		</mx:columns>
+		
+	</mx:DataGrid>
+	
+	<s:HGroup>
+		<mx:HSlider 
+			id="hslider" 
+			liveDragging="true" 
+			x="30" y="10" 
+			minimum="0" maximum="3.1415" 
+			value="0" 
+			change="drawTrack2();"/>
+		
+		<mx:HSlider 
+			x="10" y="30" 
+			liveDragging="true" 
+			minimum="1" maximum="2" 
+			id="vslider" 
+			value="1" 
+			change="drawTrack2();"/>
+	</s:HGroup>
 	
 	<mx:Canvas 
-		x="0" y="0" 
 		width="800" height="800" 
 		id="c1" 
 		mouseMove="showCoo(event);" 
 		mouseUp="findNearest(event);">
 	</mx:Canvas>
 	
-	<mx:HSlider 
-		id="hslider" 
-		liveDragging="true" 
-		x="30" y="10" 
-		minimum="0" maximum="3.1415" 
-		value="0" 
-		change="drawTrack2();"/>
 	
-	<mx:VSlider 
-		x="10" y="30" 
-		liveDragging="true" 
-		minimum="1" maximum="2" 
-		id="vslider" 
-		value="1" 
-		change="drawTrack2();"/>
-	
-</mx:Canvas>
+</s:VGroup>
