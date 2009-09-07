@@ -32,7 +32,8 @@
 		<mx:Canvas label="Organizations"></mx:Canvas>
 		<mx:Canvas label="Hotels"></mx:Canvas>
 		<mx:Canvas label="Timing"><local:Timing /></mx:Canvas>
-		<mx:Canvas label="GPS Log"><local:GpsLogReader /></mx:Canvas>
+		<mx:Canvas label="GPS Log Reader"><local:GpsLogReader /></mx:Canvas>
+		<mx:Canvas label="GPS Log"><local:GpsLog /></mx:Canvas>
 		<mx:Canvas label="Calendar"></mx:Canvas>
 	</mx:ViewStack>
 

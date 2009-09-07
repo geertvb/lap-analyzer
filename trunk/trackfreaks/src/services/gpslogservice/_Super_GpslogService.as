@@ -1,13 +1,13 @@
 /**
  * This is a generated class and is not intended for modfication.  To customize behavior
- * of this service wrapper you may modify the generated sub-class of this class - TrackService.as.
+ * of this service wrapper you may modify the generated sub-class of this class - GpslogService.as.
  */
-package services.trackservice
+package services.gpslogservice
 {
 import mx.rpc.AsyncToken;
 import com.adobe.fiber.core.model_internal;
 import mx.rpc.AbstractOperation;
-import valueObjects.Track;
+import valueObjects.Gpslog;
 import mx.collections.ItemResponder;
 import mx.rpc.remoting.RemoteObject; 
 import mx.rpc.remoting.Operation;
@@ -16,11 +16,11 @@ import com.adobe.fiber.valueobjects.AvailablePropertyIterator;
 import com.adobe.serializers.utility.TypeUtility;
 
 [ExcludeClass]
-internal class _Super_TrackService extends RemoteObjectServiceWrapper
+internal class _Super_GpslogService extends RemoteObjectServiceWrapper
 {      
        
     // Constructor
-    public function _Super_TrackService()
+    public function _Super_GpslogService()
     {
         // initialize service control
         _serviceControl = new RemoteObject(); 
@@ -29,17 +29,16 @@ internal class _Super_TrackService extends RemoteObjectServiceWrapper
         var operation:Operation;         
          
         operation = new Operation(null, "findAll");
-		 operation.resultElementType = Track;
+		 operation.resultElementType = Gpslog;
         operations["findAll"] = operation;
-        operation = new Operation(null, "findByLatLng");
-		 operation.resultType = Track; 		 
-        operations["findByLatLng"] = operation;
+        operation = new Operation(null, "createGpslog");
+        operations["createGpslog"] = operation;
     
         _serviceControl.operations = operations;   
 		_serviceControl.convertResultHandler = TypeUtility.convertResultHandler;
-        _serviceControl.source = "TrackService";
+        _serviceControl.source = "GpslogService";
         _serviceControl.endpoint = "gateway.php";
-		_serviceControl.destination = "TrackService";
+		_serviceControl.destination = "GpslogService";
         
     
                       
@@ -67,7 +66,7 @@ internal class _Super_TrackService extends RemoteObjectServiceWrapper
 	
 
 	/**
-	  * This method is a generated wrapper used to call the 'findByLatLng' operation. It returns an AsyncToken whose 
+	  * This method is a generated wrapper used to call the 'createGpslog' operation. It returns an AsyncToken whose 
 	  * result property will be populated with the result of the operation when the server response is received. 
 	  * To use this result from MXML code, define a CallResponder component and assign its token property to this method's return value. 
 	  * You can then bind to CallResponder.lastResult or listen for the CallResponder.result or fault events.
@@ -77,10 +76,10 @@ internal class _Super_TrackService extends RemoteObjectServiceWrapper
       *
       * @return an AsyncToken whose result property will be populated with the result of the operation when the server response is received.
 	  */          
-	public function findByLatLng(minlat:Object, minlng:Object, maxlat:Object, maxlng:Object) : AsyncToken
+	public function createGpslog(rider_id:int, track_id:int, date:Date, start_time:Date, end_time:Date, data:String) : AsyncToken
 	{
-		var _internal_operation:AbstractOperation = _serviceControl.getOperation("findByLatLng");
-		var _internal_token:AsyncToken = _internal_operation.send(minlat,minlng,maxlat,maxlng) ;
+		var _internal_operation:AbstractOperation = _serviceControl.getOperation("createGpslog");
+		var _internal_token:AsyncToken = _internal_operation.send(rider_id,track_id,date,start_time,end_time,data) ;
 
 		return _internal_token;
 	}   
