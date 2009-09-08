@@ -168,6 +168,40 @@ class GpslogService {
 
 	}
 
+	public function findSampleTrackData($track_id) {
+		$connection = mysqli_connect($this->server, $this->username, $this->password, $this->databasename, $this->port);
+		$this->throwExceptionOnError($connection);
+		
+		$sql = array();
+		$sql[] = "SELECT";
+		$sql[] = "  data";
+		$sql[] = "FROM";
+		$sql[] = "  gpslog";
+		$sql[] = "WHERE";
+		$sql[] = "  track_id = ?";
+		$sql[] = "LIMIT 0,1";
+	
+		$stmt = mysqli_prepare($connection, implode(" ", $sql));		
+		$this->throwExceptionOnError($connection);
+		
+		mysqli_stmt_bind_param($stmt, "i", $track_id);
+
+		mysqli_stmt_execute($stmt);
+		$this->throwExceptionOnError($connection);
+		
+		mysqli_stmt_store_result($stmt);
+
+		$content = null;
+		mysqli_stmt_bind_result($stmt, $content);
+		mysqli_stmt_fetch($stmt);
+		
+		mysqli_stmt_free_result($stmt);
+		
+	    mysqli_close($connection);
+	
+	    return $content;
+	}
+
 }
 
 ?>

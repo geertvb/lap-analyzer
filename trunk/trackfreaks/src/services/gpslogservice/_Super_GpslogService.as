@@ -36,6 +36,9 @@ internal class _Super_GpslogService extends RemoteObjectServiceWrapper
         operation = new Operation(null, "findAllDates");
 		 operation.resultElementType = Date;
         operations["findAllDates"] = operation;
+        operation = new Operation(null, "findSampleTrackData");
+		 operation.resultType = String; 		 
+        operations["findSampleTrackData"] = operation;
     
         _serviceControl.operations = operations;   
 		_serviceControl.convertResultHandler = TypeUtility.convertResultHandler;
@@ -103,6 +106,26 @@ internal class _Super_GpslogService extends RemoteObjectServiceWrapper
 	{
 		var _internal_operation:AbstractOperation = _serviceControl.getOperation("findAllDates");
 		var _internal_token:AsyncToken = _internal_operation.send() ;
+
+		return _internal_token;
+	}   
+	
+
+	/**
+	  * This method is a generated wrapper used to call the 'findSampleTrackData' operation. It returns an AsyncToken whose 
+	  * result property will be populated with the result of the operation when the server response is received. 
+	  * To use this result from MXML code, define a CallResponder component and assign its token property to this method's return value. 
+	  * You can then bind to CallResponder.lastResult or listen for the CallResponder.result or fault events.
+      *
+      * @see mx.rpc.AsyncToken
+      * @see mx.rpc.CallResponder 
+      *
+      * @return an AsyncToken whose result property will be populated with the result of the operation when the server response is received.
+	  */          
+	public function findSampleTrackData(track_id:int) : AsyncToken
+	{
+		var _internal_operation:AbstractOperation = _serviceControl.getOperation("findSampleTrackData");
+		var _internal_token:AsyncToken = _internal_operation.send(track_id) ;
 
 		return _internal_token;
 	}   

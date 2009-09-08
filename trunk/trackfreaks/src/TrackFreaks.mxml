@@ -11,7 +11,7 @@
 		width="100%" 
 		dock="true" fillAlphas="[1.0, 1.0]" fillColors="[#ECECEC, #D7D7D7]">
 		
-		<mx:Label text="TrackFreaks"  fontFamily="Arial" fontSize="18" fontWeight="bold"/>
+		<mx:Label text="TrackFreaks.eu"  fontFamily="Arial" fontSize="18" fontWeight="bold"/>
 		
 		<mx:ToggleButtonBar 
 			creationPolicy="all"

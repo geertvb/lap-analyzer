@@ -3,11 +3,16 @@
 	xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/halo" 
-	creationComplete="trackLoader.load(trackURL);"
-	xmlns:net="flash.net.*" xmlns:trackservice="services.trackservice.*" xmlns:intersectionservice="services.intersectionservice.*">
+	xmlns:net="flash.net.*"
+	creationComplete="findSampleTrackData.token = gpslogService.findSampleTrackData(1)"
+	xmlns:trackservice="services.trackservice.*" 
+	xmlns:intersectionservice="services.intersectionservice.*" 
+	xmlns:gpslogservice="services.gpslogservice.*">
 	
 	<fx:Script>
 		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.rpc.events.ResultEvent;
 			import mx.events.FlexEvent;
 			import mx.utils.StringUtil;
 			import mx.controls.Alert;
@@ -22,16 +27,13 @@
 			public var dY: Number;
 			public var d: Number;
 			
-			
-			
 			[Bindable] 
 			private var commands: Vector.<int> = new Vector.<int>();
 
 			[Bindable] 
 			private var thedata: Vector.<Number> = new Vector.<Number>();
 			
-			public function dataReady() : void {
-				var s: String = trackLoader.data;
+			public function dataReady(s: String) : void {
 				var lines: Array = s.split("\n");
 				var i: uint;
 				
@@ -73,7 +75,7 @@
 				thedata = new Vector.<Number>();
 				for each (var point: Point in points) {
 					thedata.push((point.x - minX) * 400 / d);
-					thedata.push((point.y - minY) * 400 / d);
+					thedata.push((maxY - point.y) * 400 / d);
 				}
 				//Alert.show(minLat + " " + maxLat + " " + minLng + " " + maxLng);
 
@@ -87,46 +89,11 @@
 			}
 			
 			public function drawTrack() :void {
-				
-				var m: Matrix = new Matrix();
-				m.translate(-200,-200);
-				m.rotate(hslider.value * 2);
-				m.translate(300,300);
-
+				c1.graphics.clear();
 				c1.graphics.lineStyle(1,0,1);
-				//m.scale(1.5, 1.5);
-				c1.transform.matrix = m;
-				//var t0: Date = new Date();
 				c1.graphics.drawPath(commands, thedata);
-				//var t1: Date = new Date();
-				//Alert.show("" + (t1.getTime() - t0.getTime()));
 			}
-			public function drawTrack2() :void {
-				
-				var m: Matrix = new Matrix();
-				m.translate(-200,-200);
-				m.rotate(hslider.value * 2);
-				m.translate(300,300);
-				m.scale(vslider.value, vslider.value);
 
-				//c1.graphics.lineStyle(1,0,1);
-				//m.scale(1.5, 1.5);
-				c1.transform.matrix = m;
-				//var t0: Date = new Date();
-				//c1.graphics.drawPath(commands, thedata);
-				//var t1: Date = new Date();
-				//Alert.show("" + (t1.getTime() - t0.getTime()));
-			}
-			public function showCoo(event: MouseEvent) : void {
-				
-				var x: Number = minX + event.localX / 400 * d;
-				var y: Number = minY + event.localY / 400 * d;
-
-				var p: Point = GeoFlatten.convertBack(x, y);
-				var lat: Number = p.x;
-				var lng: Number = p.y;
-				
-			}
 			public function findNearest(event: MouseEvent) : void {
 				var min: Number = Number.MAX_VALUE;
 				var best: int = -1;
@@ -153,13 +120,7 @@
 				var x2: Number = thedata[best] + vy;
 				var y2: Number = thedata[best+1] - vx;
 
-				//c1.graphics.clear();
 				c1.graphics.lineStyle(2,0xFF0000,1);
-				/*
-				var v1: Vector.<int> = new Vector.<int>();
-				v1.push([GraphicsPathCommand.MOVE_TO,GraphicsPathCommand.LINE_TO]);
-				var v2: Vector.<Number> = new Vector.<Number>();
-				v2.push([x1,y1,x2,y2]);*/
 				c1.graphics.drawPath(
 					Vector.<int>([GraphicsPathCommand.MOVE_TO,GraphicsPathCommand.LINE_TO]),
 					Vector.<Number>([x1,y1,x2,y2])
@@ -168,15 +129,18 @@
 				c1.graphics.drawCircle(x2, y2, 5);
 			}
 
-			protected function cb_tracks_creationCompleteHandler(event:FlexEvent):void
-			{
+			protected function cb_tracks_creationCompleteHandler(event:FlexEvent):void {
 				findAllResult.token = trackService.findAll();
 			}
 
-
 			protected function dataGrid_refresh():void {
 				if (cb_tracks.selectedItem != null) {
-					findByTrackResult.token = intersectionService.findByTrack(cb_tracks.selectedItem.track_id);
+					var track_id: int = cb_tracks.selectedItem.track_id;
+					findByTrackResult.token = intersectionService.findByTrack(track_id);
+					findSampleTrackData.token = gpslogService.findSampleTrackData(track_id)
+				} else {
+					dataGrid.dataProvider = new ArrayCollection();
+					c1.graphics.clear();
 				}
 			}
 
@@ -184,12 +148,25 @@
 	</fx:Script>
 	
 	<fx:Declarations>
-		<net:URLLoader id="trackLoader" complete="dataReady()" />
-		<net:URLRequest id="trackURL" url="track.csv" />
-		<s:CallResponder id="findAllResult" result="cb_tracks.selectedIndex = 0"/>
-		<trackservice:TrackService id="trackService" fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"/>
+		<s:CallResponder 
+			id="findAllResult" 
+			result="cb_tracks.selectedIndex = 0"/>
+		<trackservice:TrackService 
+			id="trackService" 
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" 
+			showBusyCursor="true"/>
 		<s:CallResponder id="findByTrackResult"/>
-		<intersectionservice:IntersectionService id="intersectionService" fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"/>
+		<intersectionservice:IntersectionService 
+			id="intersectionService" 
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" 
+			showBusyCursor="true"/>
+		<s:CallResponder 
+			id="findSampleTrackData" 
+			result="dataReady(String(event.result))"/>
+		<gpslogservice:GpslogService
+			id="gpslogService" 
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" 
+			showBusyCursor="true"/>
 	</fx:Declarations>
 	
 	<mx:Form>
@@ -219,28 +196,9 @@
 		
 	</mx:DataGrid>
 	
-	<s:HGroup>
-		<mx:HSlider 
-			id="hslider" 
-			liveDragging="true" 
-			x="30" y="10" 
-			minimum="0" maximum="3.1415" 
-			value="0" 
-			change="drawTrack2();"/>
-		
-		<mx:HSlider 
-			x="10" y="30" 
-			liveDragging="true" 
-			minimum="1" maximum="2" 
-			id="vslider" 
-			value="1" 
-			change="drawTrack2();"/>
-	</s:HGroup>
-	
 	<mx:Canvas 
 		width="800" height="800" 
 		id="c1" 
-		mouseMove="showCoo(event);" 
 		mouseUp="findNearest(event);">
 	</mx:Canvas>
 	
