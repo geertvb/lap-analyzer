@@ -4,13 +4,17 @@
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/halo" 
 	xmlns:net="flash.net.*"
-	creationComplete="findSampleTrackData.token = gpslogService.findSampleTrackData(1)"
+	creationComplete="creationComplete()"
 	xmlns:trackservice="services.trackservice.*" 
 	xmlns:intersectionservice="services.intersectionservice.*" 
 	xmlns:gpslogservice="services.gpslogservice.*">
 	
 	<fx:Script>
 		<![CDATA[
+			import com.google.maps.LatLng;
+			import mx.utils.ArrayUtil;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.AsyncToken;
 			import mx.collections.ArrayCollection;
 			import mx.rpc.events.ResultEvent;
 			import mx.events.FlexEvent;
@@ -32,6 +36,14 @@
 
 			[Bindable] 
 			private var thedata: Vector.<Number> = new Vector.<Number>();
+			
+			[Bindable]
+			private var intersections: ArrayCollection;
+			
+			public function creationComplete() : void {
+				findSampleTrackData.token = gpslogService.findSampleTrackData(1);
+				dataGrid_refresh();
+			}
 			
 			public function dataReady(s: String) : void {
 				var lines: Array = s.split("\n");
@@ -107,37 +119,65 @@
 					}
 				}
 				
-				var vx: Number = thedata[best+2] - thedata[best-2];
-				var vy: Number = thedata[best+3] - thedata[best-1];
+				if (min <= 100) {
 				
-				var vd: Number = Math.sqrt(vx * vx + vy * vy);
-				vx = vx / vd * 10;
-				vy = vy / vd * 10;
-				
-				var x1: Number = thedata[best] - vy;
-				var y1: Number = thedata[best+1] + vx;
-				
-				var x2: Number = thedata[best] + vy;
-				var y2: Number = thedata[best+1] - vx;
-
-				c1.graphics.lineStyle(2,0xFF0000,1);
-				c1.graphics.drawPath(
-					Vector.<int>([GraphicsPathCommand.MOVE_TO,GraphicsPathCommand.LINE_TO]),
-					Vector.<Number>([x1,y1,x2,y2])
-				);
-				c1.graphics.drawCircle(x1, y1, 5);
-				c1.graphics.drawCircle(x2, y2, 5);
+					var vx: Number = thedata[best+2] - thedata[best-2];
+					var vy: Number = thedata[best+3] - thedata[best-1];
+					
+					var vd: Number = Math.sqrt(vx * vx + vy * vy);
+					vx = vx / vd * 10;
+					vy = vy / vd * 10;
+					
+					var x1: Number = thedata[best] - vy;
+					var y1: Number = thedata[best+1] + vx;
+					
+					var x2: Number = thedata[best] + vy;
+					var y2: Number = thedata[best+1] - vx;
+	
+					c1.graphics.lineStyle(2,0xFF0000,1);
+					c1.graphics.drawPath(
+						Vector.<int>([GraphicsPathCommand.MOVE_TO,GraphicsPathCommand.LINE_TO]),
+						Vector.<Number>([x1,y1,x2,y2])
+					);
+					c1.graphics.drawCircle(x1, y1, 5);
+					c1.graphics.drawCircle(x2, y2, 5);
+					
+					var x: Number = thedata[best] * d / 400 + minX;
+					var y: Number = maxY - thedata[best+1] * d / 400;
+					var latLng: LatLng = GeoFlatten.convertBack(x, y);
+					intersections.addItem({
+						intersection_id: 0,
+						track_id: 1,
+						index: intersections.length,
+						lat: Math.round(latLng.lat() * 1000000) / 1000000,
+						lng: Math.round(latLng.lng() * 1000000) / 1000000,
+						angle: Math.round(Math.atan2(vy, vx) * 180.0 / Math.PI)
+					});
+					intersections.refresh();
+					//dataGrid.dataProvider = intersections;
+					//Alert.show("" + intersections.length);
+					
+				}
 			}
 
 			protected function cb_tracks_creationCompleteHandler(event:FlexEvent):void {
 				findAllResult.token = trackService.findAll();
 			}
-
+			
+			public function fault(event : FaultEvent) : void {
+				Alert.show("fault " + event.fault);
+			}
+			
+			public function result_findByTrack(event : ResultEvent) : void {
+				intersections = ArrayCollection(event.result);
+			}
+			
 			protected function dataGrid_refresh():void {
 				if (cb_tracks.selectedItem != null) {
 					var track_id: int = cb_tracks.selectedItem.track_id;
-					findByTrackResult.token = intersectionService.findByTrack(track_id);
-					findSampleTrackData.token = gpslogService.findSampleTrackData(track_id)
+					intersectionService.findByTrack(track_id).addResponder(new mx.rpc.Responder(
+						result_findByTrack, fault));
+					findSampleTrackData.token = gpslogService.findSampleTrackData(track_id);
 				} else {
 					dataGrid.dataProvider = new ArrayCollection();
 					c1.graphics.clear();
@@ -155,7 +195,6 @@
 			id="trackService" 
 			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" 
 			showBusyCursor="true"/>
-		<s:CallResponder id="findByTrackResult"/>
 		<intersectionservice:IntersectionService 
 			id="intersectionService" 
 			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" 
@@ -181,10 +220,11 @@
 		</mx:FormItem>
 	</mx:Form>
 	
+	
 	<mx:DataGrid 
 		id="dataGrid" 
 		creationComplete="dataGrid_refresh()" 
-		dataProvider="{findByTrackResult.lastResult}">
+		dataProvider="{intersections}">
 		<mx:columns>
 			<mx:DataGridColumn headerText="intersection_id" dataField="intersection_id" visible="false"/>
 			<mx:DataGridColumn headerText="index" dataField="index"/>

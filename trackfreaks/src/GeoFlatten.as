@@ -1,5 +1,7 @@
 package {
 	
+	import com.google.maps.LatLng;
+	
 	import flash.geom.Point;
 	
 	public class GeoFlatten {
@@ -10,10 +12,10 @@ package {
 			return new Point(x, y);
 		}
 		
-		public static function convertBack(x: Number, y: Number) : Point {
+		public static function convertBack(x: Number, y: Number) : LatLng {
 			var lat: Number = y * 360 / 44000;
 			var lng: Number = x * 360 / 44000 / Math.cos(lat / 180 * Math.PI);
-			return new Point(lat, lng);
+			return new LatLng(lat, lng);
 		}
 		
 	}
