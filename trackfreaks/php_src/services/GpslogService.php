@@ -86,7 +86,7 @@ class GpslogService {
 		$sql[] = "ORDER BY";
 		$sql[] = "  date ASC";
 		
-	    return findSQL(null, implode(" ", $sql));
+	    return findValues(null, implode(" ", $sql));
 	}
 
 	public function findSampleTrackData($track_id) {
