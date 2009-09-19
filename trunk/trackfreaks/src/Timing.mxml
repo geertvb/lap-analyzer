@@ -11,6 +11,7 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import util.IntersectionUtils;
 			import mx.core.UIComponent;
 			import mx.core.FlexSprite;
 			import com.google.maps.LatLng;
@@ -150,6 +151,7 @@
 					
 					var x: Number = thedata[best] * d / 400 + minX;
 					var y: Number = maxY - thedata[best+1] * d / 400;
+					
 					var latLng: LatLng = GeoFlatten.convertBack(x, y);
 					intersections.addItem({
 						intersection_id: 0,
@@ -158,12 +160,28 @@
 						lat: Math.round(latLng.lat() * 1000000) / 1000000,
 						lng: Math.round(latLng.lng() * 1000000) / 1000000,
 						angle: Math.round(Math.atan2(vy, vx) * 180.0 / Math.PI),
-						sprite: sprite
+						sprite: sprite,
+						p1: new Point(x1, y1),
+						p2: new Point(x2, y2)
 					});
 					intersections.refresh();
 					//dataGrid.dataProvider = intersections;
 					//Alert.show("" + intersections.length);
 					
+				}
+			}
+			
+			public function scan() : void {
+				for (var i:uint = 0; i < thedata.length-2; i += 2) {
+					var index: int = 0;
+					for each (var intersection: Object in intersections) {
+						var pt1: Point = new Point(thedata[i], thedata[i+1]);
+						var pt2: Point = new Point(thedata[i+2], thedata[i+3]);
+						if (IntersectionUtils.intersects(pt1, pt2, intersection.p2, intersection.p1)) {
+							trace("Intersection " + index + " " + i);
+						}
+						index++;
+					}
 				}
 			}
 			
@@ -255,6 +273,9 @@
 			label="Remove"
 			enabled="{dataGrid.selectedIndex >= 0}"
 			click="click_remove()"/>
+		<s:Button 
+			label="Scan"
+			click="scan()"/>
 	</s:HGroup>
 	
 	<mx:Canvas 
