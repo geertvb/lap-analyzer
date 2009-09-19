@@ -100,6 +100,31 @@ function getSingleResult($stmt, $classname = "stdClass") {
 	return $result;
 }
 
+function findValues($mysqli = NULL, $sql) {
+	
+	if (is_null($mysqli)) {
+		$mysqli = newMysqli();
+		$created = true;
+	}
+	
+	if ($stmt = $mysqli->prepare($sql)) {
+		if ($stmt->execute()) {
+			$result = getValues($stmt);
+		} else {
+			throwExceptionOnError($mysqli);
+		}
+		$stmt->close();
+	} else {
+		throwExceptionOnError($mysqli);
+	}
+	
+	if ($created) {
+		$mysqli->close();
+	}
+	
+	return $result;
+}
+
 function getValues($stmt) {
 	$result = array();
 	
