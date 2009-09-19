@@ -1,5 +1,7 @@
 <?php
 
+require_once 'Gpslog.php';
+
 class GpslogService {
 
 	// Connection information
@@ -12,6 +14,11 @@ class GpslogService {
 	// Table information
 	var $tablename = "gpslog";
 	
+	/**
+	 *
+	 *@return array
+	 *
+	 */
 	public function findAll() {
 		$connection = mysqli_connect($this->server, $this->username, $this->password, $this->databasename, $this->port);
 		$this->throwExceptionOnError($connection);
