@@ -1,5 +1,7 @@
 <?php
 
+require_once 'Intersection.php';
+
 class IntersectionService {
 
 	// Connection information
@@ -12,6 +14,11 @@ class IntersectionService {
 	// Table information
 	var $tablename = "intersection";
 	
+	/**
+	 * 
+	 * @param $track_id int
+	 * @return Intersection
+	 */
 	public function findByTrack($track_id) {
 		$connection = mysqli_connect($this->server, $this->username, $this->password, $this->databasename, $this->port);
 		$this->throwExceptionOnError($connection);

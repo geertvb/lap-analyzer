@@ -1,5 +1,7 @@
 <?php
 
+require_once 'Rider.php';
+
 class RiderService {
 
 	// Connection information
@@ -12,6 +14,20 @@ class RiderService {
 	// Table information
 	var $tablename = "rider";
 	
+	/**
+	 * 
+	 * @param int $rider_id 
+	 * @return Rider
+	 *
+	 */
+	public function findByID($rider_id) {
+		
+	}
+	
+	/**
+	 * 
+	 * @return array
+	 */
 	public function findAll() {
 		$connection = mysqli_connect($this->server, $this->username, $this->password, $this->databasename, $this->port);
 		$this->throwExceptionOnError($connection);
@@ -39,6 +55,7 @@ class RiderService {
 		
 		$rows = array();
 		
+		$row = new Rider();
 		mysqli_stmt_bind_result($stmt, 
 			$row->rider_id, 
 			$row->firstname, 
@@ -48,7 +65,7 @@ class RiderService {
 		
 	    while (mysqli_stmt_fetch($stmt)) {
 	      $rows[] = $row;
-	      $row = new stdClass();
+	      $row = new Rider();
 	      mysqli_stmt_bind_result($stmt,  
 			$row->rider_id,
 			$row->firstname,

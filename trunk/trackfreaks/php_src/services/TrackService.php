@@ -1,5 +1,7 @@
 <?php
 
+require_once 'Track.php';
+
 class TrackService {
 
 	// Connection information
@@ -12,6 +14,14 @@ class TrackService {
 	// Table information
 	var $tablename = "track";
 	
+	/**
+	 * 
+	 * @param float $minlat
+	 * @param float $minlng
+	 * @param float $maxlat
+	 * @param float $maxlng
+	 * @return Track
+	 */
 	public function findByLatLng($minlat, $minlng, $maxlat, $maxlng) {
 		$connection = mysqli_connect($this->server, $this->username, $this->password, $this->databasename, $this->port);
 		$this->throwExceptionOnError($connection);
@@ -45,7 +55,7 @@ class TrackService {
 		mysqli_stmt_execute($stmt);
 		$this->throwExceptionOnError($connection);
 		
-		$row = new stdClass();
+		$row = new Track();
 		mysqli_stmt_bind_result($stmt, 
 			$row->track_id, 
 			$row->name, 
