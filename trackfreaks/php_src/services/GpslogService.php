@@ -1,116 +1,59 @@
 <?php
 
 require_once 'Gpslog.php';
+require_once 'mysqliUtils.php';
 
 class GpslogService {
 
-	// Connection information
-	var $username = "trackfreaks_eu";
-	var $password = "wBpjP8Ft";
-	var $server = "localhost";
-	var $port = "3306";
-	var $databasename = "trackfreaks_eu";
-
-	// Table information
-	var $tablename = "gpslog";
-	
 	/**
-	 *
-	 *@return array
-	 *
+	 *@return array of Gpslog
 	 */
 	public function findAll() {
-		$connection = mysqli_connect($this->server, $this->username, $this->password, $this->databasename, $this->port);
-		$this->throwExceptionOnError($connection);
-		
-		$cols = array();
-		$cols[] = "gpslog.gpslog_id";
-		$cols[] = "gpslog.rider_id";
-		$cols[] = "rider.firstname as rider_firstname";
-		$cols[] = "rider.lastname as rider_lastname";
-		$cols[] = "gpslog.track_id";
-		$cols[] = "track.name as track_name";
-		$cols[] = "gpslog.date";
-		$cols[] = "gpslog.start_time";
-		$cols[] = "gpslog.end_time";
-
 		$sql = array();
+
 		$sql[] = "SELECT";
-		$sql[] = implode(", ", $cols);
+		$sql[] = "  gpslog.gpslog_id,";
+		$sql[] = "  gpslog.rider_id,";
+		$sql[] = "  rider.firstname as rider_firstname,";
+		$sql[] = "  rider.lastname as rider_lastname,";
+		$sql[] = "  gpslog.track_id,";
+		$sql[] = "  track.name as track_name,";
+		$sql[] = "  gpslog.date,";
+		$sql[] = "  gpslog.start_time,";
+		$sql[] = "  gpslog.end_time";
 		$sql[] = "FROM";
-		$sql[] = $this->tablename;
+		$sql[] = "  gpslog";
 		$sql[] = "LEFT OUTER JOIN";
-		$sql[] = "(track, rider)";
+		$sql[] = "  (track, rider)";
 		$sql[] = "ON";
-		$sql[] = "(gpslog.track_id = track.track_id AND gpslog.rider_id = rider.rider_id)";
-	
-		$stmt = mysqli_prepare($connection, implode(" ", $sql));		
-		$this->throwExceptionOnError($connection);
+		$sql[] = "  (gpslog.track_id = track.track_id AND gpslog.rider_id = rider.rider_id)";
 		
-		mysqli_stmt_execute($stmt);
-		$this->throwExceptionOnError($connection);
-		
-		$rows = array();
-		
-		mysqli_stmt_bind_result($stmt, 
-			$row->gpslog_id, 
-			$row->rider_id, 
-			$row->rider_firstname, 
-			$row->rider_lastname, 
-			$row->track_id,
-			$row->track_name,
-			$row->date,
-			$row->start_time,
-			$row->end_time
-			);
-		
-	    while (mysqli_stmt_fetch($stmt)) {
-	      $rows[] = $row;
-	      $row = new stdClass();
-	      mysqli_stmt_bind_result($stmt,  
-			$row->gpslog_id, 
-			$row->rider_id, 
-			$row->rider_firstname, 
-			$row->rider_lastname, 
-			$row->track_id,
-			$row->track_name,
-			$row->date,
-			$row->start_time,
-			$row->end_time
-			);
-	    }
-		
-		mysqli_stmt_free_result($stmt);
-		
-	    mysqli_close($connection);
-	
-	    return $rows;
+	    return findSQL(null, implode(" ", $sql), "Gpslog");
 	}
 
-	private function throwExceptionOnError($link) {
-		if(mysqli_error($link)) {
-			$msg = mysqli_errno($link) . ": " . mysqli_error($link);
-			throw new Exception('MySQL Error - '. $msg);
-		}		
-	}
-	
+	/**
+	 * @param int $rider_id
+	 * @param int $track_id
+	 * @param date $date
+	 * @param string $start_time
+	 * @param string $end_time
+	 * @param string $data
+	 */
 	public function createGpslog($rider_id, $track_id, $date, $start_time, $end_time, $data) {
-		$connection = mysqli_connect($this->server, $this->username, $this->password, $this->databasename, $this->port);
-		$this->throwExceptionOnError($connection);
+		$mysqli = newsqli();
 		
 		$sql = array();
-		$sql[] = "INSERT INTO";
-		$sql[] = $this->tablename;
-		$sql[] = "(rider_id, track_id, date, start_time, end_time, data)";
+		$sql[] = "INSERT INTO gpslog";
+		$sql[] = "  (rider_id, track_id, date, start_time, end_time, data)";
 		$sql[] = "VALUES";
-		$sql[] = "(?, ?, ?, ?, ?, ?)";
+		$sql[] = "  (?, ?, ?, ?, ?, ?)";
 		
-		$stmt = mysqli_prepare($connection, implode(" ", $sql));		
-		$this->throwExceptionOnError($connection);
+		$stmt = $mysqli->prepare(implode(" ", $sql));		
+		$this->throwExceptionOnError($mysqli);
 		
 		$content = NULL;
 		
-		mysqli_stmt_bind_param($stmt, "iisssb", 
+		$stmt->bind_param("iisssb", 
 			$rider_id,
 			$track_id,
 			$date,
@@ -121,65 +64,34 @@ class GpslogService {
 		if ($data != null) {
 			$chunks = str_split($data, 4096);
 			foreach ($chunks as $chunk) {
-				mysqli_stmt_send_long_data($stmt, 5, $chunk);
+				$stmt->send_long_data(5, $chunk);
 			}
 		}
 		
-		mysqli_stmt_execute($stmt);
+		$stmt->execute($stmt);
 		$this->throwExceptionOnError($connection);
 		
-		mysqli_stmt_free_result($stmt);
+		$stmt->free_result($stmt);
 		
-	    mysqli_close($connection);
-		
+	    $mysqli->close();
 	}
 	
 	public function findAllDates() {
-		$connection = mysqli_connect($this->server, $this->username, $this->password, $this->databasename, $this->port);
-		$this->throwExceptionOnError($connection);
-		
 		$sql = array();
-		$sql[] = "SELECT";
-		$sql[] = "DISTINCT";
-		$sql[] = "date";
+		
+		$sql[] = "SELECT DISTINCT";
+		$sql[] = "  date";
 		$sql[] = "FROM";
-		$sql[] = $this->tablename;
+		$sql[] = "  gpslog";
 		$sql[] = "ORDER BY";
-		$sql[] = "date ASC";
+		$sql[] = "  date ASC";
 		
-		$stmt = mysqli_prepare($connection, implode(" ", $sql));		
-		$this->throwExceptionOnError($connection);
-
-		mysqli_stmt_execute($stmt);
-		$this->throwExceptionOnError($connection);
-		
-		$rows = array();
-		
-		mysqli_stmt_bind_result($stmt, 
-			$row->date
-			);
-		
-	    while (mysqli_stmt_fetch($stmt)) {
-	      $rows[] = $row->date;
-	      $row = new stdClass();
-	      mysqli_stmt_bind_result($stmt,  
-			$row->date
-			);
-	    }
-		
-		mysqli_stmt_free_result($stmt);
-		
-	    mysqli_close($connection);
-	
-	    return $rows;
-
+	    return findSQL(null, implode(" ", $sql));
 	}
 
 	public function findSampleTrackData($track_id) {
-		$connection = mysqli_connect($this->server, $this->username, $this->password, $this->databasename, $this->port);
-		$this->throwExceptionOnError($connection);
-		
 		$sql = array();
+		
 		$sql[] = "SELECT";
 		$sql[] = "  data";
 		$sql[] = "FROM";
@@ -188,23 +100,23 @@ class GpslogService {
 		$sql[] = "  track_id = ?";
 		$sql[] = "LIMIT 0,1";
 	
-		$stmt = mysqli_prepare($connection, implode(" ", $sql));		
-		$this->throwExceptionOnError($connection);
-		
-		mysqli_stmt_bind_param($stmt, "i", $track_id);
+		$mysqli = newmysqli();
 
-		mysqli_stmt_execute($stmt);
-		$this->throwExceptionOnError($connection);
-		
-		mysqli_stmt_store_result($stmt);
+		$stmt = $mysqli->prepare(implode(" ", $sql));		
+		throwExceptionOnError($mysqli);
 
+		$stmt->bind_param("i", $track_id);
+
+		$stmt->execute();
+		throwExceptionOnError($mysqli);
+		
+		$stmt->store_result();
 		$content = null;
-		mysqli_stmt_bind_result($stmt, $content);
-		mysqli_stmt_fetch($stmt);
+		$stmt->bind_result($content);
+		$stmt->fetch();
+		$stmt->free_result();
 		
-		mysqli_stmt_free_result($stmt);
-		
-	    mysqli_close($connection);
+	    $mysqli->close();
 	
 	    return $content;
 	}
