@@ -22,6 +22,10 @@ class Intersection {
 	 * @var int
 	 */
 	var $angle;
+	/**
+	 * @var int
+	 */
+	var $index;
 	
 }
 ?>
