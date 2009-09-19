@@ -1,7 +1,7 @@
 <?php 
 
 class Gpslog {
-	
+
 	/**
 	 * @var int
 	 */
@@ -11,9 +11,21 @@ class Gpslog {
 	 */
 	var $track_id;
 	/**
+	 * @var string
+	 */
+	var $track_name;
+	/**
 	 * @var int
 	 */
 	var $rider_id;
+	/**
+	 * @var string
+	 */
+	var $rider_firstname;
+	/**
+	 * @var string
+	 */
+	var $rider_lastname;
 	/**
 	 * @var date
 	 */
@@ -26,10 +38,6 @@ class Gpslog {
 	 * @var date
 	 */
 	var $end_time;
-	/**
-	 * @var string
-	 */
-	var $data;
 	
 }
 
