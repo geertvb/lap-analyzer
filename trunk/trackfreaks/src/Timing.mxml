@@ -11,6 +11,8 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import mx.core.UIComponent;
+			import mx.core.FlexSprite;
 			import com.google.maps.LatLng;
 			import mx.utils.ArrayUtil;
 			import mx.rpc.events.FaultEvent;
@@ -101,6 +103,7 @@
 			}
 			
 			public function drawTrack() :void {
+				c1.removeAllChildren();
 				c1.graphics.clear();
 				c1.graphics.lineStyle(1,0,1);
 				c1.graphics.drawPath(commands, thedata);
@@ -133,14 +136,17 @@
 					
 					var x2: Number = thedata[best] + vy;
 					var y2: Number = thedata[best+1] - vx;
+					
+					var sprite: UIComponent = new UIComponent();
+					c1.addChild(sprite);
 	
-					c1.graphics.lineStyle(2,0xFF0000,1);
-					c1.graphics.drawPath(
+					sprite.graphics.lineStyle(2,0xFF0000,1);
+					sprite.graphics.drawPath(
 						Vector.<int>([GraphicsPathCommand.MOVE_TO,GraphicsPathCommand.LINE_TO]),
 						Vector.<Number>([x1,y1,x2,y2])
 					);
-					c1.graphics.drawCircle(x1, y1, 5);
-					c1.graphics.drawCircle(x2, y2, 5);
+					sprite.graphics.drawCircle(x1, y1, 5);
+					sprite.graphics.drawCircle(x2, y2, 5);
 					
 					var x: Number = thedata[best] * d / 400 + minX;
 					var y: Number = maxY - thedata[best+1] * d / 400;
@@ -151,13 +157,21 @@
 						index: intersections.length,
 						lat: Math.round(latLng.lat() * 1000000) / 1000000,
 						lng: Math.round(latLng.lng() * 1000000) / 1000000,
-						angle: Math.round(Math.atan2(vy, vx) * 180.0 / Math.PI)
+						angle: Math.round(Math.atan2(vy, vx) * 180.0 / Math.PI),
+						sprite: sprite
 					});
 					intersections.refresh();
 					//dataGrid.dataProvider = intersections;
 					//Alert.show("" + intersections.length);
 					
 				}
+			}
+			
+			public function click_remove() : void {
+				var intersection: Object = dataGrid.selectedItem;
+				c1.removeChild(intersection.sprite);
+				var index: int = intersections.getItemIndex(intersection);
+				intersections.removeItemAt(index);
 			}
 
 			protected function cb_tracks_creationCompleteHandler(event:FlexEvent):void {
@@ -206,6 +220,7 @@
 			id="gpslogService" 
 			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" 
 			showBusyCursor="true"/>
+		<mx:RadioButtonGroup id="startFinishGroup" />
 	</fx:Declarations>
 	
 	<mx:Form>
@@ -219,7 +234,6 @@
 				labelField="name"/>
 		</mx:FormItem>
 	</mx:Form>
-	
 	
 	<mx:DataGrid 
 		id="dataGrid" 
@@ -235,6 +249,13 @@
 		</mx:columns>
 		
 	</mx:DataGrid>
+	
+	<s:HGroup>
+		<s:Button 
+			label="Remove"
+			enabled="{dataGrid.selectedIndex >= 0}"
+			click="click_remove()"/>
+	</s:HGroup>
 	
 	<mx:Canvas 
 		width="800" height="800" 
