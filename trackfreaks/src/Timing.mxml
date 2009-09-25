@@ -11,6 +11,10 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import mx.controls.Label;
+			import mx.core.UITextField;
+			import mx.binding.utils.BindingUtils;
+			import mx.controls.Text;
 			import util.IntersectionUtils;
 			import mx.core.UIComponent;
 			import mx.core.FlexSprite;
@@ -146,24 +150,37 @@
 						Vector.<int>([GraphicsPathCommand.MOVE_TO,GraphicsPathCommand.LINE_TO]),
 						Vector.<Number>([x1,y1,x2,y2])
 					);
-					sprite.graphics.drawCircle(x1, y1, 5);
-					sprite.graphics.drawCircle(x2, y2, 5);
+					sprite.graphics.drawCircle(x1, y1, 4);
+					sprite.graphics.drawCircle(x2, y2, 4);
+					var tf: Label = new Label();
+					//tf.text = "" + intersections.length;
+					
+					tf.x = thedata[best] + 2.2 * vy - 5;
+					tf.y = thedata[best+1] - 2.2 * vx - 10;
+					c1.addChild(tf);
 					
 					var x: Number = thedata[best] * d / 400 + minX;
 					var y: Number = maxY - thedata[best+1] * d / 400;
 					
 					var latLng: LatLng = GeoFlatten.convertBack(x, y);
-					intersections.addItem({
+					var item: Object = {
 						intersection_id: 0,
 						track_id: 1,
 						index: intersections.length,
-						lat: Math.round(latLng.lat() * 1000000) / 1000000,
-						lng: Math.round(latLng.lng() * 1000000) / 1000000,
+						lat: latLngFormatter.format(latLng.lat()),
+						lng: latLngFormatter.format(latLng.lng()),
 						angle: Math.round(Math.atan2(vy, vx) * 180.0 / Math.PI),
 						sprite: sprite,
+						tf: tf,
+						x: thedata[best],
+						y: thedata[best+1],
+						vx: vx,
+						vy: vy,
 						p1: new Point(x1, y1),
 						p2: new Point(x2, y2)
-					});
+					};
+					//BindingUtils.bindProperty(tf, "text", item, "index");
+					intersections.addItem(item);
 					intersections.refresh();
 					//dataGrid.dataProvider = intersections;
 					//Alert.show("" + intersections.length);
@@ -172,22 +189,36 @@
 			}
 			
 			public function scan() : void {
-				for (var i:uint = 0; i < thedata.length-2; i += 2) {
+				var s1: ArrayCollection = new ArrayCollection();
+				for (var i:uint = 0; s1.length < intersections.length && i < thedata.length-2; i += 2) {
 					var index: int = 0;
 					for each (var intersection: Object in intersections) {
 						var pt1: Point = new Point(thedata[i], thedata[i+1]);
 						var pt2: Point = new Point(thedata[i+2], thedata[i+3]);
 						if (IntersectionUtils.intersects(pt1, pt2, intersection.p2, intersection.p1)) {
+							if (!s1.contains(intersection)) {
+								s1.addItem(intersection);
+							}
 							trace("Intersection " + index + " " + i);
 						}
 						index++;
 					}
 				}
+				for (i = 0; i < s1.length; i++) {
+					var item: Object = s1.getItemAt(i);
+					item.index = i;
+					item.tf.text = "" + i;
+					var tlm: TextLineMetrics = item.tf.measureText(item.tf.text);
+					item.tf.x = item.x + 2.4 * item.vy - (tlm.width + 5) / 2;
+					item.tf.y = item.y - 2.4 * item.vx - (tlm.height + 4) / 2;
+				}
+				intersections = s1;
 			}
 			
 			public function click_remove() : void {
 				var intersection: Object = dataGrid.selectedItem;
 				c1.removeChild(intersection.sprite);
+				c1.removeChild(intersection.tf);
 				var index: int = intersections.getItemIndex(intersection);
 				intersections.removeItemAt(index);
 			}
@@ -239,6 +270,7 @@
 			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" 
 			showBusyCursor="true"/>
 		<mx:RadioButtonGroup id="startFinishGroup" />
+		<mx:NumberFormatter id="latLngFormatter" precision="6" />
 	</fx:Declarations>
 	
 	<mx:Form>
@@ -259,10 +291,10 @@
 		dataProvider="{intersections}">
 		<mx:columns>
 			<mx:DataGridColumn headerText="intersection_id" dataField="intersection_id" visible="false"/>
-			<mx:DataGridColumn headerText="index" dataField="index"/>
-			<mx:DataGridColumn headerText="lat" dataField="lat"/>
-			<mx:DataGridColumn headerText="lng" dataField="lng"/>
-			<mx:DataGridColumn headerText="angle" dataField="angle"/>
+			<mx:DataGridColumn headerText="Index" dataField="index" width="44"/>
+			<mx:DataGridColumn headerText="Latitude" dataField="lat" width="80"/>
+			<mx:DataGridColumn headerText="Longitude" dataField="lng" width="80"/>
+			<mx:DataGridColumn headerText="Angle" dataField="angle" width="44"/>
 			<mx:DataGridColumn headerText="track_id" dataField="track_id" visible="false"/>
 		</mx:columns>
 		
