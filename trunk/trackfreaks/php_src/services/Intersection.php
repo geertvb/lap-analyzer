@@ -2,13 +2,16 @@
 
 class Intersection {
 	
+	/**
+	 * @var float
+	 */
 	var $lat;
 	/**
 	 * @var float
 	 */
 	var $lng;
 	/**
-	 * @var int
+	 * @var float
 	 */
 	var $angle;
 	/**
