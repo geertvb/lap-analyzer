@@ -47,9 +47,9 @@ public class _Super_Intersection extends EventDispatcher implements IValueObject
 	/**
 	 * properties
 	 */
-	private var _internal_lat : Object;
+	private var _internal_lat : Number;
 	private var _internal_lng : Number;
-	private var _internal_angle : int;
+	private var _internal_angle : Number;
 	private var _internal_index : int;
 
     private static var emptyArray:Array = new Array();
@@ -73,7 +73,7 @@ public class _Super_Intersection extends EventDispatcher implements IValueObject
      * data property getters
      */
 	[Bindable(event="propertyChange")] 
-    public function get lat() : Object    
+    public function get lat() : Number    
     {
             return _internal_lat;
     }    
@@ -83,7 +83,7 @@ public class _Super_Intersection extends EventDispatcher implements IValueObject
             return _internal_lng;
     }    
 	[Bindable(event="propertyChange")] 
-    public function get angle() : int    
+    public function get angle() : Number    
     {
             return _internal_angle;
     }    
@@ -96,16 +96,12 @@ public class _Super_Intersection extends EventDispatcher implements IValueObject
     /**
      * data property setters
      */      
-    public function set lat(value:Object) : void 
+    public function set lat(value:Number) : void 
     {    	
         var recalcValid:Boolean = false;
-    	if (value == null || _internal_lat == null)
-    	{
-    		recalcValid = true;
-    	}	
     	
     	
-    	var oldValue:Object = _internal_lat;               
+    	var oldValue:Number = _internal_lat;               
         if (oldValue !== value)
         {
         	_internal_lat = value;
@@ -134,12 +130,12 @@ public class _Super_Intersection extends EventDispatcher implements IValueObject
             model_internal::isValid_der = model_internal::calculateIsValid();
         }  
     }    
-    public function set angle(value:int) : void 
+    public function set angle(value:Number) : void 
     {    	
         var recalcValid:Boolean = false;
     	
     	
-    	var oldValue:int = _internal_angle;               
+    	var oldValue:Number = _internal_angle;               
         if (oldValue !== value)
         {
         	_internal_angle = value;
@@ -200,11 +196,6 @@ public class _Super_Intersection extends EventDispatcher implements IValueObject
         var violatedConsts:Array = new Array();    
         var validationFailureMessages:Array = new Array();    
 
-		if (_model.isLatAvailable && _internal_lat == null)
-		{
-			violatedConsts.push("latIsRequired");
-			validationFailureMessages.push("lat is required");
-		}
 
 		var styleValidity:Boolean = true;
 	

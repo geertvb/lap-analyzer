@@ -11,6 +11,7 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import com.google.maps.LatLngBounds;
 			import valueObjects.Intersection;
 			import mx.controls.Label;
 			import mx.core.UITextField;
@@ -31,15 +32,8 @@
 			import mx.messaging.AbstractConsumer;
 			import __AS3__.vec.Vector;
 			
-			public var min_lat: Number;
-			public var max_lat: Number;
-			public var min_lng: Number;
-			public var max_lng: Number;
+			public var projection: Projection;
 
-			public var minX: Number;
-			public var maxX: Number;
-			public var minY: Number;
-			public var maxY: Number;
 			public var dX: Number;
 			public var dY: Number;
 			public var d: Number;
@@ -69,45 +63,29 @@
 				var spdIndex: uint = headings.indexOf("SPEED");
 				var timeIndex: uint = headings.indexOf("TIME");
 				
-				minX = Number.MAX_VALUE;
-				maxX = Number.MIN_VALUE;
-				minY = Number.MAX_VALUE;
-				maxY = Number.MIN_VALUE;
+				var bounds: LatLngBounds = new LatLngBounds();
 				
 				var points: Array = new Array();
 				for (i = 1; i<lines.length; i++) {
 					var line: String = lines[i];
 					var values: Array = line.split(",");
 					if (values.length >= 2) {
-						var lat: Number = values[latIndex];
-						var lng: Number = values[lngIndex];
-						
-						min_lat = Math.min(min_lat, lat);
-						max_lat = Math.max(max_lat, lat);
-						min_lng = Math.min(min_lng, lng);
-						max_lng = Math.max(max_lng, lng);
-						
-						var p: Point = GeoFlatten.convert(lat, lng);
-						
-						minX = Math.min(minX, p.x);
-						maxX = Math.max(maxX, p.x);
-						minY = Math.min(minY, p.y);
-						maxY = Math.max(maxY, p.y);
-						
-						//var point: Point = new Point(lat, lng);
-						points.push(p);
+						var latLng: LatLng = new LatLng(values[latIndex], values[lngIndex]);
+						bounds.extend(latLng);
+						points.push(latLng);
 					}
 				}
-				dX = maxX - minX;
-				dY = maxY - minY;
-				d = Math.max(dX, dY);
+				
+				projection = new Projection();
+				projection.bounds = bounds;
+				projection.fit(640,480);
 				
 				thedata = new Vector.<Number>();
-				for each (var point: Point in points) {
-					thedata.push((point.x - minX) * 400 / d);
-					thedata.push((maxY - point.y) * 400 / d);
+				for each (var ll: LatLng in points) {
+					var p2: Point = projection.latLng2xy(ll);
+					thedata.push(p2.x);
+					thedata.push(p2.y);
 				}
-				//Alert.show(minLat + " " + maxLat + " " + minLng + " " + maxLng);
 
 				commands = new Vector.<int>();
 				commands.push(GraphicsPathCommand.MOVE_TO);
@@ -140,62 +118,24 @@
 				
 				if (min <= 100) {
 				
-					var vx: Number = thedata[best+2] - thedata[best-2];
-					var vy: Number = thedata[best+3] - thedata[best-1];
-					
-					var vd: Number = Math.sqrt(vx * vx + vy * vy);
-					vx = vx / vd * 10;
-					vy = vy / vd * 10;
-					
-					var x1: Number = thedata[best] - vy;
-					var y1: Number = thedata[best+1] + vx;
-					
-					var x2: Number = thedata[best] + vy;
-					var y2: Number = thedata[best+1] - vx;
-					
-					var sprite: UIComponent = new UIComponent();
-					c1.addChild(sprite);
-	
-					sprite.graphics.lineStyle(2,0xFF0000,1);
-					sprite.graphics.drawPath(
-						Vector.<int>([GraphicsPathCommand.MOVE_TO,GraphicsPathCommand.LINE_TO]),
-						Vector.<Number>([x1,y1,x2,y2])
-					);
-					sprite.graphics.drawCircle(x1, y1, 4);
-					sprite.graphics.drawCircle(x2, y2, 4);
-					var tf: Label = new Label();
-					//tf.text = "" + intersections.length;
-					
-					tf.x = thedata[best] + 2.2 * vy - 5;
-					tf.y = thedata[best+1] - 2.2 * vx - 10;
-					c1.addChild(tf);
-					
-					var x: Number = thedata[best] * d / 400 + minX;
-					var y: Number = maxY - thedata[best+1] * d / 400;
-					
-					var latLng: LatLng = GeoFlatten.convertBack(x, y);
-					var item: Object = {
-						intersection_id: 0,
-						track_id: 1,
-						index: intersections.length,
-						lat: latLngFormatter.format(latLng.lat()),
-						lng: latLngFormatter.format(latLng.lng()),
-						angle: Math.round(Math.atan2(vy, vx) * 180.0 / Math.PI),
-						sprite: sprite,
-						tf: tf,
-						x: thedata[best],
-						y: thedata[best+1],
-						vx: vx,
-						vy: vy,
-						p1: new Point(x1, y1),
-						p2: new Point(x2, y2)
-					};
-					//BindingUtils.bindProperty(tf, "text", item, "index");
-					intersections.addItem(item);
-					intersections.refresh();
-					//dataGrid.dataProvider = intersections;
-					//Alert.show("" + intersections.length);
-					
+					var angle: Number = Math.atan2(thedata[best+3] - thedata[best-1], thedata[best+2] - thedata[best-2]);
+					var latLng: LatLng = projection.xy2latLng(thedata[best], thedata[best+1]);
+
+					var marker: IntersectionMarker = new IntersectionMarker();
+					marker.latLng = latLng;
+					marker.angle = angle;
+					marker.labelText = "" + intersections.length;
+					marker.parent = c1;
+					marker.projection = projection;
+					marker.draw();
+
+					var intersection: Intersection = new Intersection();
+					intersection.index = intersections.length;
+					intersection.lat = latLng.lat();
+					intersection.lng = latLng.lng();
+					intersection.angle = angle;
+
+					intersections.addItem(intersection);
 				}
 			}
 			
@@ -206,7 +146,9 @@
 					for each (var intersection: Object in intersections) {
 						var pt1: Point = new Point(thedata[i], thedata[i+1]);
 						var pt2: Point = new Point(thedata[i+2], thedata[i+3]);
-						if (IntersectionUtils.intersects(pt1, pt2, intersection.p2, intersection.p1)) {
+						var ip1: Point = new Point(intersection.marker.x1, intersection.marker.y1);
+						var ip2: Point = new Point(intersection.marker.x2, intersection.marker.y2);
+						if (IntersectionUtils.intersects(pt1, pt2, ip2, ip1)) {
 							if (!s1.contains(intersection)) {
 								s1.addItem(intersection);
 							}
@@ -228,8 +170,7 @@
 			
 			public function click_remove() : void {
 				var intersection: Object = dataGrid.selectedItem;
-				c1.removeChild(intersection.sprite);
-				c1.removeChild(intersection.tf);
+
 				var index: int = intersections.getItemIndex(intersection);
 				intersections.removeItemAt(index);
 			}
@@ -269,6 +210,20 @@
 					ic.addItem(item);
 				}
 				intersectionService.updateByTrack(track_id, ic);
+			}
+			
+			protected function click_showmarkers() : void {
+				for each (var intersection: Object in intersections) {
+					var marker: IntersectionMarker = new IntersectionMarker();
+					marker.latLng = new LatLng(intersection.lat, intersection.lng);
+					marker.angle = intersection.angle;
+					marker.labelText = "" + intersection.index;
+					marker.parent = c1;
+					marker.projection = projection;
+					marker.draw();
+					//intersection.marker = marker;
+				}
+
 			}
 
 		]]>
@@ -318,13 +273,16 @@
 			<mx:DataGridColumn headerText="Index" dataField="index" width="44"/>
 			<mx:DataGridColumn headerText="Latitude" dataField="lat" width="80"/>
 			<mx:DataGridColumn headerText="Longitude" dataField="lng" width="80"/>
-			<mx:DataGridColumn headerText="Angle" dataField="angle" width="44"/>
+			<mx:DataGridColumn headerText="Angle" dataField="angle" width="80"/>
 			<mx:DataGridColumn headerText="track_id" dataField="track_id" visible="false"/>
 		</mx:columns>
 		
 	</mx:DataGrid>
 	
 	<s:HGroup>
+		<s:Button
+			label="showMarkers"
+			click="click_showmarkers()" />
 		<s:Button 
 			label="Remove"
 			enabled="{dataGrid.selectedIndex >= 0}"
