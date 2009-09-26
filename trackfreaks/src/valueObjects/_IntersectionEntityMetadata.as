@@ -21,12 +21,12 @@ internal class _IntersectionEntityMetadata extends AbstractEntityMetadata
 {
 	private static var emptyArray:Array = new Array();
 
-    model_internal static var allProperties:Array = new Array("intersection_id", "index", "lng", "angle", "lat", "track_id");
+    model_internal static var allProperties:Array = new Array("lat", "lng", "angle", "index");
     model_internal static var allAssociationProperties:Array = new Array();
-    model_internal static var allRequiredProperties:Array = new Array("intersection_id", "index", "lng", "angle", "lat", "track_id");
-    model_internal static var allAlwaysAvailableProperties:Array = new Array("intersection_id", "index", "lng", "angle", "lat", "track_id");
+    model_internal static var allRequiredProperties:Array = new Array("lat", "lng", "angle", "index");
+    model_internal static var allAlwaysAvailableProperties:Array = new Array("lat", "lng", "angle", "index");
     model_internal static var guardedProperties:Array = new Array();
-    model_internal static var dataProperties:Array = new Array("intersection_id", "index", "lng", "angle", "lat", "track_id");
+    model_internal static var dataProperties:Array = new Array("lat", "lng", "angle", "index");
     model_internal static var derivedProperties:Array = new Array();
     model_internal static var collectionProperties:Array = new Array();
     model_internal static var collectionBaseMap:Object;    
@@ -45,12 +45,10 @@ internal class _IntersectionEntityMetadata extends AbstractEntityMetadata
         {
             // depenents map
             model_internal::dependentsOnMap = new Object();
-            model_internal::dependentsOnMap["intersection_id"] = new Array();
-            model_internal::dependentsOnMap["index"] = new Array();
+            model_internal::dependentsOnMap["lat"] = new Array();
             model_internal::dependentsOnMap["lng"] = new Array();
             model_internal::dependentsOnMap["angle"] = new Array();
-            model_internal::dependentsOnMap["lat"] = new Array();
-            model_internal::dependentsOnMap["track_id"] = new Array();
+            model_internal::dependentsOnMap["index"] = new Array();
                         
             // collection base map
             model_internal::collectionBaseMap = new Object()
@@ -268,13 +266,7 @@ internal class _IntersectionEntityMetadata extends AbstractEntityMetadata
     }       
      
      [Bindable(event="propertyChange")] 
-     public function get isIntersection_idAvailable():Boolean
-     {
-        return true;
-     }                       
-                  
-     [Bindable(event="propertyChange")] 
-     public function get isIndexAvailable():Boolean
+     public function get isLatAvailable():Boolean
      {
         return true;
      }                       
@@ -292,13 +284,7 @@ internal class _IntersectionEntityMetadata extends AbstractEntityMetadata
      }                       
                   
      [Bindable(event="propertyChange")] 
-     public function get isLatAvailable():Boolean
-     {
-        return true;
-     }                       
-                  
-     [Bindable(event="propertyChange")] 
-     public function get isTrack_idAvailable():Boolean
+     public function get isIndexAvailable():Boolean
      {
         return true;
      }                       
@@ -314,13 +300,7 @@ internal class _IntersectionEntityMetadata extends AbstractEntityMetadata
      }
 
     [Bindable(event="propertyChange")]   
-    public function get intersection_idStyle():Style
-    {
-		return model_internal::_nullStyle;		
-    }      
-    
-    [Bindable(event="propertyChange")]   
-    public function get indexStyle():Style
+    public function get latStyle():Style
     {
 		return model_internal::_nullStyle;		
     }      
@@ -338,13 +318,7 @@ internal class _IntersectionEntityMetadata extends AbstractEntityMetadata
     }      
     
     [Bindable(event="propertyChange")]   
-    public function get latStyle():Style
-    {
-		return model_internal::_nullStyle;		
-    }      
-    
-    [Bindable(event="propertyChange")]   
-    public function get track_idStyle():Style
+    public function get indexStyle():Style
     {
 		return model_internal::_nullStyle;		
     }      

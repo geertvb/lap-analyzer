@@ -2,17 +2,6 @@
 
 class Intersection {
 	
-	/**
-	 * @var int
-	 */
-	var $intersection_id;
-	/**
-	 * @var int
-	 */
-	var $track_id;
-	/**
-	 * @var float
-	 */
 	var $lat;
 	/**
 	 * @var float

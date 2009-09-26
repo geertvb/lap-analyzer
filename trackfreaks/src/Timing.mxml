@@ -11,6 +11,7 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import valueObjects.Intersection;
 			import mx.controls.Label;
 			import mx.core.UITextField;
 			import mx.binding.utils.BindingUtils;
@@ -30,6 +31,11 @@
 			import mx.messaging.AbstractConsumer;
 			import __AS3__.vec.Vector;
 			
+			public var min_lat: Number;
+			public var max_lat: Number;
+			public var min_lng: Number;
+			public var max_lng: Number;
+
 			public var minX: Number;
 			public var maxX: Number;
 			public var minY: Number;
@@ -75,6 +81,11 @@
 					if (values.length >= 2) {
 						var lat: Number = values[latIndex];
 						var lng: Number = values[lngIndex];
+						
+						min_lat = Math.min(min_lat, lat);
+						max_lat = Math.max(max_lat, lat);
+						min_lng = Math.min(min_lng, lng);
+						max_lng = Math.max(max_lng, lng);
 						
 						var p: Point = GeoFlatten.convert(lat, lng);
 						
@@ -246,6 +257,19 @@
 					c1.graphics.clear();
 				}
 			}
+			
+			protected function click_save() : void {
+				var track_id: int = cb_tracks.selectedItem.track_id;
+				var ic: ArrayCollection = new ArrayCollection();
+				for each (var intersection: Object in intersections) {
+					var item: Intersection = new Intersection();
+					item.lat = intersection.lat;
+					item.lng = intersection.lng;
+					item.angle = intersection.angle;
+					ic.addItem(item);
+				}
+				intersectionService.updateByTrack(track_id, ic);
+			}
 
 		]]>
 	</fx:Script>
@@ -308,6 +332,9 @@
 		<s:Button 
 			label="Scan"
 			click="scan()"/>
+		<s:Button 
+			label="Save"
+			click="click_save()"/>
 	</s:HGroup>
 	
 	<mx:Canvas 

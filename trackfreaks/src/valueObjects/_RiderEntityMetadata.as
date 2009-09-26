@@ -21,12 +21,12 @@ internal class _RiderEntityMetadata extends AbstractEntityMetadata
 {
 	private static var emptyArray:Array = new Array();
 
-    model_internal static var allProperties:Array = new Array("picture_id", "lastname", "firstname", "rider_id");
+    model_internal static var allProperties:Array = new Array("rider_id", "firstname", "lastname", "picture_id");
     model_internal static var allAssociationProperties:Array = new Array();
-    model_internal static var allRequiredProperties:Array = new Array("picture_id", "lastname", "firstname", "rider_id");
-    model_internal static var allAlwaysAvailableProperties:Array = new Array("picture_id", "lastname", "firstname", "rider_id");
+    model_internal static var allRequiredProperties:Array = new Array("rider_id", "firstname", "lastname", "picture_id");
+    model_internal static var allAlwaysAvailableProperties:Array = new Array("rider_id", "firstname", "lastname", "picture_id");
     model_internal static var guardedProperties:Array = new Array();
-    model_internal static var dataProperties:Array = new Array("picture_id", "lastname", "firstname", "rider_id");
+    model_internal static var dataProperties:Array = new Array("rider_id", "firstname", "lastname", "picture_id");
     model_internal static var derivedProperties:Array = new Array();
     model_internal static var collectionProperties:Array = new Array();
     model_internal static var collectionBaseMap:Object;    
@@ -45,10 +45,10 @@ internal class _RiderEntityMetadata extends AbstractEntityMetadata
         {
             // depenents map
             model_internal::dependentsOnMap = new Object();
-            model_internal::dependentsOnMap["picture_id"] = new Array();
-            model_internal::dependentsOnMap["lastname"] = new Array();
-            model_internal::dependentsOnMap["firstname"] = new Array();
             model_internal::dependentsOnMap["rider_id"] = new Array();
+            model_internal::dependentsOnMap["firstname"] = new Array();
+            model_internal::dependentsOnMap["lastname"] = new Array();
+            model_internal::dependentsOnMap["picture_id"] = new Array();
                         
             // collection base map
             model_internal::collectionBaseMap = new Object()
@@ -266,13 +266,7 @@ internal class _RiderEntityMetadata extends AbstractEntityMetadata
     }       
      
      [Bindable(event="propertyChange")] 
-     public function get isPicture_idAvailable():Boolean
-     {
-        return true;
-     }                       
-                  
-     [Bindable(event="propertyChange")] 
-     public function get isLastnameAvailable():Boolean
+     public function get isRider_idAvailable():Boolean
      {
         return true;
      }                       
@@ -284,7 +278,13 @@ internal class _RiderEntityMetadata extends AbstractEntityMetadata
      }                       
                   
      [Bindable(event="propertyChange")] 
-     public function get isRider_idAvailable():Boolean
+     public function get isLastnameAvailable():Boolean
+     {
+        return true;
+     }                       
+                  
+     [Bindable(event="propertyChange")] 
+     public function get isPicture_idAvailable():Boolean
      {
         return true;
      }                       
@@ -300,13 +300,7 @@ internal class _RiderEntityMetadata extends AbstractEntityMetadata
      }
 
     [Bindable(event="propertyChange")]   
-    public function get picture_idStyle():Style
-    {
-		return model_internal::_nullStyle;		
-    }      
-    
-    [Bindable(event="propertyChange")]   
-    public function get lastnameStyle():Style
+    public function get rider_idStyle():Style
     {
 		return model_internal::_nullStyle;		
     }      
@@ -318,7 +312,13 @@ internal class _RiderEntityMetadata extends AbstractEntityMetadata
     }      
     
     [Bindable(event="propertyChange")]   
-    public function get rider_idStyle():Style
+    public function get lastnameStyle():Style
+    {
+		return model_internal::_nullStyle;		
+    }      
+    
+    [Bindable(event="propertyChange")]   
+    public function get picture_idStyle():Style
     {
 		return model_internal::_nullStyle;		
     }      

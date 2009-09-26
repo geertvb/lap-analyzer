@@ -6,6 +6,8 @@
 package valueObjects
 {
 import flash.events.EventDispatcher;
+import flash.net.registerClassAlias;
+import flash.net.getClassByAlias;
 import com.adobe.fiber.core.model_internal;
 import com.adobe.fiber.valueobjects.IPropertyIterator;
 import com.adobe.fiber.valueobjects.IValueObject;
@@ -25,17 +27,30 @@ use namespace model_internal;
 [ExcludeClass]
 public class _Super_Intersection extends EventDispatcher implements IValueObject
 {
+    model_internal static function initRemoteClassAlias(cz:Class) : void 
+    {
+        try 
+        {
+            if (flash.net.getClassByAlias("Intersection") == null)
+            {
+                flash.net.registerClassAlias("Intersection", cz);
+            } 
+        }
+        catch (e:Error) 
+        {
+            flash.net.registerClassAlias("Intersection", cz); 
+        }
+     }   
+
 	model_internal var _dminternal_model : _IntersectionEntityMetadata;
 
 	/**
 	 * properties
 	 */
-	private var _internal_intersection_id : int;
+	private var _internal_lat : Object;
+	private var _internal_lng : Number;
+	private var _internal_angle : int;
 	private var _internal_index : int;
-	private var _internal_lng : Number = 0;
-	private var _internal_angle : Number = 0;
-	private var _internal_lat : Number = 0;
-	private var _internal_track_id : int;
 
     private static var emptyArray:Array = new Array();
 
@@ -58,14 +73,9 @@ public class _Super_Intersection extends EventDispatcher implements IValueObject
      * data property getters
      */
 	[Bindable(event="propertyChange")] 
-    public function get intersection_id() : int    
+    public function get lat() : Object    
     {
-            return _internal_intersection_id;
-    }    
-	[Bindable(event="propertyChange")] 
-    public function get index() : int    
-    {
-            return _internal_index;
+            return _internal_lat;
     }    
 	[Bindable(event="propertyChange")] 
     public function get lng() : Number    
@@ -73,51 +83,33 @@ public class _Super_Intersection extends EventDispatcher implements IValueObject
             return _internal_lng;
     }    
 	[Bindable(event="propertyChange")] 
-    public function get angle() : Number    
+    public function get angle() : int    
     {
             return _internal_angle;
     }    
 	[Bindable(event="propertyChange")] 
-    public function get lat() : Number    
+    public function get index() : int    
     {
-            return _internal_lat;
-    }    
-	[Bindable(event="propertyChange")] 
-    public function get track_id() : int    
-    {
-            return _internal_track_id;
+            return _internal_index;
     }    
 
     /**
      * data property setters
      */      
-    public function set intersection_id(value:int) : void 
+    public function set lat(value:Object) : void 
     {    	
         var recalcValid:Boolean = false;
+    	if (value == null || _internal_lat == null)
+    	{
+    		recalcValid = true;
+    	}	
     	
     	
-    	var oldValue:int = _internal_intersection_id;               
+    	var oldValue:Object = _internal_lat;               
         if (oldValue !== value)
         {
-        	_internal_intersection_id = value;
-        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "intersection_id", oldValue, _internal_intersection_id));
-        }    	     
-        
-        if (recalcValid && model_internal::_cacheInitialized_isValid)
-        {
-            model_internal::isValid_der = model_internal::calculateIsValid();
-        }  
-    }    
-    public function set index(value:int) : void 
-    {    	
-        var recalcValid:Boolean = false;
-    	
-    	
-    	var oldValue:int = _internal_index;               
-        if (oldValue !== value)
-        {
-        	_internal_index = value;
-        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "index", oldValue, _internal_index));
+        	_internal_lat = value;
+        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "lat", oldValue, _internal_lat));
         }    	     
         
         if (recalcValid && model_internal::_cacheInitialized_isValid)
@@ -142,12 +134,12 @@ public class _Super_Intersection extends EventDispatcher implements IValueObject
             model_internal::isValid_der = model_internal::calculateIsValid();
         }  
     }    
-    public function set angle(value:Number) : void 
+    public function set angle(value:int) : void 
     {    	
         var recalcValid:Boolean = false;
     	
     	
-    	var oldValue:Number = _internal_angle;               
+    	var oldValue:int = _internal_angle;               
         if (oldValue !== value)
         {
         	_internal_angle = value;
@@ -159,33 +151,16 @@ public class _Super_Intersection extends EventDispatcher implements IValueObject
             model_internal::isValid_der = model_internal::calculateIsValid();
         }  
     }    
-    public function set lat(value:Number) : void 
+    public function set index(value:int) : void 
     {    	
         var recalcValid:Boolean = false;
     	
     	
-    	var oldValue:Number = _internal_lat;               
+    	var oldValue:int = _internal_index;               
         if (oldValue !== value)
         {
-        	_internal_lat = value;
-        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "lat", oldValue, _internal_lat));
-        }    	     
-        
-        if (recalcValid && model_internal::_cacheInitialized_isValid)
-        {
-            model_internal::isValid_der = model_internal::calculateIsValid();
-        }  
-    }    
-    public function set track_id(value:int) : void 
-    {    	
-        var recalcValid:Boolean = false;
-    	
-    	
-    	var oldValue:int = _internal_track_id;               
-        if (oldValue !== value)
-        {
-        	_internal_track_id = value;
-        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "track_id", oldValue, _internal_track_id));
+        	_internal_index = value;
+        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "index", oldValue, _internal_index));
         }    	     
         
         if (recalcValid && model_internal::_cacheInitialized_isValid)
@@ -225,10 +200,13 @@ public class _Super_Intersection extends EventDispatcher implements IValueObject
         var violatedConsts:Array = new Array();    
         var validationFailureMessages:Array = new Array();    
 
+		if (_model.isLatAvailable && _internal_lat == null)
+		{
+			violatedConsts.push("latIsRequired");
+			validationFailureMessages.push("lat is required");
+		}
 
 		var styleValidity:Boolean = true;
-	
-	
 	
 	
 	

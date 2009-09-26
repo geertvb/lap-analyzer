@@ -6,6 +6,8 @@
 package valueObjects
 {
 import flash.events.EventDispatcher;
+import flash.net.registerClassAlias;
+import flash.net.getClassByAlias;
 import com.adobe.fiber.core.model_internal;
 import com.adobe.fiber.valueobjects.IPropertyIterator;
 import com.adobe.fiber.valueobjects.IValueObject;
@@ -25,6 +27,10 @@ use namespace model_internal;
 [ExcludeClass]
 public class _Super_Gpslog extends EventDispatcher implements IValueObject
 {
+    model_internal static function initRemoteClassAlias(cz:Class) : void 
+    {
+     }   
+
 	model_internal var _dminternal_model : _GpslogEntityMetadata;
 
 	/**

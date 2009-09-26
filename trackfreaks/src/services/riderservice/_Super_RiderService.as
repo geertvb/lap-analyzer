@@ -29,8 +29,11 @@ internal class _Super_RiderService extends RemoteObjectServiceWrapper
         var operation:Operation;         
          
         operation = new Operation(null, "findAll");
-		 operation.resultElementType = Rider;
+		 operation.resultElementType = valueObjects.Rider;
         operations["findAll"] = operation;
+        operation = new Operation(null, "findByID");
+		 operation.resultType = valueObjects.Rider; 		 
+        operations["findByID"] = operation;
     
         _serviceControl.operations = operations;   
 		_serviceControl.convertResultHandler = TypeUtility.convertResultHandler;
@@ -61,8 +64,26 @@ internal class _Super_RiderService extends RemoteObjectServiceWrapper
 
 		return _internal_token;
 	}   
-	
+	 
+	/**
+	  * This method is a generated wrapper used to call the 'findByID' operation. It returns an AsyncToken whose 
+	  * result property will be populated with the result of the operation when the server response is received. 
+	  * To use this result from MXML code, define a CallResponder component and assign its token property to this method's return value. 
+	  * You can then bind to CallResponder.lastResult or listen for the CallResponder.result or fault events.
+      *
+      * @see mx.rpc.AsyncToken
+      * @see mx.rpc.CallResponder 
+      *
+      * @return an AsyncToken whose result property will be populated with the result of the operation when the server response is received.
+	  */          
+	public function findByID(rider_id:int) : AsyncToken
+	{
+		var _internal_operation:AbstractOperation = _serviceControl.getOperation("findByID");
+		var _internal_token:AsyncToken = _internal_operation.send(rider_id) ;
 
+		return _internal_token;
+	}   
+	 
 }
 
 }

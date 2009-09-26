@@ -6,6 +6,8 @@
 package valueObjects
 {
 import flash.events.EventDispatcher;
+import flash.net.registerClassAlias;
+import flash.net.getClassByAlias;
 import com.adobe.fiber.core.model_internal;
 import com.adobe.fiber.valueobjects.IPropertyIterator;
 import com.adobe.fiber.valueobjects.IValueObject;
@@ -25,19 +27,34 @@ use namespace model_internal;
 [ExcludeClass]
 public class _Super_Track extends EventDispatcher implements IValueObject
 {
+    model_internal static function initRemoteClassAlias(cz:Class) : void 
+    {
+        try 
+        {
+            if (flash.net.getClassByAlias("Track") == null)
+            {
+                flash.net.registerClassAlias("Track", cz);
+            } 
+        }
+        catch (e:Error) 
+        {
+            flash.net.registerClassAlias("Track", cz); 
+        }
+     }   
+
 	model_internal var _dminternal_model : _TrackEntityMetadata;
 
 	/**
 	 * properties
 	 */
-	private var _internal_name : String;
-	private var _internal_picture_id : int;
-	private var _internal_length : int;
-	private var _internal_lng : Number;
-	private var _internal_lat : Number;
-	private var _internal_url : String;
 	private var _internal_track_id : int;
+	private var _internal_name : String;
+	private var _internal_url : String;
+	private var _internal_lat : Number;
+	private var _internal_lng : Number;
 	private var _internal_country : String;
+	private var _internal_length : int;
+	private var _internal_picture_id : int;
 
     private static var emptyArray:Array = new Array();
 
@@ -60,29 +77,14 @@ public class _Super_Track extends EventDispatcher implements IValueObject
      * data property getters
      */
 	[Bindable(event="propertyChange")] 
+    public function get track_id() : int    
+    {
+            return _internal_track_id;
+    }    
+	[Bindable(event="propertyChange")] 
     public function get name() : String    
     {
             return _internal_name;
-    }    
-	[Bindable(event="propertyChange")] 
-    public function get picture_id() : int    
-    {
-            return _internal_picture_id;
-    }    
-	[Bindable(event="propertyChange")] 
-    public function get length() : int    
-    {
-            return _internal_length;
-    }    
-	[Bindable(event="propertyChange")] 
-    public function get lng() : Number    
-    {
-            return _internal_lng;
-    }    
-	[Bindable(event="propertyChange")] 
-    public function get lat() : Number    
-    {
-            return _internal_lat;
     }    
 	[Bindable(event="propertyChange")] 
     public function get url() : String    
@@ -90,19 +92,51 @@ public class _Super_Track extends EventDispatcher implements IValueObject
             return _internal_url;
     }    
 	[Bindable(event="propertyChange")] 
-    public function get track_id() : int    
+    public function get lat() : Number    
     {
-            return _internal_track_id;
+            return _internal_lat;
+    }    
+	[Bindable(event="propertyChange")] 
+    public function get lng() : Number    
+    {
+            return _internal_lng;
     }    
 	[Bindable(event="propertyChange")] 
     public function get country() : String    
     {
             return _internal_country;
     }    
+	[Bindable(event="propertyChange")] 
+    public function get length() : int    
+    {
+            return _internal_length;
+    }    
+	[Bindable(event="propertyChange")] 
+    public function get picture_id() : int    
+    {
+            return _internal_picture_id;
+    }    
 
     /**
      * data property setters
      */      
+    public function set track_id(value:int) : void 
+    {    	
+        var recalcValid:Boolean = false;
+    	
+    	
+    	var oldValue:int = _internal_track_id;               
+        if (oldValue !== value)
+        {
+        	_internal_track_id = value;
+        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "track_id", oldValue, _internal_track_id));
+        }    	     
+        
+        if (recalcValid && model_internal::_cacheInitialized_isValid)
+        {
+            model_internal::isValid_der = model_internal::calculateIsValid();
+        }  
+    }    
     public function set name(value:String) : void 
     {    	
         var recalcValid:Boolean = false;
@@ -117,74 +151,6 @@ public class _Super_Track extends EventDispatcher implements IValueObject
         {
         	_internal_name = value;
         	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "name", oldValue, _internal_name));
-        }    	     
-        
-        if (recalcValid && model_internal::_cacheInitialized_isValid)
-        {
-            model_internal::isValid_der = model_internal::calculateIsValid();
-        }  
-    }    
-    public function set picture_id(value:int) : void 
-    {    	
-        var recalcValid:Boolean = false;
-    	
-    	
-    	var oldValue:int = _internal_picture_id;               
-        if (oldValue !== value)
-        {
-        	_internal_picture_id = value;
-        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "picture_id", oldValue, _internal_picture_id));
-        }    	     
-        
-        if (recalcValid && model_internal::_cacheInitialized_isValid)
-        {
-            model_internal::isValid_der = model_internal::calculateIsValid();
-        }  
-    }    
-    public function set length(value:int) : void 
-    {    	
-        var recalcValid:Boolean = false;
-    	
-    	
-    	var oldValue:int = _internal_length;               
-        if (oldValue !== value)
-        {
-        	_internal_length = value;
-        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "length", oldValue, _internal_length));
-        }    	     
-        
-        if (recalcValid && model_internal::_cacheInitialized_isValid)
-        {
-            model_internal::isValid_der = model_internal::calculateIsValid();
-        }  
-    }    
-    public function set lng(value:Number) : void 
-    {    	
-        var recalcValid:Boolean = false;
-    	
-    	
-    	var oldValue:Number = _internal_lng;               
-        if (oldValue !== value)
-        {
-        	_internal_lng = value;
-        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "lng", oldValue, _internal_lng));
-        }    	     
-        
-        if (recalcValid && model_internal::_cacheInitialized_isValid)
-        {
-            model_internal::isValid_der = model_internal::calculateIsValid();
-        }  
-    }    
-    public function set lat(value:Number) : void 
-    {    	
-        var recalcValid:Boolean = false;
-    	
-    	
-    	var oldValue:Number = _internal_lat;               
-        if (oldValue !== value)
-        {
-        	_internal_lat = value;
-        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "lat", oldValue, _internal_lat));
         }    	     
         
         if (recalcValid && model_internal::_cacheInitialized_isValid)
@@ -213,16 +179,33 @@ public class _Super_Track extends EventDispatcher implements IValueObject
             model_internal::isValid_der = model_internal::calculateIsValid();
         }  
     }    
-    public function set track_id(value:int) : void 
+    public function set lat(value:Number) : void 
     {    	
         var recalcValid:Boolean = false;
     	
     	
-    	var oldValue:int = _internal_track_id;               
+    	var oldValue:Number = _internal_lat;               
         if (oldValue !== value)
         {
-        	_internal_track_id = value;
-        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "track_id", oldValue, _internal_track_id));
+        	_internal_lat = value;
+        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "lat", oldValue, _internal_lat));
+        }    	     
+        
+        if (recalcValid && model_internal::_cacheInitialized_isValid)
+        {
+            model_internal::isValid_der = model_internal::calculateIsValid();
+        }  
+    }    
+    public function set lng(value:Number) : void 
+    {    	
+        var recalcValid:Boolean = false;
+    	
+    	
+    	var oldValue:Number = _internal_lng;               
+        if (oldValue !== value)
+        {
+        	_internal_lng = value;
+        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "lng", oldValue, _internal_lng));
         }    	     
         
         if (recalcValid && model_internal::_cacheInitialized_isValid)
@@ -244,6 +227,40 @@ public class _Super_Track extends EventDispatcher implements IValueObject
         {
         	_internal_country = value;
         	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "country", oldValue, _internal_country));
+        }    	     
+        
+        if (recalcValid && model_internal::_cacheInitialized_isValid)
+        {
+            model_internal::isValid_der = model_internal::calculateIsValid();
+        }  
+    }    
+    public function set length(value:int) : void 
+    {    	
+        var recalcValid:Boolean = false;
+    	
+    	
+    	var oldValue:int = _internal_length;               
+        if (oldValue !== value)
+        {
+        	_internal_length = value;
+        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "length", oldValue, _internal_length));
+        }    	     
+        
+        if (recalcValid && model_internal::_cacheInitialized_isValid)
+        {
+            model_internal::isValid_der = model_internal::calculateIsValid();
+        }  
+    }    
+    public function set picture_id(value:int) : void 
+    {    	
+        var recalcValid:Boolean = false;
+    	
+    	
+    	var oldValue:int = _internal_picture_id;               
+        if (oldValue !== value)
+        {
+        	_internal_picture_id = value;
+        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "picture_id", oldValue, _internal_picture_id));
         }    	     
         
         if (recalcValid && model_internal::_cacheInitialized_isValid)

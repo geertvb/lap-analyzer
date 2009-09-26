@@ -29,10 +29,10 @@ internal class _Super_TrackService extends RemoteObjectServiceWrapper
         var operation:Operation;         
          
         operation = new Operation(null, "findAll");
-		 operation.resultElementType = Track;
+		 operation.resultElementType = valueObjects.Track;
         operations["findAll"] = operation;
         operation = new Operation(null, "findByLatLng");
-		 operation.resultType = Track; 		 
+		 operation.resultType = valueObjects.Track; 		 
         operations["findByLatLng"] = operation;
     
         _serviceControl.operations = operations;   
@@ -64,8 +64,7 @@ internal class _Super_TrackService extends RemoteObjectServiceWrapper
 
 		return _internal_token;
 	}   
-	
-
+	 
 	/**
 	  * This method is a generated wrapper used to call the 'findByLatLng' operation. It returns an AsyncToken whose 
 	  * result property will be populated with the result of the operation when the server response is received. 
@@ -77,15 +76,14 @@ internal class _Super_TrackService extends RemoteObjectServiceWrapper
       *
       * @return an AsyncToken whose result property will be populated with the result of the operation when the server response is received.
 	  */          
-	public function findByLatLng(minlat:Object, minlng:Object, maxlat:Object, maxlng:Object) : AsyncToken
+	public function findByLatLng(minlat:Number, minlng:Number, maxlat:Number, maxlng:Number) : AsyncToken
 	{
 		var _internal_operation:AbstractOperation = _serviceControl.getOperation("findByLatLng");
 		var _internal_token:AsyncToken = _internal_operation.send(minlat,minlng,maxlat,maxlng) ;
 
 		return _internal_token;
 	}   
-	
-
+	 
 }
 
 }
