@@ -23,9 +23,7 @@
 	
 	<mx:ViewStack 
 		id="viewstack1" 
-		resizeToContent="true"
-		creationPolicy="all"
-		>
+		resizeToContent="true" >
 		<mx:Canvas label="Tracks"><local:Tracks /></mx:Canvas>
 		<mx:Canvas label="Riders"><local:Riders /></mx:Canvas>
 		<mx:Canvas label="Timing"><local:Timing /></mx:Canvas>
