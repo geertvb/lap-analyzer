@@ -13,13 +13,7 @@
 		<![CDATA[
 			import com.google.maps.LatLngBounds;
 			import valueObjects.Intersection;
-			import mx.controls.Label;
-			import mx.core.UITextField;
-			import mx.binding.utils.BindingUtils;
-			import mx.controls.Text;
 			import util.IntersectionUtils;
-			import mx.core.UIComponent;
-			import mx.core.FlexSprite;
 			import com.google.maps.LatLng;
 			import mx.utils.ArrayUtil;
 			import mx.rpc.events.FaultEvent;
@@ -34,10 +28,6 @@
 			
 			public var projection: Projection;
 
-			public var dX: Number;
-			public var dY: Number;
-			public var d: Number;
-			
 			[Bindable] 
 			private var commands: Vector.<int> = new Vector.<int>();
 
@@ -46,6 +36,10 @@
 			
 			[Bindable]
 			private var intersections: ArrayCollection;
+			private var markers: ArrayCollection;
+			
+			[Bindable]
+			private var laptimes: ArrayCollection;
 			
 			public function creationComplete() : void {
 				findSampleTrackData.token = gpslogService.findSampleTrackData(1);
@@ -128,6 +122,8 @@
 					marker.parent = c1;
 					marker.projection = projection;
 					marker.draw();
+					
+					markers.addItem(marker);
 
 					var intersection: Intersection = new Intersection();
 					intersection.index = intersections.length;
@@ -140,32 +136,81 @@
 			}
 			
 			public function scan() : void {
-				var s1: ArrayCollection = new ArrayCollection();
-				for (var i:uint = 0; s1.length < intersections.length && i < thedata.length-2; i += 2) {
-					var index: int = 0;
-					for each (var intersection: Object in intersections) {
+				var i: int;
+				var ii: int;
+				var s1: ArrayCollection;
+				
+				s1 = new ArrayCollection();
+				s1.addAll(markers);
+				i = 0;
+				while (s1.length > 0 && i < thedata.length-2) {
+					for (ii = s1.length - 1; ii >= 0; ii--) {
+						var marker: IntersectionMarker = IntersectionMarker(s1.getItemAt(ii));
 						var pt1: Point = new Point(thedata[i], thedata[i+1]);
 						var pt2: Point = new Point(thedata[i+2], thedata[i+3]);
-						var ip1: Point = new Point(intersection.marker.x1, intersection.marker.y1);
-						var ip2: Point = new Point(intersection.marker.x2, intersection.marker.y2);
+						var ip1: Point = new Point(marker.x1, marker.y1);
+						var ip2: Point = new Point(marker.x2, marker.y2);
 						if (IntersectionUtils.intersects(pt1, pt2, ip2, ip1)) {
-							if (!s1.contains(intersection)) {
-								s1.addItem(intersection);
-							}
-							trace("Intersection " + index + " " + i);
+							s1.removeItemAt(ii);
 						}
-						index++;
+					}
+					i += 2;
+				}
+
+				var ni: ArrayCollection = new ArrayCollection();
+				var nm: ArrayCollection = new ArrayCollection();
+				var index: int = 0;
+				while (markers.length > 0 && i < thedata.length-2) {
+					for (ii = markers.length - 1; ii >= 0; ii--) {
+						marker = IntersectionMarker(markers.getItemAt(ii));
+						pt1 = new Point(thedata[i], thedata[i+1]);
+						pt2 = new Point(thedata[i+2], thedata[i+3]);
+						ip1 = new Point(marker.x1, marker.y1);
+						ip2 = new Point(marker.x2, marker.y2);
+						if (IntersectionUtils.intersects(pt1, pt2, ip2, ip1)) {
+							markers.removeItemAt(ii);
+							marker.labelText = "" + index;
+							marker.draw();
+							nm.addItem(marker);
+							var intersection: Intersection = Intersection(intersections.removeItemAt(ii));
+							intersection.index = index;
+							ni.addItem(intersection);
+							index++;
+						}
+					}
+					i += 2;
+				}
+				
+				markers = nm;
+				intersections = ni;
+			}
+			
+			public function calculateLaptimes() : void {
+				laptimes = new ArrayCollection();
+
+				var marker: IntersectionMarker = IntersectionMarker(markers.getItemAt(0));
+				var ip1: Point = new Point(marker.x1, marker.y1);
+				var ip2: Point = new Point(marker.x2, marker.y2);
+
+				var ts0: int = -1;
+				var ts1: int = -1;
+
+				var index: int = 0;
+				for (var i: int = 0; i < thedata.length-2; i += 2) {
+					var pt1: Point = new Point(thedata[i], thedata[i+1]);
+					var pt2: Point = new Point(thedata[i+2], thedata[i+3]);
+					if (IntersectionUtils.intersects(pt1, pt2, ip2, ip1)) {
+						ts1 = i * 100;
+						if (ts0 >= 0) {
+							laptimes.addItem({
+								index: index,
+								laptime: ts1 - ts0
+							});
+							index++;
+						}
+						ts0 = ts1;
 					}
 				}
-				for (i = 0; i < s1.length; i++) {
-					var item: Object = s1.getItemAt(i);
-					item.index = i;
-					item.tf.text = "" + i;
-					var tlm: TextLineMetrics = item.tf.measureText(item.tf.text);
-					item.tf.x = item.x + 2.4 * item.vy - (tlm.width + 5) / 2;
-					item.tf.y = item.y - 2.4 * item.vx - (tlm.height + 4) / 2;
-				}
-				intersections = s1;
 			}
 			
 			public function click_remove() : void {
@@ -185,6 +230,7 @@
 			
 			public function result_findByTrack(event : ResultEvent) : void {
 				intersections = ArrayCollection(event.result);
+				//click_showmarkers();
 			}
 			
 			protected function dataGrid_refresh():void {
@@ -213,6 +259,7 @@
 			}
 			
 			protected function click_showmarkers() : void {
+				markers = new ArrayCollection();
 				for each (var intersection: Object in intersections) {
 					var marker: IntersectionMarker = new IntersectionMarker();
 					marker.latLng = new LatLng(intersection.lat, intersection.lng);
@@ -221,11 +268,32 @@
 					marker.parent = c1;
 					marker.projection = projection;
 					marker.draw();
-					//intersection.marker = marker;
+					markers.addItem(marker);
 				}
 
 			}
-
+			
+			protected function labelFunction(item:Object, column:DataGridColumn): String {
+				return latLngFormatter.format(item[column.dataField]);
+			}
+			
+			protected function timeLabelFunction(item:Object, column:DataGridColumn): String {
+				var value: int = int(item[column.dataField]);
+				var minutes: int = Math.floor(value / 1000.0 / 60.0);
+				value -= minutes * 1000 * 60;
+				var seconds: int = Math.floor(value / 1000.0);
+				value -= seconds * 1000;
+				return minutes + ":" + pad(seconds,2) + "." + pad(value,3);
+			}
+			
+			protected function pad(value: int, n: int): String {
+				var result: String = String(value);
+				while (result.length < n) {
+					result = "0" + result;
+				}
+				return result;
+			}
+			
 		]]>
 	</fx:Script>
 	
@@ -250,6 +318,7 @@
 			showBusyCursor="true"/>
 		<mx:RadioButtonGroup id="startFinishGroup" />
 		<mx:NumberFormatter id="latLngFormatter" precision="6" />
+		<mx:DateFormatter id="timeFormatter" formatString="NN:SS.QQQ" />
 	</fx:Declarations>
 	
 	<mx:Form>
@@ -264,20 +333,53 @@
 		</mx:FormItem>
 	</mx:Form>
 	
-	<mx:DataGrid 
-		id="dataGrid" 
-		creationComplete="dataGrid_refresh()" 
-		dataProvider="{intersections}">
-		<mx:columns>
-			<mx:DataGridColumn headerText="intersection_id" dataField="intersection_id" visible="false"/>
-			<mx:DataGridColumn headerText="Index" dataField="index" width="44"/>
-			<mx:DataGridColumn headerText="Latitude" dataField="lat" width="80"/>
-			<mx:DataGridColumn headerText="Longitude" dataField="lng" width="80"/>
-			<mx:DataGridColumn headerText="Angle" dataField="angle" width="80"/>
-			<mx:DataGridColumn headerText="track_id" dataField="track_id" visible="false"/>
-		</mx:columns>
+	<s:HGroup>
 		
-	</mx:DataGrid>
+		<mx:DataGrid 
+			id="dataGrid" 
+			creationComplete="dataGrid_refresh()" 
+			dataProvider="{intersections}">
+			<mx:columns>
+				<mx:DataGridColumn 
+					headerText="Index" 
+					dataField="index" 
+					width="44"/>
+				<mx:DataGridColumn 
+					headerText="Latitude" 
+					dataField="lat" 
+					width="80" 
+					labelFunction="labelFunction"/>
+				<mx:DataGridColumn 
+					headerText="Longitude" 
+					dataField="lng" 
+					width="80" 
+					labelFunction="labelFunction"/>
+				<mx:DataGridColumn 
+					headerText="Angle" 
+					dataField="angle" 
+					width="80" 
+					labelFunction="labelFunction"/>
+			</mx:columns>
+			
+		</mx:DataGrid>
+		
+		<mx:DataGrid
+			id="laptimesGrid"
+			dataProvider="{laptimes}">
+			<mx:columns>
+				<mx:DataGridColumn 
+					headerText="Index" 
+					dataField="index" 
+					width="44"/>
+				<mx:DataGridColumn 
+					headerText="Laptime" 
+					dataField="laptime" 
+					width="80" 
+					labelFunction="timeLabelFunction"/>
+			</mx:columns>
+		</mx:DataGrid>
+
+	</s:HGroup>
 	
 	<s:HGroup>
 		<s:Button
@@ -293,6 +395,9 @@
 		<s:Button 
 			label="Save"
 			click="click_save()"/>
+		<s:Button 
+			label="Laptimes"
+			click="calculateLaptimes()"/>
 	</s:HGroup>
 	
 	<mx:Canvas 
