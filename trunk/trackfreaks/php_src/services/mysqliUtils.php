@@ -20,6 +20,30 @@ function throwExceptionOnError($mysqli) {
 		throw new Exception('MySQL Error - '. $msg);
 	}		
 }
+
+function executeSQL($mysqli = NULL, $sql) {
+	
+	if (is_null($mysqli)) {
+		$mysqli = newMysqli();
+		$created = true;
+	} else {
+		$created = false;
+	}
+	
+	if ($stmt = $mysqli->prepare($sql)) {
+		if (!$stmt->execute()) {
+			throwExceptionOnError($mysqli);
+		}
+		$stmt->close();
+	} else {
+		throwExceptionOnError($mysqli);
+	}
+	
+	if ($created) {
+		$mysqli->close();
+	}
+	
+}
 	
 function findSQL($mysqli = NULL, $sql, $classname = "stdClass") {
 	

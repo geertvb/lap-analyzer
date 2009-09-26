@@ -29,9 +29,10 @@ internal class _Super_GpslogService extends RemoteObjectServiceWrapper
         var operation:Operation;         
          
         operation = new Operation(null, "findAll");
-		 operation.resultElementType = Gpslog;
+		 operation.resultElementType = valueObjects.Gpslog;
         operations["findAll"] = operation;
         operation = new Operation(null, "createGpslog");
+		 operation.resultType = Object; 		 
         operations["createGpslog"] = operation;
         operation = new Operation(null, "findAllDates");
 		 operation.resultElementType = Date;
@@ -69,8 +70,7 @@ internal class _Super_GpslogService extends RemoteObjectServiceWrapper
 
 		return _internal_token;
 	}   
-	
-
+	 
 	/**
 	  * This method is a generated wrapper used to call the 'createGpslog' operation. It returns an AsyncToken whose 
 	  * result property will be populated with the result of the operation when the server response is received. 
@@ -82,15 +82,14 @@ internal class _Super_GpslogService extends RemoteObjectServiceWrapper
       *
       * @return an AsyncToken whose result property will be populated with the result of the operation when the server response is received.
 	  */          
-	public function createGpslog(rider_id:int, track_id:int, date:String, start_time:String, end_time:String, data:String) : AsyncToken
+	public function createGpslog(rider_id:int, track_id:int, date:Object, start_time:String, end_time:String, data:String) : AsyncToken
 	{
 		var _internal_operation:AbstractOperation = _serviceControl.getOperation("createGpslog");
 		var _internal_token:AsyncToken = _internal_operation.send(rider_id,track_id,date,start_time,end_time,data) ;
 
 		return _internal_token;
 	}   
-	
-
+	 
 	/**
 	  * This method is a generated wrapper used to call the 'findAllDates' operation. It returns an AsyncToken whose 
 	  * result property will be populated with the result of the operation when the server response is received. 
@@ -109,8 +108,7 @@ internal class _Super_GpslogService extends RemoteObjectServiceWrapper
 
 		return _internal_token;
 	}   
-	
-
+	 
 	/**
 	  * This method is a generated wrapper used to call the 'findSampleTrackData' operation. It returns an AsyncToken whose 
 	  * result property will be populated with the result of the operation when the server response is received. 
@@ -129,8 +127,7 @@ internal class _Super_GpslogService extends RemoteObjectServiceWrapper
 
 		return _internal_token;
 	}   
-	
-
+	 
 }
 
 }

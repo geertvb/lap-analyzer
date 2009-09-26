@@ -6,6 +6,8 @@
 package valueObjects
 {
 import flash.events.EventDispatcher;
+import flash.net.registerClassAlias;
+import flash.net.getClassByAlias;
 import com.adobe.fiber.core.model_internal;
 import com.adobe.fiber.valueobjects.IPropertyIterator;
 import com.adobe.fiber.valueobjects.IValueObject;
@@ -25,15 +27,30 @@ use namespace model_internal;
 [ExcludeClass]
 public class _Super_Rider extends EventDispatcher implements IValueObject
 {
+    model_internal static function initRemoteClassAlias(cz:Class) : void 
+    {
+        try 
+        {
+            if (flash.net.getClassByAlias("Rider") == null)
+            {
+                flash.net.registerClassAlias("Rider", cz);
+            } 
+        }
+        catch (e:Error) 
+        {
+            flash.net.registerClassAlias("Rider", cz); 
+        }
+     }   
+
 	model_internal var _dminternal_model : _RiderEntityMetadata;
 
 	/**
 	 * properties
 	 */
-	private var _internal_picture_id : int;
-	private var _internal_lastname : String;
-	private var _internal_firstname : String;
 	private var _internal_rider_id : int;
+	private var _internal_firstname : String;
+	private var _internal_lastname : String;
+	private var _internal_picture_id : int;
 
     private static var emptyArray:Array = new Array();
 
@@ -56,14 +73,9 @@ public class _Super_Rider extends EventDispatcher implements IValueObject
      * data property getters
      */
 	[Bindable(event="propertyChange")] 
-    public function get picture_id() : int    
+    public function get rider_id() : int    
     {
-            return _internal_picture_id;
-    }    
-	[Bindable(event="propertyChange")] 
-    public function get lastname() : String    
-    {
-            return _internal_lastname;
+            return _internal_rider_id;
     }    
 	[Bindable(event="propertyChange")] 
     public function get firstname() : String    
@@ -71,45 +83,29 @@ public class _Super_Rider extends EventDispatcher implements IValueObject
             return _internal_firstname;
     }    
 	[Bindable(event="propertyChange")] 
-    public function get rider_id() : int    
+    public function get lastname() : String    
     {
-            return _internal_rider_id;
+            return _internal_lastname;
+    }    
+	[Bindable(event="propertyChange")] 
+    public function get picture_id() : int    
+    {
+            return _internal_picture_id;
     }    
 
     /**
      * data property setters
      */      
-    public function set picture_id(value:int) : void 
+    public function set rider_id(value:int) : void 
     {    	
         var recalcValid:Boolean = false;
     	
     	
-    	var oldValue:int = _internal_picture_id;               
+    	var oldValue:int = _internal_rider_id;               
         if (oldValue !== value)
         {
-        	_internal_picture_id = value;
-        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "picture_id", oldValue, _internal_picture_id));
-        }    	     
-        
-        if (recalcValid && model_internal::_cacheInitialized_isValid)
-        {
-            model_internal::isValid_der = model_internal::calculateIsValid();
-        }  
-    }    
-    public function set lastname(value:String) : void 
-    {    	
-        var recalcValid:Boolean = false;
-    	if (value == null || _internal_lastname == null)
-    	{
-    		recalcValid = true;
-    	}	
-    	
-    	
-    	var oldValue:String = _internal_lastname;               
-        if (oldValue !== value)
-        {
-        	_internal_lastname = value;
-        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "lastname", oldValue, _internal_lastname));
+        	_internal_rider_id = value;
+        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "rider_id", oldValue, _internal_rider_id));
         }    	     
         
         if (recalcValid && model_internal::_cacheInitialized_isValid)
@@ -138,16 +134,37 @@ public class _Super_Rider extends EventDispatcher implements IValueObject
             model_internal::isValid_der = model_internal::calculateIsValid();
         }  
     }    
-    public function set rider_id(value:int) : void 
+    public function set lastname(value:String) : void 
+    {    	
+        var recalcValid:Boolean = false;
+    	if (value == null || _internal_lastname == null)
+    	{
+    		recalcValid = true;
+    	}	
+    	
+    	
+    	var oldValue:String = _internal_lastname;               
+        if (oldValue !== value)
+        {
+        	_internal_lastname = value;
+        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "lastname", oldValue, _internal_lastname));
+        }    	     
+        
+        if (recalcValid && model_internal::_cacheInitialized_isValid)
+        {
+            model_internal::isValid_der = model_internal::calculateIsValid();
+        }  
+    }    
+    public function set picture_id(value:int) : void 
     {    	
         var recalcValid:Boolean = false;
     	
     	
-    	var oldValue:int = _internal_rider_id;               
+    	var oldValue:int = _internal_picture_id;               
         if (oldValue !== value)
         {
-        	_internal_rider_id = value;
-        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "rider_id", oldValue, _internal_rider_id));
+        	_internal_picture_id = value;
+        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "picture_id", oldValue, _internal_picture_id));
         }    	     
         
         if (recalcValid && model_internal::_cacheInitialized_isValid)
@@ -187,15 +204,15 @@ public class _Super_Rider extends EventDispatcher implements IValueObject
         var violatedConsts:Array = new Array();    
         var validationFailureMessages:Array = new Array();    
 
-		if (_model.isLastnameAvailable && _internal_lastname == null)
-		{
-			violatedConsts.push("lastnameIsRequired");
-			validationFailureMessages.push("lastname is required");
-		}
 		if (_model.isFirstnameAvailable && _internal_firstname == null)
 		{
 			violatedConsts.push("firstnameIsRequired");
 			validationFailureMessages.push("firstname is required");
+		}
+		if (_model.isLastnameAvailable && _internal_lastname == null)
+		{
+			violatedConsts.push("lastnameIsRequired");
+			validationFailureMessages.push("lastname is required");
 		}
 
 		var styleValidity:Boolean = true;

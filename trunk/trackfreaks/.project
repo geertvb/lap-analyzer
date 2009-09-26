@@ -24,7 +24,7 @@
 		<link>
 			<name>bin-release</name>
 			<type>2</type>
-			<location>C:/xampp/htdocs/trackfreaks</location>
+			<locationURI>C:/xampp/htdocs/trackfreaks</locationURI>
 		</link>
 		<link>
 			<name>services/GpslogService.php</name>
