@@ -53,8 +53,8 @@ package {
 					Vector.<int>([GraphicsPathCommand.MOVE_TO,GraphicsPathCommand.LINE_TO]),
 					Vector.<Number>([x1, y1, x2, y2])
 				);
-				drawCircle(x1, y1, 4);
-				drawCircle(x2, y2, 4);
+				drawCircle(x1, y1, d/3);
+				drawCircle(x2, y2, d/3);
 			}
 			
 		}
@@ -66,10 +66,12 @@ package {
 				parent.addChild(label);
 			}
 			
+			var d: Number = 6 + projection.zoom * 0.03;
+			
 			label.text = labelText;
 			var tlm: TextLineMetrics = label.measureText(labelText);
-			label.x = x + 24 * vy - (tlm.width + 5) / 2;
-			label.y = y - 24 * vx - (tlm.height + 4) / 2;
+			label.x = x + d * vy - (tlm.width + 5) / 2;
+			label.y = y - d * vx - (tlm.height + 4) / 2;
 
 		}
 
