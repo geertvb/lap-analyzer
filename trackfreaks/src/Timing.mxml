@@ -11,6 +11,7 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import mx.controls.dataGridClasses.DataGridColumn;
 			import com.google.maps.LatLngBounds;
 			import valueObjects.Intersection;
 			import util.IntersectionUtils;
@@ -33,6 +34,7 @@
 
 			[Bindable] 
 			private var thedata: Vector.<Number> = new Vector.<Number>();
+			private var timestamps: Vector.<Number> = new Vector.<Number>();
 			
 			[Bindable]
 			private var intersections: ArrayCollection;
@@ -56,10 +58,17 @@
 				var lngIndex: uint = headings.indexOf("LONGITUDE");
 				var spdIndex: uint = headings.indexOf("SPEED");
 				var timeIndex: uint = headings.indexOf("TIME");
+				if (timeIndex < 0) {
+					timeIndex = headings.indexOf("LOCAL TIME");
+				}
+				if (timeIndex < 0) {
+					timeIndex = headings.indexOf("UTC TIME");
+				}
 				
 				var bounds: LatLngBounds = new LatLngBounds();
 				
 				var points: Array = new Array();
+				timestamps = new Vector.<Number>();
 				for (i = 1; i<lines.length; i++) {
 					var line: String = lines[i];
 					var values: Array = line.split(",");
@@ -67,6 +76,14 @@
 						var latLng: LatLng = new LatLng(values[latIndex], values[lngIndex]);
 						bounds.extend(latLng);
 						points.push(latLng);
+						var ts: String = values[timeIndex];
+						var t: Number = 
+							((parseInt(ts.substr(0,2)) * 60 
+								+ parseInt(ts.substr(3,2))) * 60 
+								+ parseInt(ts.substr(6,2))) * 1000 
+							+ parseInt(ts.substr(9,3));
+						timestamps.push(t);
+						trace(ts + "_" + t);
 					}
 				}
 				
@@ -187,28 +204,55 @@
 			
 			public function calculateLaptimes() : void {
 				laptimes = new ArrayCollection();
-
-				var marker: IntersectionMarker = IntersectionMarker(markers.getItemAt(0));
-				var ip1: Point = new Point(marker.x1, marker.y1);
-				var ip2: Point = new Point(marker.x2, marker.y2);
+				var columns: Array = laptimesGrid.columns;
+				while (columns.length - 2 > markers.length) {
+					columns.pop();
+				}
+				while (columns.length - 2 < markers.length) {
+					var column: DataGridColumn = new DataGridColumn();
+					column.dataField = "section_" + (columns.length - 2);
+					column.headerText = "Section " + (columns.length - 1);
+					column.labelFunction = timeLabelFunction;
+					columns.push(column);
+				}
+				laptimesGrid.columns = columns;
 
 				var ts0: int = -1;
 				var ts1: int = -1;
+				var ts2: int = -1;
 
 				var index: int = 0;
+				var sections: Array = new Array();
 				for (var i: int = 0; i < thedata.length-2; i += 2) {
 					var pt1: Point = new Point(thedata[i], thedata[i+1]);
 					var pt2: Point = new Point(thedata[i+2], thedata[i+3]);
-					if (IntersectionUtils.intersects(pt1, pt2, ip2, ip1)) {
-						ts1 = i * 100;
-						if (ts0 >= 0) {
-							laptimes.addItem({
-								index: index,
-								laptime: ts1 - ts0
-							});
-							index++;
+					for (var j: int = 0; j < markers.length; j++) {
+						var marker: IntersectionMarker = IntersectionMarker(markers.getItemAt(j));
+						var ip1: Point = new Point(marker.x1, marker.y1);
+						var ip2: Point = new Point(marker.x2, marker.y2);
+						
+						if (IntersectionUtils.intersects(pt1, pt2, ip2, ip1)) {
+							ts1 = timestamps[i/2];
+							if (ts2 >= 0) {
+								sections[j] = ts1 - ts2;
+							}
+							ts2 = ts1;
+							if (j == 0) {
+								if (ts0 >= 0) {
+									var row: Object = {
+										index: index,
+										laptime: ts1 - ts0
+									};
+									for (var k: int=0; k < markers.length; k++) {
+										row["section_"+k] = sections[k];
+									}
+									laptimes.addItem(row);
+									index++;
+								}
+								sections = new Array();
+								ts0 = ts1;
+							}
 						}
-						ts0 = ts1;
 					}
 				}
 			}
@@ -218,6 +262,8 @@
 
 				var index: int = intersections.getItemIndex(intersection);
 				intersections.removeItemAt(index);
+				var marker: IntersectionMarker = IntersectionMarker(markers.removeItemAt(index));
+				marker.destroy();
 			}
 
 			protected function cb_tracks_creationCompleteHandler(event:FlexEvent):void {
