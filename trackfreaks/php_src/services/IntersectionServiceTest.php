@@ -2,10 +2,10 @@
 
 require_once 'IntersectionService.php';
 
-$s = new IntersectionService();
+$service = new IntersectionService();
 
-$rows = $s->findByTrack(1);
+$result = $service->findByTrack(1);
 
-var_dump($rows)
+var_dump($result);
 
 ?>
