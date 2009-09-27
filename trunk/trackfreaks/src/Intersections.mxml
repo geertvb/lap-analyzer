@@ -191,6 +191,14 @@
 				marker.destroy();
 				scan();
 			}
+			
+			public function click_remove_all() : void {
+				intersections = new ArrayCollection();
+				for each (var marker: IntersectionMarker in markers) {
+					marker.destroy();
+				}
+				markers = new ArrayCollection();
+			}
 
 			protected function cb_tracks_creationCompleteHandler(event:FlexEvent):void {
 				findAllResult.token = trackService.findAll();
@@ -314,6 +322,13 @@
 	</mx:DataGrid>
 	
 	<s:HGroup>
+		<s:Button 
+			label="Reload"
+			click="dataGrid_refresh()"/>
+		<s:Button 
+			label="Remove all"
+			enabled="{intersections.length >= 0}"
+			click="click_remove_all()"/>
 		<s:Button 
 			label="Remove"
 			enabled="{dataGrid.selectedIndex >= 0}"
