@@ -69,36 +69,56 @@ class IntersectionService {
 	
 	/**
 	 * @param int $track_id
-	 * @return array of Intersection
 	 */
 	public function findByTrack($track_id) {
-		$sql = array();
-
-		$sql[] = "SELECT";
-		$sql[] = "  `index`,";
-		$sql[] = "  `lat`,";
-		$sql[] = "  `lng`,";
-		$sql[] = "  `angle`";
-		$sql[] = "FROM";
-		$sql[] = "  `intersection`";
-		$sql[] = "WHERE";
-		$sql[] = "  `track_id` = ?";
-		$sql[] = "ORDER BY";
-		$sql[] = "  `index` asc";
 
 		$mysqli = newmysqli();
 
-		$stmt = $mysqli->prepare(implode(" ", $sql));		
-		throwExceptionOnError($mysqli);
+		$sql = <<<SQL
+SELECT
+  `index`,
+  `lat`,
+  `lng`,
+  `angle`
+FROM
+  `intersection`
+WHERE
+  `track_id` = ?
+ORDER BY
+  `index` asc
+SQL;
 
+		$stmt = $mysqli->prepare($sql);		
 		$stmt->bind_param("i", $track_id);
-
 		$stmt->execute();
-		throwExceptionOnError($mysqli);
-		
-		$result = getResult($stmt, "Intersection");
+		$intersections = getResult($stmt, "Intersection");
+		$stmt->close();
+
+		$sql = <<<SQL
+SELECT
+  `data`
+FROM
+  `gpslog`
+WHERE
+  `track_id` = ?
+LIMIT 0,1
+SQL;
+	
+		$stmt = $mysqli->prepare($sql);		
+		$stmt->bind_param("i", $track_id);
+		$stmt->execute();
+		$stmt->store_result();
+		$data = null;
+		$stmt->bind_result($data);
+		$stmt->fetch();
+		$stmt->free_result();
+		$stmt->close();
 		
 	    $mysqli->close();
+	    
+	    $result = new stdClass();
+	    $result->intersections = $intersections;
+	    $result->data = $data;
 	
 	    return $result;
 	}

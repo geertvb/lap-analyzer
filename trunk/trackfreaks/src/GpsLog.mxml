@@ -9,9 +9,23 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import util.IntersectionUtils;
 			import mx.events.FlexEvent;
 			import mx.controls.Alert;
 
+			[Bindable]
+			private var laptimes: ArrayCollection;
+
+			[Bindable]
+			private var markers: ArrayCollection;
+
+			[Bindable] 
+			private var thedata: Vector.<Number>;
+
+			[Bindable]
+			private var gpsLines: Vector.<GpsLine>;
+
+			
 			protected function dataGrid_creationCompleteHandler(event:FlexEvent):void {
 				findAllResult.token = gpslogService.findAll();
 			}
@@ -39,11 +53,86 @@
 				
 			}
 
-			protected function dropDownList_creationCompleteHandler(event:FlexEvent):void
-			{
+			protected function dropDownList_creationCompleteHandler(event:FlexEvent):void {
 				findAllDatesResult.token = gpslogService.findAllDates();
 			}
+			
+			public function createSectionColumns() : void {
+				var columns: Array = laptimesGrid.columns;
+				while (columns.length - 2 > markers.length) {
+					columns.pop();
+				}
+				while (columns.length - 2 < markers.length) {
+					var column: DataGridColumn = new DataGridColumn();
+					column.dataField = "section_" + (columns.length - 2);
+					column.headerText = "Section " + (columns.length - 1);
+					column.labelFunction = timeLabelFunction;
+					column.width = 64;
+					columns.push(column);
+				}
+				laptimesGrid.columns = columns;
+			}
 
+			public function calculateLaptimes() : void {
+				laptimes = new ArrayCollection();
+				
+				var ts0: int = -1;
+				var ts1: int = -1;
+				var ts2: int = -1;
+				
+				var index: int = 0;
+				var sections: Array = new Array();
+				for (var i: int = 0; i < gpsLines.length-1; i += 1) {
+					var pt1: Point = new Point(thedata[i*2], thedata[i*2+1]);
+					var pt2: Point = new Point(thedata[i*2+2], thedata[i*2+3]);
+					for (var j: int = 0; j < markers.length; j++) {
+						var marker: IntersectionMarker = IntersectionMarker(markers.getItemAt(j));
+						var ip1: Point = new Point(marker.x1, marker.y1);
+						var ip2: Point = new Point(marker.x2, marker.y2);
+						
+						if (IntersectionUtils.intersects(pt1, pt2, ip2, ip1)) {
+							ts1 = gpsLines[i].time;
+							if (ts2 >= 0) {
+								sections[j] = ts1 - ts2;
+							}
+							ts2 = ts1;
+							if (j == 0) {
+								if (ts0 >= 0) {
+									var row: Object = {
+										index: index,
+										laptime: ts1 - ts0
+									};
+									for (var k: int=0; k < markers.length; k++) {
+										row["section_"+k] = sections[k];
+									}
+									laptimes.addItem(row);
+									index++;
+								}
+								sections = new Array();
+								ts0 = ts1;
+							}
+						}
+					}
+				}
+			}
+			
+			protected function timeLabelFunction(item:Object, column:DataGridColumn): String {
+				var value: int = int(item[column.dataField]);
+				var minutes: int = Math.floor(value / 1000.0 / 60.0);
+				value -= minutes * 1000 * 60;
+				var seconds: int = Math.floor(value / 1000.0);
+				value -= seconds * 1000;
+				return minutes + ":" + pad(seconds,2) + "." + pad(value,3);
+			}
+			
+			protected function pad(value: int, n: int): String {
+				var result: String = String(value);
+				while (result.length < n) {
+					result = "0" + result;
+				}
+				return result;
+			}
+			
 		]]>
 	</fx:Script>
 	
@@ -119,6 +208,24 @@
 		</mx:columns>
 	</mx:DataGrid>
 	
-	<s:Button label="Upload logs"/>
+	<mx:DataGrid
+		id="laptimesGrid"
+		dataProvider="{laptimes}">
+		<mx:columns>
+			<mx:DataGridColumn 
+				headerText="Index" 
+				dataField="index" 
+				width="44"/>
+			<mx:DataGridColumn 
+				headerText="Laptime" 
+				dataField="laptime" 
+				width="80" 
+				labelFunction="timeLabelFunction"/>
+		</mx:columns>
+	</mx:DataGrid>
+
+	<s:Button 
+		label="Laptimes"
+		click="calculateLaptimes()"/>
 	
 </s:VGroup>

@@ -35,7 +35,7 @@ internal class _Super_IntersectionService extends RemoteObjectServiceWrapper
         operation = new Operation(null, "updateByTrack");
         operations["updateByTrack"] = operation;
         operation = new Operation(null, "findByTrack");
-		 operation.resultElementType = valueObjects.Intersection;
+		 operation.resultType = Object; 		 
         operations["findByTrack"] = operation;
     
         _serviceControl.operations = operations;   
