@@ -1,20 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:VGroup 
+<s:HGroup 
 	xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/halo" 
 	xmlns:gpslogservice="services.gpslogservice.*" 
 	xmlns:trackservice="services.trackservice.*" 
-	xmlns:riderservice="services.riderservice.*">
+	xmlns:riderservice="services.riderservice.*" xmlns:timingservice="services.timingservice.*">
 	
 	<fx:Script>
 		<![CDATA[
+			import com.google.maps.LatLng;
+			import com.google.maps.LatLngBounds;
+			import mx.rpc.events.ResultEvent;
+			import mx.rpc.events.FaultEvent;
 			import util.IntersectionUtils;
 			import mx.events.FlexEvent;
 			import mx.controls.Alert;
+			
+			public var projection: Projection;
 
 			[Bindable]
 			private var laptimes: ArrayCollection;
+
+			[Bindable]
+			private var intersections: ArrayCollection;
 
 			[Bindable]
 			private var markers: ArrayCollection;
@@ -72,13 +81,17 @@
 				}
 				laptimesGrid.columns = columns;
 			}
+			
+			public function loadLaptimes() : void {
+				findByGpslogID.token = timingService.findByGpslogID(dataGrid.selectedItem.gpslog_id);
+			}
 
 			public function calculateLaptimes() : void {
 				laptimes = new ArrayCollection();
 				
-				var ts0: int = -1;
-				var ts1: int = -1;
-				var ts2: int = -1;
+				var ts0: Number = -1;
+				var ts1: Number = -1;
+				var ts2: Number = -1;
 				
 				var index: int = 0;
 				var sections: Array = new Array();
@@ -133,33 +146,118 @@
 				return result;
 			}
 			
+			public function fault(event : FaultEvent) : void {
+				Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)
+			}
+			
+			public function dataReady(s: String) : void {
+				if (s != null) {
+					var lines: Array = s.split("\n");
+					var iterator: GpsLineIterator = new GpsLineIterator(lines);
+					
+					var bounds: LatLngBounds = new LatLngBounds();
+					var points: Array = new Array();
+					gpsLines = new Vector.<GpsLine>();
+
+					while (iterator.hasNext()) {
+						var gpsLine: GpsLine = iterator.next();
+						var latLng: LatLng = new LatLng(gpsLine.lat, gpsLine.lng);
+						bounds.extend(latLng);
+						points.push(latLng);
+						gpsLines.push(gpsLine);
+					}
+					
+					projection = new Projection();
+					projection.bounds = bounds;
+					projection.fit(640,480);
+					
+					thedata = new Vector.<Number>();
+					for each (var ll: LatLng in points) {
+						var p2: Point = projection.latLng2xy(ll);
+						thedata.push(p2.x);
+						thedata.push(p2.y);
+					}
+					
+					var commands: Vector.<int> = new Vector.<int>();
+					commands.push(GraphicsPathCommand.MOVE_TO);
+					for (var i: int = 2; i < thedata.length; i += 2) {
+						commands.push(GraphicsPathCommand.LINE_TO);
+					}
+					
+					c1.removeAllChildren();
+					c1.graphics.clear();
+					c1.graphics.lineStyle(1,0,1);
+					c1.graphics.drawPath(commands, thedata);
+				} else {
+					c1.removeAllChildren();
+					c1.graphics.clear();
+				}
+			}
+
+			protected function result_findByGpslogID(event: ResultEvent) : void {
+				dataReady(event.result.data);
+				intersections = new ArrayCollection(event.result.intersections);
+				showmarkers();
+				createSectionColumns();
+				calculateLaptimes();
+			}
+
+			protected function showmarkers() : void {
+				markers = new ArrayCollection();
+				for each (var intersection: Object in intersections) {
+					var marker: IntersectionMarker = new IntersectionMarker();
+					marker.latLng = new LatLng(intersection.lat, intersection.lng);
+					marker.angle = intersection.angle;
+					marker.labelText = "" + intersection.index;
+					marker.parent = c1;
+					marker.projection = projection;
+					marker.draw();
+					markers.addItem(marker);
+				}
+				
+			}
+			
+
 		]]>
 	</fx:Script>
 	
 	<fx:Declarations>
 		<s:CallResponder id="findAllResult"/>
-		<gpslogservice:GpslogService 
-			id="gpslogService" 
-			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"/>
+
 		<s:CallResponder id="findAllTracks"/>
 		<s:CallResponder id="findAllRiders"/>
+		<s:CallResponder
+			id="findByGpslogID"
+			result="result_findByGpslogID(event)"/>
+
+		<timingservice:TimingService
+			id="timingService"
+			fault="fault(event)" 
+			showBusyCursor="true"/>
+		<gpslogservice:GpslogService 
+			id="gpslogService" 
+			fault="fault(event)" 
+			showBusyCursor="true"/>
 		<trackservice:TrackService 
 			id="trackService" 
-			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" 
+			fault="fault(event)" 
 			showBusyCursor="true" />
 		<riderservice:RiderService
 			id="riderService"
-			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" 
+			fault="fault(event)" 
 			showBusyCursor="true" />
 		
 		<mx:ArrayCollection
 			id="gpslogs"
 			filterFunction="filterGpslogs" 
 			list="{findAllResult.lastResult}" />
+		
 		<s:CallResponder id="findAllDatesResult"/>
 
 	</fx:Declarations>
 	
+	<s:VGroup>
+		
 	<mx:Form>
 		<mx:FormItem label="Rider" direction="horizontal">
 			<s:DropDownList 
@@ -226,6 +324,14 @@
 
 	<s:Button 
 		label="Laptimes"
-		click="calculateLaptimes()"/>
+		enabled="{dataGrid.selectedIndex >= 0}"
+		click="loadLaptimes()"/>
+
+	</s:VGroup>
 	
-</s:VGroup>
+	<mx:Canvas 
+		width="640" height="480" 
+		id="c1" >
+	</mx:Canvas>
+
+</s:HGroup>
