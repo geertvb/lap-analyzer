@@ -6,8 +6,7 @@
 	xmlns:net="flash.net.*"
 	creationComplete="creationComplete()"
 	xmlns:trackservice="services.trackservice.*" 
-	xmlns:intersectionservice="services.intersectionservice.*" 
-	xmlns:gpslogservice="services.gpslogservice.*">
+	xmlns:intersectionservice="services.intersectionservice.*">
 	
 	<fx:Script>
 		<![CDATA[
@@ -17,7 +16,6 @@
 			import com.google.maps.LatLng;
 			import mx.utils.ArrayUtil;
 			import mx.rpc.events.FaultEvent;
-			import mx.rpc.AsyncToken;
 			import mx.collections.ArrayCollection;
 			import mx.rpc.events.ResultEvent;
 			import mx.events.FlexEvent;
@@ -205,7 +203,7 @@
 			}
 			
 			public function fault(event : FaultEvent) : void {
-				Alert.show("fault " + event.fault);
+				Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)
 			}
 			
 			public function result_findByTrack(event : ResultEvent) : void {
@@ -217,8 +215,7 @@
 			protected function dataGrid_refresh():void {
 				if (cb_tracks.selectedItem != null) {
 					var track_id: int = cb_tracks.selectedItem.track_id;
-					intersectionService.findByTrack(track_id).addResponder(new mx.rpc.Responder(
-						result_findByTrack, fault));
+					findByTrack.token = intersectionService.findByTrack(track_id);
 				} else {
 					dataGrid.dataProvider = new ArrayCollection();
 					c1.graphics.clear();
@@ -262,21 +259,21 @@
 	
 	<fx:Declarations>
 		<s:CallResponder 
+			id="findByTrack" 
+			fault="fault(event)" 
+			result="result_findByTrack(event)"/>
+		<s:CallResponder 
 			id="findAllResult" 
+			fault="fault(event)" 
 			result="cb_tracks.selectedIndex = 0"/>
 		<trackservice:TrackService 
 			id="trackService" 
-			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" 
+			fault="fault(event)" 
 			showBusyCursor="true"/>
 		<intersectionservice:IntersectionService 
 			id="intersectionService" 
-			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" 
+			fault="fault(event)" 
 			showBusyCursor="true"/>
-		<gpslogservice:GpslogService
-			id="gpslogService" 
-			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" 
-			showBusyCursor="true"/>
-		<mx:RadioButtonGroup id="startFinishGroup" />
 		<mx:NumberFormatter id="latLngFormatter" precision="6" />
 		<mx:DateFormatter id="timeFormatter" formatString="NN:SS.QQQ" />
 	</fx:Declarations>
@@ -318,7 +315,6 @@
 				width="80" 
 				labelFunction="labelFunction"/>
 		</mx:columns>
-		
 	</mx:DataGrid>
 	
 	<s:HGroup>
