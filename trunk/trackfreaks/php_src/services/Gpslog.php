@@ -27,15 +27,15 @@ class Gpslog {
 	 */
 	var $rider_lastname;
 	/**
-	 * @var date
+	 * @var string
 	 */
 	var $date;
 	/**
-	 * @var date
+	 * @var string
 	 */
 	var $start_time;
 	/**
-	 * @var date
+	 * @var string
 	 */
 	var $end_time;
 	
