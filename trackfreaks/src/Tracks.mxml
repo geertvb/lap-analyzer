@@ -71,7 +71,8 @@
 						var marker: Marker = new Marker(
 							latLng,
 							new MarkerOptions({
-								icon: new flag()
+								icon: new flag(),
+								iconOffset: new Point(-13, -26)
 							}));
 						
 						marker.addEventListener(MapMouseEvent.CLICK, onMarkerClick);  
