@@ -4,9 +4,17 @@ require_once 'Gpslog.php';
 require_once 'mysqliUtils.php';
 
 class GpslogService {
+	
+	/**
+	 * @return Gpslog 
+	 *
+	 */
+	public function getGpslog() {
+		return new Gpslog();
+	}
 
 	/**
-	 *@return array of Gpslog
+	 * @return array of Gpslog
 	 */
 	public function findAll() {
 		$sql = array();
@@ -34,10 +42,11 @@ class GpslogService {
 	/**
 	 * @param int $rider_id
 	 * @param int $track_id
-	 * @param date $date
+	 * @param string $date
 	 * @param string $start_time
 	 * @param string $end_time
 	 * @param string $data
+	 * @return void
 	 */
 	public function createGpslog($rider_id, $track_id, $date, $start_time, $end_time, $data) {
 		$mysqli = newsqli();
@@ -89,6 +98,10 @@ class GpslogService {
 	    return findValues(null, implode(" ", $sql));
 	}
 
+	/**
+	 * @param int
+	 * @return string
+	 */
 	public function findSampleTrackData($track_id) {
 		$sql = array();
 		
