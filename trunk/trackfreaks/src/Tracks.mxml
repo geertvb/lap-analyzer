@@ -33,6 +33,11 @@
 			
 			public var trackMarkers: ArrayCollection = new ArrayCollection();
 			
+			[Embed(source="assets/checkeredflag.png")]
+			[Bindable]
+			
+			public var flag:Class;
+			
 			private function onMapReady(event:Event):void {
 				with (this.map) {
 					addControl(new ZoomControl());
@@ -62,13 +67,11 @@
 					if (track.lat != 0  && track.lng != 0) {
 						var latLng: LatLng = new LatLng(track.lat, track.lng);
 						bb.extend(latLng);
+						
 						var marker: Marker = new Marker(
 							latLng,
 							new MarkerOptions({
-								strokeStyle: new StrokeStyle({thickness:1, color: 0x000000}),
-								fillStyle: new FillStyle({color: 0xff0000}),
-								radius: 7,
-								hasShadow: true
+								icon: new flag()
 							}));
 						
 						marker.addEventListener(MapMouseEvent.CLICK, onMarkerClick);  
@@ -141,12 +144,14 @@
 			showBusyCursor="true"/>
 	</fx:Declarations>
 	
-	<maps:Map3D 
-		xmlns:maps="com.google.maps.*" 
-		id="map" 
-		mapevent_mapready="onMapReady(event)" 
-		width="640" height="480" 
-		key="ABQIAAAARHlxm1tnIyh53Qky1yRvaxQRM90ZMLGmypNtl0aCSyUOIyb2sxQJCMaQB88DzEFGpMHAzTs5sB2Wpw"/>
+	<s:Border>		
+		<maps:Map3D 
+			xmlns:maps="com.google.maps.*" 
+			id="map" 
+			mapevent_mapready="onMapReady(event)" 
+			width="640" height="480" 
+			key="ABQIAAAARHlxm1tnIyh53Qky1yRvaxQRM90ZMLGmypNtl0aCSyUOIyb2sxQJCMaQB88DzEFGpMHAzTs5sB2Wpw"/>
+	</s:Border>
 	
 	<s:HGroup width="100%">
 		<s:Button label="Overview" click="zoomOut();" />
