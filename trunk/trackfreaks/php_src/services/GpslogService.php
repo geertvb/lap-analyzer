@@ -49,7 +49,7 @@ class GpslogService {
 	 * @return void
 	 */
 	public function createGpslog($rider_id, $track_id, $date, $start_time, $end_time, $data) {
-		$mysqli = newsqli();
+		$mysqli = newmysqli();
 		
 		$sql = array();
 		$sql[] = "INSERT INTO gpslog";
@@ -58,7 +58,7 @@ class GpslogService {
 		$sql[] = "  (?, ?, ?, ?, ?, ?)";
 		
 		$stmt = $mysqli->prepare(implode(" ", $sql));		
-		$this->throwExceptionOnError($mysqli);
+		throwExceptionOnError($mysqli);
 		
 		$content = NULL;
 		
@@ -77,10 +77,10 @@ class GpslogService {
 			}
 		}
 		
-		$stmt->execute($stmt);
-		$this->throwExceptionOnError($connection);
+		$stmt->execute();
+		throwExceptionOnError($mysqli);
 		
-		$stmt->free_result($stmt);
+		$stmt->free_result();
 		
 	    $mysqli->close();
 	}
