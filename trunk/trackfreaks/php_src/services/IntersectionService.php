@@ -58,7 +58,7 @@ class IntersectionService {
 				$intersection->angle);
 			
 			$stmt->execute();
-			throwExceptionOnError($connection);
+			throwExceptionOnError($mysqli);
 		}
 		
 		$stmt->close();

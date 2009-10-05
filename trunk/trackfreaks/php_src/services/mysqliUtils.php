@@ -86,7 +86,7 @@ function getResult($stmt, $classname = "stdClass") {
 			$pointers[] = &$row->$fieldname;
 		}
 		 
-		call_user_func_array(mysqli_stmt_bind_result, $pointers);
+		call_user_func_array('mysqli_stmt_bind_result', $pointers);
 		 
 		if (!$stmt->fetch()) {
 			break;
@@ -113,7 +113,7 @@ function getSingleResult($stmt, $classname = "stdClass") {
 		$pointers[] = &$result->$fieldname;
 	}
 	 
-	call_user_func_array(mysqli_stmt_bind_result, $pointers);
+	call_user_func_array('mysqli_stmt_bind_result', $pointers);
 	 
 	if (!$stmt->fetch()) {
 		$result = null;
