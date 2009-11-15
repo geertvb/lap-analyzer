@@ -11,11 +11,16 @@
 		<![CDATA[
 			import com.google.maps.LatLng;
 			import com.google.maps.LatLngBounds;
-			import mx.rpc.events.ResultEvent;
-			import mx.rpc.events.FaultEvent;
-			import util.IntersectionUtils;
-			import mx.events.FlexEvent;
+			
+			import components.CustomGridItemRenderer;
+			
 			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			import util.IntersectionUtils;
+			import util.TimeUtils;
 			
 			public var projection: Projection;
 
@@ -77,6 +82,7 @@
 					column.headerText = "Section " + (columns.length - 1);
 					column.labelFunction = timeLabelFunction;
 					column.width = 64;
+					column.itemRenderer = new ClassFactory(CustomGridItemRenderer);
 					columns.push(column);
 				}
 				laptimesGrid.columns = columns;
@@ -88,6 +94,8 @@
 
 			public function calculateLaptimes() : void {
 				laptimes = new ArrayCollection();
+				var bestValue: Object = new Object();
+				var bestIndex: Object = new Object();
 				
 				var ts0: Number = -1;
 				var ts1: Number = -1;
@@ -104,7 +112,8 @@
 						var ip2: Point = new Point(marker.x2, marker.y2);
 						
 						if (IntersectionUtils.intersects(pt1, pt2, ip2, ip1)) {
-							ts1 = gpsLines[i].time;
+							var a: Number = IntersectionUtils.intersectionFactor(ip2, ip1, pt1, pt2);
+							ts1 = gpsLines[i].time + a * (gpsLines[i+1].time - gpsLines[i].time);
 							if (ts2 >= 0) {
 								sections[j] = ts1 - ts2;
 							}
@@ -129,21 +138,9 @@
 				}
 			}
 			
-			protected function timeLabelFunction(item:Object, column:DataGridColumn): String {
+			public function timeLabelFunction(item:Object, column:DataGridColumn): String {
 				var value: int = int(item[column.dataField]);
-				var minutes: int = Math.floor(value / 1000.0 / 60.0);
-				value -= minutes * 1000 * 60;
-				var seconds: int = Math.floor(value / 1000.0);
-				value -= seconds * 1000;
-				return minutes + ":" + pad(seconds,2) + "." + pad(value,3);
-			}
-			
-			protected function pad(value: int, n: int): String {
-				var result: String = String(value);
-				while (result.length < n) {
-					result = "0" + result;
-				}
-				return result;
+				return TimeUtils.intToTime(value);
 			}
 			
 			public function fault(event : FaultEvent) : void {
@@ -317,8 +314,9 @@
 			<mx:DataGridColumn 
 				headerText="Laptime" 
 				dataField="laptime" 
-				width="80" 
-				labelFunction="timeLabelFunction"/>
+				width="80"
+				itemRenderer="components.CustomGridItemRenderer"
+				labelFunction="timeLabelFunction" />
 		</mx:columns>
 	</mx:DataGrid>
 

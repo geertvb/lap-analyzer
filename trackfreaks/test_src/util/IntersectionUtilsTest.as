@@ -41,5 +41,15 @@ package util
 			Assert.assertFalse(IntersectionUtils.intersects(p1, p2, p3, p4));
 		}
 		
+		[Test]
+		public function testIntersectionFactor1():void {
+			var p1: Point = new Point(0.0, 0.0);
+			var p2: Point = new Point(1.0, 1.0);
+			var p3: Point = new Point(1.0, 0.0);
+			var p4: Point = new Point(1.0, 1.0);
+			var result: Number = IntersectionUtils.intersectionFactor(p1, p2, p3, p4);
+			Assert.assertEquals(1.0, result);
+		}
+		
 	}
 }
