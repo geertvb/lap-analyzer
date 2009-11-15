@@ -98,6 +98,7 @@
 				showInfoWindow(marker, track);
 				
 				dataGrid.selectedItem = track;
+				dataGrid.scrollToIndex(dataGrid.selectedIndex);
 			}
 			
 			protected function onItemClick(event: ListEvent) : void {
