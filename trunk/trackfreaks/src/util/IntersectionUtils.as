@@ -22,6 +22,17 @@ package util
 				&& area(p3, p4, p2) < 0;
 		}
 			
+		public static function intersectionFactor(p1: Point, p2: Point, p3: Point, p4: Point) : Number {
+			var dx0: Number = p1.x - p3.x;
+			var dy0: Number = p1.y - p3.y;
+			var dx1: Number = p2.x - p1.x;
+			var dy1: Number = p2.y - p1.y;
+			var dx2: Number = p4.x - p3.x;
+			var dy2: Number = p4.y - p3.y;
+			var numerator: Number = dx0 * dy1 - dy0 * dx1;
+			var denominator: Number = dx2 * dy1 - dy2 * dx1;
+			return numerator / denominator;
+		}
 			
 		
 	}
