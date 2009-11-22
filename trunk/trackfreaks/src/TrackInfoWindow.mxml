@@ -3,10 +3,10 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/halo" 
 		 xmlns:net="flash.net.*"
-		 width="200" height="180">
+		 width="160" height="180">
 
 	
-	<s:VGroup width="200">
+	<s:VGroup width="160">
 		
 		<mx:Label
 			width="100%"
