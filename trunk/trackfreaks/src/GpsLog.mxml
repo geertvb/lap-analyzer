@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:HGroup 
+<s:VGroup 
 	xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/halo" 
@@ -16,6 +16,7 @@
 			
 			import mx.controls.Alert;
 			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			
@@ -23,6 +24,8 @@
 			import util.TimeUtils;
 			
 			public var projection: Projection;
+			
+			private var lapspeeds: ArrayCollection;
 
 			[Bindable]
 			private var laptimes: ArrayCollection;
@@ -94,12 +97,15 @@
 
 			public function calculateLaptimes() : void {
 				laptimes = new ArrayCollection();
+				lapspeeds = new ArrayCollection();
 				var bestValue: Object = new Object();
 				var bestIndex: Object = new Object();
 				
 				var ts0: Number = -1;
 				var ts1: Number = -1;
 				var ts2: Number = -1;
+				
+				var i0: Number = -1;
 				
 				var index: int = 0;
 				var sections: Array = new Array();
@@ -129,9 +135,11 @@
 									}
 									laptimes.addItem(row);
 									index++;
+									lapspeeds.addItem({i0: i0, i1: i});
 								}
 								sections = new Array();
 								ts0 = ts1;
+								i0 = i;
 							}
 						}
 					}
@@ -220,6 +228,39 @@
 				c1.scaleY = scaleFactor;
 			}
 
+
+			protected function laptimesGrid_changeHandler(event:ListEvent):void {
+				if (laptimesGrid.selectedIndex >= 0) {
+					var o: Object = lapspeeds.getItemAt(laptimesGrid.selectedIndex);
+					
+					var data: Vector.<Number> = new Vector.<Number>();
+					var cmd: Vector.<int> = new Vector.<int>();
+					for (var i: int = o.i0; i < o.i1; i++) {
+						if (i == o.i0) {
+							cmd.push(GraphicsPathCommand.MOVE_TO);
+						} else {
+							cmd.push(GraphicsPathCommand.LINE_TO);
+						}
+						var gpsLine: GpsLine = gpsLines[i];
+						data.push(i - o.i0);
+						data.push(c2.height - gpsLine.speed / 2);
+					}
+
+					c2.removeAllChildren();
+					c2.graphics.clear();
+					c2.graphics.lineStyle(1,0,1);
+					c2.graphics.drawPath(cmd, data);
+					
+					c2.graphics.lineStyle(1,0,0.2);
+					c2.graphics.moveTo(0, c2.height - 100/2);
+					c2.graphics.lineTo(c2.width, c2.height - 100/2);
+					
+					c2.graphics.lineStyle(1,0,0.2);
+					c2.graphics.moveTo(0, c2.height - 100);
+					c2.graphics.lineTo(c2.width, c2.height - 100);
+				}
+			}
+
 		]]>
 	</fx:Script>
 	
@@ -257,108 +298,119 @@
 		<s:CallResponder id="findAllDatesResult"/>
 
 	</fx:Declarations>
-	
-	<s:VGroup>
+
+	<s:HGroup>
+		<s:VGroup>
+			
+		<mx:Form>
+			<mx:FormItem label="Rider" direction="horizontal">
+				<s:DropDownList 
+					id="cb_riders"
+					width="160"
+					prompt="Select one ..."
+					dataProvider="{findAllRiders.lastResult}"
+					change="gpslogs.refresh()"
+					creationComplete="findAllRiders.token = riderService.findAll();"
+					labelField="firstname" />
+				<s:Button label="All" click="cb_riders.selectedIndex = -1" />
+			</mx:FormItem>
+			<mx:FormItem label="Track" direction="horizontal">
+				<s:DropDownList 
+					id="cb_tracks"
+					width="160"
+					prompt="Select one ..."
+					dataProvider="{findAllTracks.lastResult}"
+					change="gpslogs.refresh()"
+					creationComplete="findAllTracks.token = trackService.findAll();"
+					labelField="name" />
+				<s:Button label="All" click="cb_tracks.selectedIndex = -1" />
+			</mx:FormItem>
+			<mx:FormItem label="Date" direction="horizontal">
+				<s:DropDownList 
+					id="cb_dates" 
+					creationComplete="dropDownList_creationCompleteHandler(event)" 
+					dataProvider="{findAllDatesResult.lastResult}" 
+					change="gpslogs.refresh()"
+					prompt="Select one ..." />
+				<s:Button label="All" click="cb_dates.selectedIndex = -1" />
+			</mx:FormItem>
+		</mx:Form>
 		
-	<mx:Form>
-		<mx:FormItem label="Rider" direction="horizontal">
-			<s:DropDownList 
-				id="cb_riders"
-				width="160"
-				prompt="Select one ..."
-				dataProvider="{findAllRiders.lastResult}"
-				change="gpslogs.refresh()"
-				creationComplete="findAllRiders.token = riderService.findAll();"
-				labelField="firstname" />
-			<s:Button label="All" click="cb_riders.selectedIndex = -1" />
-		</mx:FormItem>
-		<mx:FormItem label="Track" direction="horizontal">
-			<s:DropDownList 
-				id="cb_tracks"
-				width="160"
-				prompt="Select one ..."
-				dataProvider="{findAllTracks.lastResult}"
-				change="gpslogs.refresh()"
-				creationComplete="findAllTracks.token = trackService.findAll();"
-				labelField="name" />
-			<s:Button label="All" click="cb_tracks.selectedIndex = -1" />
-		</mx:FormItem>
-		<mx:FormItem label="Date" direction="horizontal">
-			<s:DropDownList 
-				id="cb_dates" 
-				creationComplete="dropDownList_creationCompleteHandler(event)" 
-				dataProvider="{findAllDatesResult.lastResult}" 
-				change="gpslogs.refresh()"
-				prompt="Select one ..." />
-			<s:Button label="All" click="cb_dates.selectedIndex = -1" />
-		</mx:FormItem>
-	</mx:Form>
-	
-	<mx:DataGrid 
-		id="dataGrid" 
-		creationComplete="dataGrid_creationCompleteHandler(event)" 
-		dataProvider="{gpslogs}">
-		<mx:columns>
-			<mx:DataGridColumn headerText="gpslog_id" dataField="gpslog_id" visible="false"/>
-			<mx:DataGridColumn headerText="Rider" labelFunction="riderLabel"/>
-			<mx:DataGridColumn headerText="Track" dataField="track_name"/>
-			<mx:DataGridColumn headerText="Date" dataField="date"/>
-			<mx:DataGridColumn headerText="Start time" dataField="start_time"/>
-			<mx:DataGridColumn headerText="End time" dataField="end_time"/>
-		</mx:columns>
-	</mx:DataGrid>
-	
-	<mx:DataGrid
-		id="laptimesGrid"
-		dataProvider="{laptimes}">
-		<mx:columns>
-			<mx:DataGridColumn 
-				headerText="Index" 
-				dataField="index" 
-				width="44"/>
-			<mx:DataGridColumn 
-				headerText="Laptime" 
-				dataField="laptime" 
-				width="80"
-				itemRenderer="components.CustomGridItemRenderer"
-				labelFunction="timeLabelFunction" />
-		</mx:columns>
-	</mx:DataGrid>
-
-	<s:Button 
-		label="Laptimes"
-		enabled="{dataGrid.selectedIndex >= 0}"
-		click="loadLaptimes()"/>
-
-	</s:VGroup>
-	
-	<s:VGroup>
+		<mx:DataGrid 
+			id="dataGrid" 
+			creationComplete="dataGrid_creationCompleteHandler(event)" 
+			dataProvider="{gpslogs}">
+			<mx:columns>
+				<mx:DataGridColumn headerText="gpslog_id" dataField="gpslog_id" visible="false"/>
+				<mx:DataGridColumn headerText="Rider" labelFunction="riderLabel"/>
+				<mx:DataGridColumn headerText="Track" dataField="track_name"/>
+				<mx:DataGridColumn headerText="Date" dataField="date"/>
+				<mx:DataGridColumn headerText="Start time" dataField="start_time"/>
+				<mx:DataGridColumn headerText="End time" dataField="end_time"/>
+			</mx:columns>
+		</mx:DataGrid>
 		
-		<s:Border>
-			<s:Scroller 
-				verticalScrollPolicy="on"
-				horizontalScrollPolicy="on">
-				<s:Group 
-					width="640" height="480">
-					<mx:Canvas
-						verticalScrollPolicy="off"
-						horizontalScrollPolicy="off"
-						width="640" height="480" 
-						id="c1" />
-				</s:Group>
-			</s:Scroller>
-		</s:Border>
+		<mx:DataGrid
+			id="laptimesGrid"
+			change="laptimesGrid_changeHandler(event)"
+			dataProvider="{laptimes}">
+			<mx:columns>
+				<mx:DataGridColumn 
+					headerText="Index" 
+					dataField="index" 
+					width="44"/>
+				<mx:DataGridColumn 
+					headerText="Laptime" 
+					dataField="laptime" 
+					width="80"
+					itemRenderer="components.CustomGridItemRenderer"
+					labelFunction="timeLabelFunction" />
+			</mx:columns>
+		</mx:DataGrid>
+	
+		<s:Button 
+			label="Laptimes"
+			enabled="{dataGrid.selectedIndex >= 0}"
+			click="loadLaptimes()"/>
+	
+		</s:VGroup>
 		
-		<s:HGroup>
-			<s:Label text="Zoom" />
-			<s:HSlider 
-				id="zoomSlider"
-				change="zoomSlider_changeHandler(event)"
-				minimum="1"
-				maximum="4"
-				stepSize="0.1" snapInterval="0.1"/>
-		</s:HGroup>
+		<s:VGroup>
+			
+			<s:Border>
+				<s:Scroller 
+					verticalScrollPolicy="on"
+					horizontalScrollPolicy="on">
+					<s:Group 
+						width="640" height="480">
+						<mx:Canvas
+							verticalScrollPolicy="off"
+							horizontalScrollPolicy="off"
+							width="640" height="480" 
+							id="c1" />
+					</s:Group>
+				</s:Scroller>
+			</s:Border>
+			
+			<s:HGroup>
+				<s:Label text="Zoom" />
+				<s:HSlider 
+					id="zoomSlider"
+					change="zoomSlider_changeHandler(event)"
+					minimum="1"
+					maximum="4"
+					stepSize="0.1" snapInterval="0.1"/>
+			</s:HGroup>
+	
+		</s:VGroup>
+	</s:HGroup>
+	
+	<s:Border>
+		<mx:Canvas
+			verticalScrollPolicy="off"
+			horizontalScrollPolicy="off"
+			width="1280" height="150" 
+			id="c2" />
+	</s:Border>	
 
-	</s:VGroup>
-
-</s:HGroup>
+</s:VGroup>
