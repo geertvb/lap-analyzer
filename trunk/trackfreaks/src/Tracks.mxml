@@ -7,27 +7,23 @@
 
 	<fx:Script>
 		<![CDATA[
-			import mx.collections.ArrayCollection;
-			import com.google.maps.MapMouseEvent;
 			import com.google.maps.InfoWindowOptions;
-			import com.google.maps.geom.Attitude;
-			import mx.events.ListEvent;
+			import com.google.maps.LatLng;
 			import com.google.maps.LatLngBounds;
+			import com.google.maps.MapMouseEvent;
+			import com.google.maps.MapType;
 			import com.google.maps.controls.MapTypeControl;
 			import com.google.maps.controls.PositionControl;
 			import com.google.maps.controls.ZoomControl;
-			import com.google.maps.styles.StrokeStyle;
-			import com.google.maps.styles.FillStyle;
-			import com.google.maps.overlays.MarkerOptions;
 			import com.google.maps.overlays.Marker;
-			import valueObjects.Track;
-			import mx.events.FlexEvent;
-			import mx.controls.Alert;
+			import com.google.maps.overlays.MarkerOptions;
 			
-			import com.google.maps.LatLng;
-			import com.google.maps.Map;
-			import com.google.maps.MapEvent;
-			import com.google.maps.MapType;
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			
+			import valueObjects.Track;
 			
 			public var bb: LatLngBounds;
 			
@@ -135,6 +131,13 @@
 				this.map.setCenter(bb.getCenter(), this.map.getBoundsZoomLevel(bb));
 			}
 			
+			protected function zoomIn() : void {
+				var track: Track = dataGrid.selectedItem as Track;
+				var center: LatLng = new LatLng(track.lat, track.lng);
+				var zoomLevel: Number = 14; //TODO: Zoom depending on track size
+				this.map.setCenter(center, zoomLevel);
+			}
+			
 		]]>
 	</fx:Script>
 	
@@ -156,7 +159,13 @@
 	</s:Border>
 	
 	<s:HGroup width="100%">
-		<s:Button label="Overview" click="zoomOut();" />
+		<s:Button 
+			label="Overview" 
+			click="zoomOut();" />
+		<s:Button 
+			label="Track"
+			enabled="{dataGrid.selectedIndex >= 0}"
+			click="zoomIn();"/>
 	</s:HGroup>
 	
 	<mx:DataGrid 
