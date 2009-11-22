@@ -5,10 +5,29 @@
 	xmlns:mx="library://ns.adobe.com/flex/halo" 
 	width="160" height="150">
 	
+	<fx:Script>
+		<![CDATA[
+			
+			protected function magnifier_clickHandler(event:MouseEvent):void {
+				navigateToURL(new URLRequest("download_picture.php?picture_id=" + data.picture_id), "_blank");
+			}
+
+		]]>
+	</fx:Script>
+	
 	<mx:Image
 		source="download_thumb.php?picture_id={data.picture_id}"
 		left="0" top="0"
 		width="160" height="120"/>
+	
+	<mx:Image
+		id="magnifier"
+		useHandCursor="true"
+		buttonMode="true"
+		source="@Embed(source='assets/magnifier.png')"
+		click="magnifier_clickHandler(event)"
+		width="16" height="16"
+		left="140" top="100" /> 
 
 	<mx:Label 
 		text="{data.firstname} {data.lastname}" 
