@@ -214,6 +214,11 @@
 				
 			}
 			
+			protected function zoomSlider_changeHandler(event:Event):void {
+				var scaleFactor: Number = zoomSlider.value;
+				c1.scaleX = scaleFactor;
+				c1.scaleY = scaleFactor;
+			}
 
 		]]>
 	</fx:Script>
@@ -327,9 +332,33 @@
 
 	</s:VGroup>
 	
-	<mx:Canvas 
-		width="640" height="480" 
-		id="c1" >
-	</mx:Canvas>
+	<s:VGroup>
+		
+		<s:Border>
+			<s:Scroller 
+				verticalScrollPolicy="on"
+				horizontalScrollPolicy="on">
+				<s:Group 
+					width="640" height="480">
+					<mx:Canvas
+						verticalScrollPolicy="off"
+						horizontalScrollPolicy="off"
+						width="640" height="480" 
+						id="c1" />
+				</s:Group>
+			</s:Scroller>
+		</s:Border>
+		
+		<s:HGroup>
+			<s:Label text="Zoom" />
+			<s:HSlider 
+				id="zoomSlider"
+				change="zoomSlider_changeHandler(event)"
+				minimum="1"
+				maximum="4"
+				stepSize="0.1" snapInterval="0.1"/>
+		</s:HGroup>
+
+	</s:VGroup>
 
 </s:HGroup>
