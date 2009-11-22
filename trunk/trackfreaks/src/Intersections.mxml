@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:VGroup
+<s:HGroup
 	xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/halo" 
@@ -63,7 +63,7 @@
 					
 					projection = new Projection();
 					projection.bounds = bounds;
-					projection.fit(640,480);
+					projection.fit(640,640);
 					
 					thedata = new Vector.<Number>();
 					for each (var ll: LatLng in points) {
@@ -254,6 +254,12 @@
 				return latLngFormatter.format(item[column.dataField]);
 			}
 			
+			protected function zoomSlider_changeHandler(event:Event):void {
+				var scaleFactor: Number = zoomSlider.value;
+				c1.scaleX = scaleFactor;
+				c1.scaleY = scaleFactor;
+			}
+			
 		]]>
 	</fx:Script>
 	
@@ -278,67 +284,95 @@
 		<mx:DateFormatter id="timeFormatter" formatString="NN:SS.QQQ" />
 	</fx:Declarations>
 	
-	<mx:Form>
-		<mx:FormItem label="Track">
-			<s:DropDownList
-				id="cb_tracks" 
-				width="160"
-				creationComplete="cb_tracks_creationCompleteHandler(event)" 
-				dataProvider="{findAllResult.lastResult}"
-				change="dataGrid_refresh()"
-				labelField="name"/>
-		</mx:FormItem>
-	</mx:Form>
+	<s:VGroup>
+		
+		<mx:Form>
+			<mx:FormItem label="Track">
+				<s:DropDownList
+					id="cb_tracks" 
+					width="160"
+					creationComplete="cb_tracks_creationCompleteHandler(event)" 
+					dataProvider="{findAllResult.lastResult}"
+					change="dataGrid_refresh()"
+					labelField="name"/>
+			</mx:FormItem>
+		</mx:Form>
+		
+		<mx:DataGrid 
+			id="dataGrid" 
+			creationComplete="dataGrid_refresh()" 
+			dataProvider="{intersections}">
+			<mx:columns>
+				<mx:DataGridColumn 
+					headerText="Index" 
+					dataField="index" 
+					width="44"/>
+				<mx:DataGridColumn 
+					headerText="Latitude" 
+					dataField="lat" 
+					width="80" 
+					labelFunction="labelFunction"/>
+				<mx:DataGridColumn 
+					headerText="Longitude" 
+					dataField="lng" 
+					width="80" 
+					labelFunction="labelFunction"/>
+				<mx:DataGridColumn 
+					headerText="Angle" 
+					dataField="angle" 
+					width="80" 
+					labelFunction="labelFunction"/>
+			</mx:columns>
+		</mx:DataGrid>
+		
+		<s:HGroup>
+			<s:Button 
+				label="Reload"
+				click="dataGrid_refresh()"/>
+			<s:Button 
+				label="Remove all"
+				enabled="{intersections.length >= 0}"
+				click="click_remove_all()"/>
+			<s:Button 
+				label="Remove"
+				enabled="{dataGrid.selectedIndex >= 0}"
+				click="click_remove()"/>
+			<s:Button 
+				label="Save"
+				click="click_save()"/>
+		</s:HGroup>
 	
-	<mx:DataGrid 
-		id="dataGrid" 
-		creationComplete="dataGrid_refresh()" 
-		dataProvider="{intersections}">
-		<mx:columns>
-			<mx:DataGridColumn 
-				headerText="Index" 
-				dataField="index" 
-				width="44"/>
-			<mx:DataGridColumn 
-				headerText="Latitude" 
-				dataField="lat" 
-				width="80" 
-				labelFunction="labelFunction"/>
-			<mx:DataGridColumn 
-				headerText="Longitude" 
-				dataField="lng" 
-				width="80" 
-				labelFunction="labelFunction"/>
-			<mx:DataGridColumn 
-				headerText="Angle" 
-				dataField="angle" 
-				width="80" 
-				labelFunction="labelFunction"/>
-		</mx:columns>
-	</mx:DataGrid>
-	
-	<s:HGroup>
-		<s:Button 
-			label="Reload"
-			click="dataGrid_refresh()"/>
-		<s:Button 
-			label="Remove all"
-			enabled="{intersections.length >= 0}"
-			click="click_remove_all()"/>
-		<s:Button 
-			label="Remove"
-			enabled="{dataGrid.selectedIndex >= 0}"
-			click="click_remove()"/>
-		<s:Button 
-			label="Save"
-			click="click_save()"/>
-	</s:HGroup>
-	
-	<mx:Canvas 
-		width="800" height="800" 
-		id="c1" 
-		mouseUp="findNearest(event);">
-	</mx:Canvas>
-	
-	
-</s:VGroup>
+	</s:VGroup>
+
+	<s:VGroup>
+		
+		<s:Border>
+			<s:Scroller 
+				verticalScrollPolicy="on"
+				horizontalScrollPolicy="on">
+				<s:Group 
+					width="640" height="640">
+					<mx:Canvas 
+						verticalScrollPolicy="off"
+						horizontalScrollPolicy="off"
+						width="640" height="640" 
+						id="c1" 
+						mouseUp="findNearest(event);">
+					</mx:Canvas>
+				</s:Group>
+			</s:Scroller>
+		</s:Border>
+		
+		<s:HGroup>
+			<s:Label text="Zoom" />
+			<s:HSlider 
+				id="zoomSlider"
+				change="zoomSlider_changeHandler(event)"
+				minimum="1"
+				maximum="4"
+				stepSize="0.1" snapInterval="0.1"/>
+		</s:HGroup>
+		
+	</s:VGroup>	
+
+</s:HGroup>
