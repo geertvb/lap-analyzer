@@ -128,7 +128,7 @@
 				
 				var infoWindowOptions: InfoWindowOptions = new InfoWindowOptions({
 					customContent: trackInfoWindow, 
-					width: 200, 
+					width: 160, 
 					drawDefaultFrame:true})
 				
 				marker.openInfoWindow(infoWindowOptions);
