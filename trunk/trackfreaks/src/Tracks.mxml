@@ -82,7 +82,9 @@
 						trackMarkers.addItem({track: track, marker: marker});
 					}
 				}
-				this.map.setCenter(bb.getCenter(), this.map.getBoundsZoomLevel(bb), MapType.NORMAL_MAP_TYPE);
+				var zoomLevel: Number = this.map.getBoundsZoomLevel(bb);
+				this.map.setCenter(bb.getCenter(), zoomLevel, MapType.NORMAL_MAP_TYPE);
+				oldZoomLevel = zoomLevel;
 			}
 			
 			public function onMarkerClick(event: Event) : void {
@@ -104,9 +106,6 @@
 			
 			protected function onItemClick(event: ListEvent) : void {
 				var track: Track = Track(dataGrid.selectedItem);
-				//var latLng: LatLng = new LatLng(track.lat, track.lng);
-				
-				//this.map.setCenter(latLng);
 				
 				var marker: Marker = null;
 				for each (var o: Object in trackMarkers) {
@@ -115,8 +114,11 @@
 						break;
 					}
 				}
-
 				showInfoWindow(marker, track);
+				
+				if (event.columnIndex == 1) {
+					navigateToURL(new URLRequest(track.url), "_blank");
+				}
 				
 			}
 			
@@ -133,7 +135,9 @@
 			}
 
 			protected function zoomOut() : void {
-				this.map.setCenter(bb.getCenter(), this.map.getBoundsZoomLevel(bb));
+				var zoomLevel: Number = this.map.getBoundsZoomLevel(bb);
+				this.map.setCenter(bb.getCenter(), zoomLevel);
+				oldZoomLevel = zoomLevel;
 			}
 			
 			protected function zoomIn() : void {
@@ -141,6 +145,7 @@
 				var center: LatLng = new LatLng(track.lat, track.lng);
 				var zoomLevel: Number = 14; //TODO: Zoom depending on track size
 				this.map.setCenter(center, zoomLevel);
+				oldZoomLevel = zoomLevel;
 			}
 			
 			protected function onMapZoomChanged(event: MapZoomEvent) : void {
