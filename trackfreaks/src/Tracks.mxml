@@ -12,6 +12,7 @@
 			import com.google.maps.LatLngBounds;
 			import com.google.maps.MapMouseEvent;
 			import com.google.maps.MapType;
+			import com.google.maps.MapZoomEvent;
 			import com.google.maps.controls.MapTypeControl;
 			import com.google.maps.controls.PositionControl;
 			import com.google.maps.controls.ZoomControl;
@@ -24,6 +25,8 @@
 			import mx.events.ListEvent;
 			
 			import valueObjects.Track;
+			
+			private var oldZoomLevel: Number;
 			
 			public var bb: LatLngBounds;
 			
@@ -39,6 +42,8 @@
 					addControl(new ZoomControl());
 					addControl(new PositionControl());
 					addControl(new MapTypeControl());
+					map.addEventListener(MapZoomEvent.ZOOM_CHANGED, onMapZoomChanged, false, 0, true);
+
 				}
 				if (findAllResult.lastResult) {
 					onBothReady();
@@ -136,6 +141,15 @@
 				var center: LatLng = new LatLng(track.lat, track.lng);
 				var zoomLevel: Number = 14; //TODO: Zoom depending on track size
 				this.map.setCenter(center, zoomLevel);
+			}
+			
+			protected function onMapZoomChanged(event: MapZoomEvent) : void {
+				if (oldZoomLevel < event.zoomLevel && dataGrid.selectedIndex >= 0) {
+					var track: Track = dataGrid.selectedItem as Track;
+					var center: LatLng = new LatLng(track.lat, track.lng);
+					this.map.setCenter(center);
+				}
+				oldZoomLevel = event.zoomLevel;
 			}
 			
 		]]>
