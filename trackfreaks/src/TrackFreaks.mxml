@@ -26,6 +26,8 @@
 		resizeToContent="true" >
 		<mx:Canvas label="Tracks"><local:Tracks /></mx:Canvas>
 		<mx:Canvas label="Riders"><local:Riders /></mx:Canvas>
+		<mx:Canvas label="Organizations" />
+		<mx:Canvas label="Hotels" />
 		<mx:Canvas label="Intersections"><local:Intersections /></mx:Canvas>
 		<mx:Canvas label="GPS Log Reader"><local:GpsLogReader /></mx:Canvas>
 		<mx:Canvas label="GPS Log"><local:GpsLog /></mx:Canvas>
