@@ -26,6 +26,7 @@
 		resizeToContent="true" >
 		<mx:Canvas label="Tracks"><local:Tracks /></mx:Canvas>
 		<mx:Canvas label="Riders"><local:Riders /></mx:Canvas>
+		<mx:Canvas label="Calendar" />
 		<mx:Canvas label="Organizations" />
 		<mx:Canvas label="Hotels" />
 		<mx:Canvas label="Intersections"><local:Intersections /></mx:Canvas>
