@@ -27,7 +27,7 @@ use namespace model_internal;
 [ExcludeClass]
 public class _Super_Track extends EventDispatcher implements IValueObject
 {
-    model_internal static function initRemoteClassAlias(cz:Class) : void 
+    model_internal static function initRemoteClassAliasSingle(cz:Class) : void 
     {
         try 
         {
@@ -41,6 +41,10 @@ public class _Super_Track extends EventDispatcher implements IValueObject
             flash.net.registerClassAlias("Track", cz); 
         }
      }   
+     
+    model_internal static function initRemoteClassAliasAllRelated() : void 
+    {
+    }
 
 	model_internal var _dminternal_model : _TrackEntityMetadata;
 

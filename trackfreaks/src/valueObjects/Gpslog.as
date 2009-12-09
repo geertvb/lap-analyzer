@@ -13,9 +13,39 @@
 package valueObjects
 {
 
+import com.adobe.fiber.core.model_internal;
+
 public class Gpslog extends _Super_Gpslog
 {
-
+    /** 
+     * DO NOT MODIFY THIS STATIC INITIALIZER - IT IS NECESSARY
+     * FOR PROPERLY SETTING UP THE REMOTE CLASS ALIAS FOR THIS CLASS
+     *
+     **/
+     
+    /**
+     * Calling this static function will initialize RemoteClass aliases
+     * for this value object as well as all of the value objects corresponding
+     * to entities associated to this value object's entity.  
+     */     
+    public static function _initRemoteClassAlias() : void
+    {
+        _Super_Gpslog.model_internal::initRemoteClassAliasSingle(valueObjects.Gpslog);
+        _Super_Gpslog.model_internal::initRemoteClassAliasAllRelated();
+    }
+     
+    model_internal static function initRemoteClassAliasSingleChild() : void
+    {
+        _Super_Gpslog.model_internal::initRemoteClassAliasSingle(valueObjects.Gpslog);
+    }
+    
+    {
+        _Super_Gpslog.model_internal::initRemoteClassAliasSingle(valueObjects.Gpslog);
+    }
+    /** 
+     * END OF DO NOT MODIFY SECTION
+     *
+     **/    
 }
 
 }

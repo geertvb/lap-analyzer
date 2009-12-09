@@ -22,9 +22,30 @@ public class Intersection extends _Super_Intersection
      * FOR PROPERLY SETTING UP THE REMOTE CLASS ALIAS FOR THIS CLASS
      *
      **/
+     
+    /**
+     * Calling this static function will initialize RemoteClass aliases
+     * for this value object as well as all of the value objects corresponding
+     * to entities associated to this value object's entity.  
+     */     
+    public static function _initRemoteClassAlias() : void
     {
-         _Super_Intersection.model_internal::initRemoteClassAlias(valueObjects.Intersection);
+        _Super_Intersection.model_internal::initRemoteClassAliasSingle(valueObjects.Intersection);
+        _Super_Intersection.model_internal::initRemoteClassAliasAllRelated();
     }
+     
+    model_internal static function initRemoteClassAliasSingleChild() : void
+    {
+        _Super_Intersection.model_internal::initRemoteClassAliasSingle(valueObjects.Intersection);
+    }
+    
+    {
+        _Super_Intersection.model_internal::initRemoteClassAliasSingle(valueObjects.Intersection);
+    }
+    /** 
+     * END OF DO NOT MODIFY SECTION
+     *
+     **/    
 }
 
 }

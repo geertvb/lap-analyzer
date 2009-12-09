@@ -27,9 +27,24 @@ use namespace model_internal;
 [ExcludeClass]
 public class _Super_Gpslog extends EventDispatcher implements IValueObject
 {
-    model_internal static function initRemoteClassAlias(cz:Class) : void 
+    model_internal static function initRemoteClassAliasSingle(cz:Class) : void 
     {
+        try 
+        {
+            if (flash.net.getClassByAlias("Gpslog") == null)
+            {
+                flash.net.registerClassAlias("Gpslog", cz);
+            } 
+        }
+        catch (e:Error) 
+        {
+            flash.net.registerClassAlias("Gpslog", cz); 
+        }
      }   
+     
+    model_internal static function initRemoteClassAliasAllRelated() : void 
+    {
+    }
 
 	model_internal var _dminternal_model : _GpslogEntityMetadata;
 
@@ -37,14 +52,14 @@ public class _Super_Gpslog extends EventDispatcher implements IValueObject
 	 * properties
 	 */
 	private var _internal_gpslog_id : int;
-	private var _internal_end_time : String;
-	private var _internal_rider_lastname : String;
-	private var _internal_start_time : String;
-	private var _internal_rider_firstname : String;
-	private var _internal_rider_id : int;
-	private var _internal_date : String;
 	private var _internal_track_id : int;
 	private var _internal_track_name : String;
+	private var _internal_rider_id : int;
+	private var _internal_rider_firstname : String;
+	private var _internal_rider_lastname : String;
+	private var _internal_date : String;
+	private var _internal_start_time : String;
+	private var _internal_end_time : String;
 
     private static var emptyArray:Array = new Array();
 
@@ -72,36 +87,6 @@ public class _Super_Gpslog extends EventDispatcher implements IValueObject
             return _internal_gpslog_id;
     }    
 	[Bindable(event="propertyChange")] 
-    public function get end_time() : String    
-    {
-            return _internal_end_time;
-    }    
-	[Bindable(event="propertyChange")] 
-    public function get rider_lastname() : String    
-    {
-            return _internal_rider_lastname;
-    }    
-	[Bindable(event="propertyChange")] 
-    public function get start_time() : String    
-    {
-            return _internal_start_time;
-    }    
-	[Bindable(event="propertyChange")] 
-    public function get rider_firstname() : String    
-    {
-            return _internal_rider_firstname;
-    }    
-	[Bindable(event="propertyChange")] 
-    public function get rider_id() : int    
-    {
-            return _internal_rider_id;
-    }    
-	[Bindable(event="propertyChange")] 
-    public function get date() : String    
-    {
-            return _internal_date;
-    }    
-	[Bindable(event="propertyChange")] 
     public function get track_id() : int    
     {
             return _internal_track_id;
@@ -110,6 +95,36 @@ public class _Super_Gpslog extends EventDispatcher implements IValueObject
     public function get track_name() : String    
     {
             return _internal_track_name;
+    }    
+	[Bindable(event="propertyChange")] 
+    public function get rider_id() : int    
+    {
+            return _internal_rider_id;
+    }    
+	[Bindable(event="propertyChange")] 
+    public function get rider_firstname() : String    
+    {
+            return _internal_rider_firstname;
+    }    
+	[Bindable(event="propertyChange")] 
+    public function get rider_lastname() : String    
+    {
+            return _internal_rider_lastname;
+    }    
+	[Bindable(event="propertyChange")] 
+    public function get date() : String    
+    {
+            return _internal_date;
+    }    
+	[Bindable(event="propertyChange")] 
+    public function get start_time() : String    
+    {
+            return _internal_start_time;
+    }    
+	[Bindable(event="propertyChange")] 
+    public function get end_time() : String    
+    {
+            return _internal_end_time;
     }    
 
     /**
@@ -125,128 +140,6 @@ public class _Super_Gpslog extends EventDispatcher implements IValueObject
         {
         	_internal_gpslog_id = value;
         	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "gpslog_id", oldValue, _internal_gpslog_id));
-        }    	     
-        
-        if (recalcValid && model_internal::_cacheInitialized_isValid)
-        {
-            model_internal::isValid_der = model_internal::calculateIsValid();
-        }  
-    }    
-    public function set end_time(value:String) : void 
-    {    	
-        var recalcValid:Boolean = false;
-    	if (value == null || _internal_end_time == null)
-    	{
-    		recalcValid = true;
-    	}	
-    	
-    	
-    	var oldValue:String = _internal_end_time;               
-        if (oldValue !== value)
-        {
-        	_internal_end_time = value;
-        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "end_time", oldValue, _internal_end_time));
-        }    	     
-        
-        if (recalcValid && model_internal::_cacheInitialized_isValid)
-        {
-            model_internal::isValid_der = model_internal::calculateIsValid();
-        }  
-    }    
-    public function set rider_lastname(value:String) : void 
-    {    	
-        var recalcValid:Boolean = false;
-    	if (value == null || _internal_rider_lastname == null)
-    	{
-    		recalcValid = true;
-    	}	
-    	
-    	
-    	var oldValue:String = _internal_rider_lastname;               
-        if (oldValue !== value)
-        {
-        	_internal_rider_lastname = value;
-        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "rider_lastname", oldValue, _internal_rider_lastname));
-        }    	     
-        
-        if (recalcValid && model_internal::_cacheInitialized_isValid)
-        {
-            model_internal::isValid_der = model_internal::calculateIsValid();
-        }  
-    }    
-    public function set start_time(value:String) : void 
-    {    	
-        var recalcValid:Boolean = false;
-    	if (value == null || _internal_start_time == null)
-    	{
-    		recalcValid = true;
-    	}	
-    	
-    	
-    	var oldValue:String = _internal_start_time;               
-        if (oldValue !== value)
-        {
-        	_internal_start_time = value;
-        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "start_time", oldValue, _internal_start_time));
-        }    	     
-        
-        if (recalcValid && model_internal::_cacheInitialized_isValid)
-        {
-            model_internal::isValid_der = model_internal::calculateIsValid();
-        }  
-    }    
-    public function set rider_firstname(value:String) : void 
-    {    	
-        var recalcValid:Boolean = false;
-    	if (value == null || _internal_rider_firstname == null)
-    	{
-    		recalcValid = true;
-    	}	
-    	
-    	
-    	var oldValue:String = _internal_rider_firstname;               
-        if (oldValue !== value)
-        {
-        	_internal_rider_firstname = value;
-        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "rider_firstname", oldValue, _internal_rider_firstname));
-        }    	     
-        
-        if (recalcValid && model_internal::_cacheInitialized_isValid)
-        {
-            model_internal::isValid_der = model_internal::calculateIsValid();
-        }  
-    }    
-    public function set rider_id(value:int) : void 
-    {    	
-        var recalcValid:Boolean = false;
-    	
-    	
-    	var oldValue:int = _internal_rider_id;               
-        if (oldValue !== value)
-        {
-        	_internal_rider_id = value;
-        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "rider_id", oldValue, _internal_rider_id));
-        }    	     
-        
-        if (recalcValid && model_internal::_cacheInitialized_isValid)
-        {
-            model_internal::isValid_der = model_internal::calculateIsValid();
-        }  
-    }    
-    public function set date(value:String) : void 
-    {    	
-        var recalcValid:Boolean = false;
-    	if (value == null || _internal_date == null)
-    	{
-    		recalcValid = true;
-    	}	
-    	
-    	
-    	var oldValue:String = _internal_date;               
-        if (oldValue !== value)
-        {
-        	_internal_date = value;
-        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "date", oldValue, _internal_date));
         }    	     
         
         if (recalcValid && model_internal::_cacheInitialized_isValid)
@@ -292,6 +185,128 @@ public class _Super_Gpslog extends EventDispatcher implements IValueObject
             model_internal::isValid_der = model_internal::calculateIsValid();
         }  
     }    
+    public function set rider_id(value:int) : void 
+    {    	
+        var recalcValid:Boolean = false;
+    	
+    	
+    	var oldValue:int = _internal_rider_id;               
+        if (oldValue !== value)
+        {
+        	_internal_rider_id = value;
+        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "rider_id", oldValue, _internal_rider_id));
+        }    	     
+        
+        if (recalcValid && model_internal::_cacheInitialized_isValid)
+        {
+            model_internal::isValid_der = model_internal::calculateIsValid();
+        }  
+    }    
+    public function set rider_firstname(value:String) : void 
+    {    	
+        var recalcValid:Boolean = false;
+    	if (value == null || _internal_rider_firstname == null)
+    	{
+    		recalcValid = true;
+    	}	
+    	
+    	
+    	var oldValue:String = _internal_rider_firstname;               
+        if (oldValue !== value)
+        {
+        	_internal_rider_firstname = value;
+        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "rider_firstname", oldValue, _internal_rider_firstname));
+        }    	     
+        
+        if (recalcValid && model_internal::_cacheInitialized_isValid)
+        {
+            model_internal::isValid_der = model_internal::calculateIsValid();
+        }  
+    }    
+    public function set rider_lastname(value:String) : void 
+    {    	
+        var recalcValid:Boolean = false;
+    	if (value == null || _internal_rider_lastname == null)
+    	{
+    		recalcValid = true;
+    	}	
+    	
+    	
+    	var oldValue:String = _internal_rider_lastname;               
+        if (oldValue !== value)
+        {
+        	_internal_rider_lastname = value;
+        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "rider_lastname", oldValue, _internal_rider_lastname));
+        }    	     
+        
+        if (recalcValid && model_internal::_cacheInitialized_isValid)
+        {
+            model_internal::isValid_der = model_internal::calculateIsValid();
+        }  
+    }    
+    public function set date(value:String) : void 
+    {    	
+        var recalcValid:Boolean = false;
+    	if (value == null || _internal_date == null)
+    	{
+    		recalcValid = true;
+    	}	
+    	
+    	
+    	var oldValue:String = _internal_date;               
+        if (oldValue !== value)
+        {
+        	_internal_date = value;
+        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "date", oldValue, _internal_date));
+        }    	     
+        
+        if (recalcValid && model_internal::_cacheInitialized_isValid)
+        {
+            model_internal::isValid_der = model_internal::calculateIsValid();
+        }  
+    }    
+    public function set start_time(value:String) : void 
+    {    	
+        var recalcValid:Boolean = false;
+    	if (value == null || _internal_start_time == null)
+    	{
+    		recalcValid = true;
+    	}	
+    	
+    	
+    	var oldValue:String = _internal_start_time;               
+        if (oldValue !== value)
+        {
+        	_internal_start_time = value;
+        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "start_time", oldValue, _internal_start_time));
+        }    	     
+        
+        if (recalcValid && model_internal::_cacheInitialized_isValid)
+        {
+            model_internal::isValid_der = model_internal::calculateIsValid();
+        }  
+    }    
+    public function set end_time(value:String) : void 
+    {    	
+        var recalcValid:Boolean = false;
+    	if (value == null || _internal_end_time == null)
+    	{
+    		recalcValid = true;
+    	}	
+    	
+    	
+    	var oldValue:String = _internal_end_time;               
+        if (oldValue !== value)
+        {
+        	_internal_end_time = value;
+        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "end_time", oldValue, _internal_end_time));
+        }    	     
+        
+        if (recalcValid && model_internal::_cacheInitialized_isValid)
+        {
+            model_internal::isValid_der = model_internal::calculateIsValid();
+        }  
+    }    
 
     /**
      * data property setter listeners
@@ -324,35 +339,35 @@ public class _Super_Gpslog extends EventDispatcher implements IValueObject
         var violatedConsts:Array = new Array();    
         var validationFailureMessages:Array = new Array();    
 
-		if (_model.isEnd_timeAvailable && _internal_end_time == null)
+		if (_model.isTrack_nameAvailable && _internal_track_name == null)
 		{
-			violatedConsts.push("end_timeIsRequired");
-			validationFailureMessages.push("end_time is required");
-		}
-		if (_model.isRider_lastnameAvailable && _internal_rider_lastname == null)
-		{
-			violatedConsts.push("rider_lastnameIsRequired");
-			validationFailureMessages.push("rider_lastname is required");
-		}
-		if (_model.isStart_timeAvailable && _internal_start_time == null)
-		{
-			violatedConsts.push("start_timeIsRequired");
-			validationFailureMessages.push("start_time is required");
+			violatedConsts.push("track_nameIsRequired");
+			validationFailureMessages.push("track_name is required");
 		}
 		if (_model.isRider_firstnameAvailable && _internal_rider_firstname == null)
 		{
 			violatedConsts.push("rider_firstnameIsRequired");
 			validationFailureMessages.push("rider_firstname is required");
 		}
+		if (_model.isRider_lastnameAvailable && _internal_rider_lastname == null)
+		{
+			violatedConsts.push("rider_lastnameIsRequired");
+			validationFailureMessages.push("rider_lastname is required");
+		}
 		if (_model.isDateAvailable && _internal_date == null)
 		{
 			violatedConsts.push("dateIsRequired");
 			validationFailureMessages.push("date is required");
 		}
-		if (_model.isTrack_nameAvailable && _internal_track_name == null)
+		if (_model.isStart_timeAvailable && _internal_start_time == null)
 		{
-			violatedConsts.push("track_nameIsRequired");
-			validationFailureMessages.push("track_name is required");
+			violatedConsts.push("start_timeIsRequired");
+			validationFailureMessages.push("start_time is required");
+		}
+		if (_model.isEnd_timeAvailable && _internal_end_time == null)
+		{
+			violatedConsts.push("end_timeIsRequired");
+			validationFailureMessages.push("end_time is required");
 		}
 
 		var styleValidity:Boolean = true;

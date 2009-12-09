@@ -30,6 +30,7 @@ internal class _Super_TimingService extends RemoteObjectServiceWrapper
         operation = new Operation(null, "findByGpslogID");
 		 operation.resultType = Object; 		 
         operations["findByGpslogID"] = operation;
+
     
         _serviceControl.operations = operations;   
 		_serviceControl.convertResultHandler = TypeUtility.convertResultHandler;
