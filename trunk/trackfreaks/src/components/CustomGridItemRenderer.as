@@ -1,7 +1,7 @@
 package components {
-	
+
 	import flash.text.engine.FontWeight;
-	
+
 	import mx.collections.ArrayCollection;
 	import mx.controls.DataGrid;
 	import mx.controls.dataGridClasses.DataGridColumn;
@@ -10,10 +10,6 @@ package components {
 
 	public class CustomGridItemRenderer extends DataGridItemRenderer {
 
-		public function CustomGridItemRenderer() {
-			super;
-		}
-		
 		public override function validateProperties() : void {
 			if (listData) {
 				var dg: DataGrid = DataGrid(listData.owner);
@@ -36,7 +32,7 @@ package components {
 			}
 			super.validateProperties();
 		}
-		
+
 	}
-	
+
 }
