@@ -21,12 +21,12 @@ internal class _GpslogEntityMetadata extends AbstractEntityMetadata
 {
 	private static var emptyArray:Array = new Array();
 
-    model_internal static var allProperties:Array = new Array("gpslog_id", "end_time", "rider_lastname", "start_time", "rider_firstname", "rider_id", "date", "track_id", "track_name");
+    model_internal static var allProperties:Array = new Array("gpslog_id", "track_id", "track_name", "rider_id", "rider_firstname", "rider_lastname", "date", "start_time", "end_time");
     model_internal static var allAssociationProperties:Array = new Array();
-    model_internal static var allRequiredProperties:Array = new Array("gpslog_id", "end_time", "rider_lastname", "start_time", "rider_firstname", "rider_id", "date", "track_id", "track_name");
-    model_internal static var allAlwaysAvailableProperties:Array = new Array("gpslog_id", "end_time", "rider_lastname", "start_time", "rider_firstname", "rider_id", "date", "track_id", "track_name");
+    model_internal static var allRequiredProperties:Array = new Array("gpslog_id", "track_id", "track_name", "rider_id", "rider_firstname", "rider_lastname", "date", "start_time", "end_time");
+    model_internal static var allAlwaysAvailableProperties:Array = new Array("gpslog_id", "track_id", "track_name", "rider_id", "rider_firstname", "rider_lastname", "date", "start_time", "end_time");
     model_internal static var guardedProperties:Array = new Array();
-    model_internal static var dataProperties:Array = new Array("gpslog_id", "end_time", "rider_lastname", "start_time", "rider_firstname", "rider_id", "date", "track_id", "track_name");
+    model_internal static var dataProperties:Array = new Array("gpslog_id", "track_id", "track_name", "rider_id", "rider_firstname", "rider_lastname", "date", "start_time", "end_time");
     model_internal static var derivedProperties:Array = new Array();
     model_internal static var collectionProperties:Array = new Array();
     model_internal static var collectionBaseMap:Object;    
@@ -46,14 +46,14 @@ internal class _GpslogEntityMetadata extends AbstractEntityMetadata
             // depenents map
             model_internal::dependentsOnMap = new Object();
             model_internal::dependentsOnMap["gpslog_id"] = new Array();
-            model_internal::dependentsOnMap["end_time"] = new Array();
-            model_internal::dependentsOnMap["rider_lastname"] = new Array();
-            model_internal::dependentsOnMap["start_time"] = new Array();
-            model_internal::dependentsOnMap["rider_firstname"] = new Array();
-            model_internal::dependentsOnMap["rider_id"] = new Array();
-            model_internal::dependentsOnMap["date"] = new Array();
             model_internal::dependentsOnMap["track_id"] = new Array();
             model_internal::dependentsOnMap["track_name"] = new Array();
+            model_internal::dependentsOnMap["rider_id"] = new Array();
+            model_internal::dependentsOnMap["rider_firstname"] = new Array();
+            model_internal::dependentsOnMap["rider_lastname"] = new Array();
+            model_internal::dependentsOnMap["date"] = new Array();
+            model_internal::dependentsOnMap["start_time"] = new Array();
+            model_internal::dependentsOnMap["end_time"] = new Array();
                         
             // collection base map
             model_internal::collectionBaseMap = new Object()
@@ -277,25 +277,13 @@ internal class _GpslogEntityMetadata extends AbstractEntityMetadata
      }                       
                   
      [Bindable(event="propertyChange")] 
-     public function get isEnd_timeAvailable():Boolean
+     public function get isTrack_idAvailable():Boolean
      {
         return true;
      }                       
                   
      [Bindable(event="propertyChange")] 
-     public function get isRider_lastnameAvailable():Boolean
-     {
-        return true;
-     }                       
-                  
-     [Bindable(event="propertyChange")] 
-     public function get isStart_timeAvailable():Boolean
-     {
-        return true;
-     }                       
-                  
-     [Bindable(event="propertyChange")] 
-     public function get isRider_firstnameAvailable():Boolean
+     public function get isTrack_nameAvailable():Boolean
      {
         return true;
      }                       
@@ -307,19 +295,31 @@ internal class _GpslogEntityMetadata extends AbstractEntityMetadata
      }                       
                   
      [Bindable(event="propertyChange")] 
+     public function get isRider_firstnameAvailable():Boolean
+     {
+        return true;
+     }                       
+                  
+     [Bindable(event="propertyChange")] 
+     public function get isRider_lastnameAvailable():Boolean
+     {
+        return true;
+     }                       
+                  
+     [Bindable(event="propertyChange")] 
      public function get isDateAvailable():Boolean
      {
         return true;
      }                       
                   
      [Bindable(event="propertyChange")] 
-     public function get isTrack_idAvailable():Boolean
+     public function get isStart_timeAvailable():Boolean
      {
         return true;
      }                       
                   
      [Bindable(event="propertyChange")] 
-     public function get isTrack_nameAvailable():Boolean
+     public function get isEnd_timeAvailable():Boolean
      {
         return true;
      }                       
@@ -341,25 +341,13 @@ internal class _GpslogEntityMetadata extends AbstractEntityMetadata
     }      
     
     [Bindable(event="propertyChange")]   
-    public function get end_timeStyle():Style
+    public function get track_idStyle():Style
     {
 		return model_internal::_nullStyle;		
     }      
     
     [Bindable(event="propertyChange")]   
-    public function get rider_lastnameStyle():Style
-    {
-		return model_internal::_nullStyle;		
-    }      
-    
-    [Bindable(event="propertyChange")]   
-    public function get start_timeStyle():Style
-    {
-		return model_internal::_nullStyle;		
-    }      
-    
-    [Bindable(event="propertyChange")]   
-    public function get rider_firstnameStyle():Style
+    public function get track_nameStyle():Style
     {
 		return model_internal::_nullStyle;		
     }      
@@ -371,19 +359,31 @@ internal class _GpslogEntityMetadata extends AbstractEntityMetadata
     }      
     
     [Bindable(event="propertyChange")]   
+    public function get rider_firstnameStyle():Style
+    {
+		return model_internal::_nullStyle;		
+    }      
+    
+    [Bindable(event="propertyChange")]   
+    public function get rider_lastnameStyle():Style
+    {
+		return model_internal::_nullStyle;		
+    }      
+    
+    [Bindable(event="propertyChange")]   
     public function get dateStyle():Style
     {
 		return model_internal::_nullStyle;		
     }      
     
     [Bindable(event="propertyChange")]   
-    public function get track_idStyle():Style
+    public function get start_timeStyle():Style
     {
 		return model_internal::_nullStyle;		
     }      
     
     [Bindable(event="propertyChange")]   
-    public function get track_nameStyle():Style
+    public function get end_timeStyle():Style
     {
 		return model_internal::_nullStyle;		
     }      
