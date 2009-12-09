@@ -1,30 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:VGroup
-	xmlns:fx="http://ns.adobe.com/mxml/2009"
-	xmlns:s="library://ns.adobe.com/flex/spark"
-	xmlns:mx="library://ns.adobe.com/flex/halo"
-	xmlns:gpslogservice="services.gpslogservice.*"
-	xmlns:trackservice="services.trackservice.*"
+<s:VGroup 
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/halo" 
+	xmlns:gpslogservice="services.gpslogservice.*" 
+	xmlns:trackservice="services.trackservice.*" 
 	xmlns:riderservice="services.riderservice.*" xmlns:timingservice="services.timingservice.*">
-
+	
 	<fx:Script>
 		<![CDATA[
 			import com.google.maps.LatLng;
 			import com.google.maps.LatLngBounds;
-
+			
 			import components.CustomGridItemRenderer;
-
+			
 			import mx.controls.Alert;
 			import mx.events.FlexEvent;
 			import mx.events.ListEvent;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
-
+			
 			import util.IntersectionUtils;
 			import util.TimeUtils;
-
+			
+			private var riderMarker: RiderMarker = new RiderMarker();
+			
 			public var projection: Projection;
-
+			
+			private var bi: int;
+			
 			private var lapspeeds: ArrayCollection;
 
 			[Bindable]
@@ -36,17 +40,17 @@
 			[Bindable]
 			private var markers: ArrayCollection;
 
-			[Bindable]
+			[Bindable] 
 			private var thedata: Vector.<Number>;
 
 			[Bindable]
 			private var gpsLines: Vector.<GpsLine>;
 
-
+			
 			protected function dataGrid_creationCompleteHandler(event:FlexEvent):void {
 				findAllResult.token = gpslogService.findAll();
 			}
-
+			
 			private function filterGpslogs(item:Object) : Boolean {
 				var result: Boolean = true;
 				if (cb_riders.selectedIndex >= 0) {
@@ -67,13 +71,13 @@
 				} else {
 					return "";
 				}
-
+				
 			}
 
 			protected function dropDownList_creationCompleteHandler(event:FlexEvent):void {
 				findAllDatesResult.token = gpslogService.findAllDates();
 			}
-
+			
 			public function createSectionColumns() : void {
 				var columns: Array = laptimesGrid.columns;
 				while (columns.length - 2 > markers.length) {
@@ -90,7 +94,7 @@
 				}
 				laptimesGrid.columns = columns;
 			}
-
+			
 			public function loadLaptimes() : void {
 				findByGpslogID.token = timingService.findByGpslogID(dataGrid.selectedItem.gpslog_id);
 			}
@@ -100,13 +104,15 @@
 				lapspeeds = new ArrayCollection();
 				var bestValue: Object = new Object();
 				var bestIndex: Object = new Object();
-
+				
 				var ts0: Number = -1;
 				var ts1: Number = -1;
 				var ts2: Number = -1;
-
+				
 				var i0: Number = -1;
-
+				bi = -1;
+				var bt: Number = Number.MAX_VALUE;
+				
 				var index: int = 0;
 				var sections: Array = new Array();
 				for (var i: int = 0; i < gpsLines.length-1; i += 1) {
@@ -116,7 +122,7 @@
 						var marker: IntersectionMarker = IntersectionMarker(markers.getItemAt(j));
 						var ip1: Point = new Point(marker.x1, marker.y1);
 						var ip2: Point = new Point(marker.x2, marker.y2);
-
+						
 						if (IntersectionUtils.intersects(pt1, pt2, ip2, ip1)) {
 							var a: Number = IntersectionUtils.intersectionFactor(ip2, ip1, pt1, pt2);
 							ts1 = gpsLines[i].time + a * (gpsLines[i+1].time - gpsLines[i].time);
@@ -130,6 +136,10 @@
 										index: index,
 										laptime: ts1 - ts0
 									};
+									if (ts1-ts0 < bt) {
+										bt = ts1 - ts0;
+										bi = index;
+									}
 									for (var k: int=0; k < markers.length; k++) {
 										row["section_"+k] = sections[k];
 									}
@@ -145,21 +155,21 @@
 					}
 				}
 			}
-
+			
 			public function timeLabelFunction(item:Object, column:DataGridColumn): String {
 				var value: int = int(item[column.dataField]);
 				return TimeUtils.intToTime(value);
 			}
-
+			
 			public function fault(event : FaultEvent) : void {
 				Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)
 			}
-
+			
 			public function dataReady(s: String) : void {
 				if (s != null) {
 					var lines: Array = s.split("\n");
 					var iterator: GpsLineIterator = new GpsLineIterator(lines);
-
+					
 					var bounds: LatLngBounds = new LatLngBounds();
 					var points: Array = new Array();
 					gpsLines = new Vector.<GpsLine>();
@@ -171,24 +181,26 @@
 						points.push(latLng);
 						gpsLines.push(gpsLine);
 					}
-
+					
 					projection = new Projection();
 					projection.bounds = bounds;
 					projection.fit(640,480);
-
+					riderMarker.projection = projection;
+					riderMarker.parent = c1;
+					
 					thedata = new Vector.<Number>();
 					for each (var ll: LatLng in points) {
 						var p2: Point = projection.latLng2xy(ll);
 						thedata.push(p2.x);
 						thedata.push(p2.y);
 					}
-
+					
 					var commands: Vector.<int> = new Vector.<int>();
 					commands.push(GraphicsPathCommand.MOVE_TO);
 					for (var i: int = 2; i < thedata.length; i += 2) {
 						commands.push(GraphicsPathCommand.LINE_TO);
 					}
-
+					
 					c1.removeAllChildren();
 					c1.graphics.clear();
 					c1.graphics.lineStyle(1,0,1);
@@ -205,6 +217,8 @@
 				showmarkers();
 				createSectionColumns();
 				calculateLaptimes();
+				//laptimesGrid.selectedIndex = bi;
+				//laptimesGrid.scrollToIndex(laptimesGrid.selectedIndex);
 			}
 
 			protected function showmarkers() : void {
@@ -219,9 +233,9 @@
 					marker.draw();
 					markers.addItem(marker);
 				}
-
+				
 			}
-
+			
 			protected function zoomSlider_changeHandler(event:Event):void {
 				var scaleFactor: Number = zoomSlider.value;
 				c1.scaleX = scaleFactor;
@@ -232,7 +246,7 @@
 			protected function laptimesGrid_changeHandler(event:ListEvent):void {
 				if (laptimesGrid.selectedIndex >= 0) {
 					var o: Object = lapspeeds.getItemAt(laptimesGrid.selectedIndex);
-
+					
 					var data: Vector.<Number> = new Vector.<Number>();
 					var cmd: Vector.<int> = new Vector.<int>();
 					for (var i: int = o.i0; i < o.i1; i++) {
@@ -248,22 +262,37 @@
 
 					c2.removeAllChildren();
 					c2.graphics.clear();
+					
+					c2.graphics.beginFill(0xFFFFFF);
+					c2.graphics.drawRect(0, 0, c2.width, c2.height);
+					
 					c2.graphics.lineStyle(1,0,1);
 					c2.graphics.drawPath(cmd, data);
-
+					
 					c2.graphics.lineStyle(1,0,0.2);
 					c2.graphics.moveTo(0, c2.height - 100/2);
 					c2.graphics.lineTo(c2.width, c2.height - 100/2);
-
+					
 					c2.graphics.lineStyle(1,0,0.2);
 					c2.graphics.moveTo(0, c2.height - 100);
 					c2.graphics.lineTo(c2.width, c2.height - 100);
 				}
 			}
 
+
+			protected function c2_mouseMoveHandler(event:MouseEvent):void {
+				if (laptimesGrid.selectedIndex >= 0) {
+					var o: Object = lapspeeds.getItemAt(laptimesGrid.selectedIndex);
+					var i: int = o.i0 + event.localX;
+					var gpsLine: GpsLine = gpsLines[i];
+					riderMarker.draw(new LatLng(gpsLine.lat, gpsLine.lng));
+					speedLabel.text = "Speed: " + gpsLine.speed + " km/h";
+				}
+			}
+
 		]]>
 	</fx:Script>
-
+	
 	<fx:Declarations>
 		<s:CallResponder id="findAllResult"/>
 
@@ -275,36 +304,36 @@
 
 		<timingservice:TimingService
 			id="timingService"
-			fault="fault(event)"
+			fault="fault(event)" 
 			showBusyCursor="true"/>
-		<gpslogservice:GpslogService
-			id="gpslogService"
-			fault="fault(event)"
+		<gpslogservice:GpslogService 
+			id="gpslogService" 
+			fault="fault(event)" 
 			showBusyCursor="true"/>
-		<trackservice:TrackService
-			id="trackService"
-			fault="fault(event)"
+		<trackservice:TrackService 
+			id="trackService" 
+			fault="fault(event)" 
 			showBusyCursor="true" />
 		<riderservice:RiderService
 			id="riderService"
-			fault="fault(event)"
+			fault="fault(event)" 
 			showBusyCursor="true" />
-
+		
 		<mx:ArrayCollection
 			id="gpslogs"
-			filterFunction="filterGpslogs"
+			filterFunction="filterGpslogs" 
 			list="{findAllResult.lastResult}" />
-
+		
 		<s:CallResponder id="findAllDatesResult"/>
 
 	</fx:Declarations>
 
 	<s:HGroup>
 		<s:VGroup>
-
+			
 		<mx:Form>
 			<mx:FormItem label="Rider" direction="horizontal">
-				<s:DropDownList
+				<s:DropDownList 
 					id="cb_riders"
 					width="160"
 					prompt="Select one ..."
@@ -315,7 +344,7 @@
 				<s:Button label="All" click="cb_riders.selectedIndex = -1" />
 			</mx:FormItem>
 			<mx:FormItem label="Track" direction="horizontal">
-				<s:DropDownList
+				<s:DropDownList 
 					id="cb_tracks"
 					width="160"
 					prompt="Select one ..."
@@ -326,91 +355,93 @@
 				<s:Button label="All" click="cb_tracks.selectedIndex = -1" />
 			</mx:FormItem>
 			<mx:FormItem label="Date" direction="horizontal">
-				<s:DropDownList
-					id="cb_dates"
-					creationComplete="dropDownList_creationCompleteHandler(event)"
-					dataProvider="{findAllDatesResult.lastResult}"
+				<s:DropDownList 
+					id="cb_dates" 
+					creationComplete="dropDownList_creationCompleteHandler(event)" 
+					dataProvider="{findAllDatesResult.lastResult}" 
 					change="gpslogs.refresh()"
 					prompt="Select one ..." />
 				<s:Button label="All" click="cb_dates.selectedIndex = -1" />
 			</mx:FormItem>
 		</mx:Form>
-
-		<mx:DataGrid
-			id="dataGrid"
-			creationComplete="dataGrid_creationCompleteHandler(event)"
+		
+		<mx:DataGrid 
+			id="dataGrid" 
+			creationComplete="dataGrid_creationCompleteHandler(event)" 
 			dataProvider="{gpslogs}">
 			<mx:columns>
 				<mx:DataGridColumn headerText="gpslog_id" dataField="gpslog_id" visible="false"/>
-				<mx:DataGridColumn headerText="Rider" labelFunction="riderLabel"/>
-				<mx:DataGridColumn headerText="Track" dataField="track_name"/>
-				<mx:DataGridColumn headerText="Date" dataField="date"/>
-				<mx:DataGridColumn headerText="Start time" dataField="start_time"/>
-				<mx:DataGridColumn headerText="End time" dataField="end_time"/>
+				<mx:DataGridColumn headerText="Rider" labelFunction="riderLabel" width="128" />
+				<mx:DataGridColumn headerText="Track" dataField="track_name" width="128" />
+				<mx:DataGridColumn headerText="Date" dataField="date" width="80" />
+				<mx:DataGridColumn headerText="Start time" dataField="start_time" width="64" />
+				<mx:DataGridColumn headerText="End time" dataField="end_time" width="64" />
 			</mx:columns>
 		</mx:DataGrid>
-
+		
 		<mx:DataGrid
 			id="laptimesGrid"
 			change="laptimesGrid_changeHandler(event)"
 			dataProvider="{laptimes}">
 			<mx:columns>
-				<mx:DataGridColumn
-					headerText="Index"
-					dataField="index"
+				<mx:DataGridColumn 
+					headerText="Index" 
+					dataField="index" 
 					width="44"/>
-				<mx:DataGridColumn
-					headerText="Laptime"
-					dataField="laptime"
+				<mx:DataGridColumn 
+					headerText="Laptime" 
+					dataField="laptime" 
 					width="80"
 					itemRenderer="components.CustomGridItemRenderer"
 					labelFunction="timeLabelFunction" />
 			</mx:columns>
 		</mx:DataGrid>
-
-		<s:Button
+	
+		<s:Button 
 			label="Laptimes"
 			enabled="{dataGrid.selectedIndex >= 0}"
 			click="loadLaptimes()"/>
-
+	
 		</s:VGroup>
-
+		
 		<s:VGroup>
-
+			
 			<s:BorderContainer>
-				<s:Scroller
+				<s:Scroller 
 					verticalScrollPolicy="on"
 					horizontalScrollPolicy="on">
-					<s:Group
+					<s:Group 
 						width="640" height="480">
 						<mx:Canvas
 							verticalScrollPolicy="off"
 							horizontalScrollPolicy="off"
-							width="640" height="480"
+							width="640" height="480" 
 							id="c1" />
 					</s:Group>
 				</s:Scroller>
 			</s:BorderContainer>
-
+			
 			<s:HGroup>
 				<s:Label text="Zoom" />
-				<s:HSlider
+				<s:HSlider 
 					id="zoomSlider"
 					change="zoomSlider_changeHandler(event)"
 					minimum="1"
 					maximum="4"
 					stepSize="0.1" snapInterval="0.1"/>
 			</s:HGroup>
-
+	
 		</s:VGroup>
 	</s:HGroup>
-
+	
 	<s:BorderContainer>
 		<mx:Canvas
 			verticalScrollPolicy="off"
 			horizontalScrollPolicy="off"
-			width="1280" height="150"
+			width="1280" height="150" 
+			mouseMove="c2_mouseMoveHandler(event)"
 			id="c2" />
 	</s:BorderContainer>
+	<s:Label id="speedLabel" />
 
 </s:VGroup>
