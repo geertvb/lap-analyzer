@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:VGroup 
-	xmlns:fx="http://ns.adobe.com/mxml/2009" 
-	xmlns:s="library://ns.adobe.com/flex/spark" 
-	xmlns:mx="library://ns.adobe.com/flex/halo" 
+<s:VGroup
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/halo"
 	xmlns:trackservice="services.trackservice.*">
 
 	<fx:Script>
@@ -18,25 +18,25 @@
 			import com.google.maps.controls.ZoomControl;
 			import com.google.maps.overlays.Marker;
 			import com.google.maps.overlays.MarkerOptions;
-			
+
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.events.FlexEvent;
 			import mx.events.ListEvent;
-			
+
 			import valueObjects.Track;
-			
+
 			private var oldZoomLevel: Number;
-			
+
 			public var bb: LatLngBounds;
-			
+
 			public var trackMarkers: ArrayCollection = new ArrayCollection();
-			
+
 			[Embed(source="assets/checkeredflag.png")]
 			[Bindable]
-			
+
 			public var flag:Class;
-			
+
 			private function onMapReady(event:Event):void {
 				with (this.map) {
 					addControl(new ZoomControl());
@@ -49,18 +49,18 @@
 					onBothReady();
 				}
 			}
-			
-			
+
+
 			protected function dataGrid_creationCompleteHandler(event:FlexEvent):void {
 				findAllResult.token = trackService.findAll();
 			}
-			
+
 			protected function onDataReady(event: Event) : void {
 				if (this.map.isLoaded()) {
 					onBothReady();
 				}
 			}
-			
+
 			protected function onBothReady() : void {
 				bb = new LatLngBounds();
 				trackMarkers = new ArrayCollection();
@@ -68,17 +68,17 @@
 					if (track.lat != 0  && track.lng != 0) {
 						var latLng: LatLng = new LatLng(track.lat, track.lng);
 						bb.extend(latLng);
-						
+
 						var marker: Marker = new Marker(
 							latLng,
 							new MarkerOptions({
 								icon: new flag(),
 								iconOffset: new Point(-13, -26)
 							}));
-						
-						marker.addEventListener(MapMouseEvent.CLICK, onMarkerClick);  
+
+						marker.addEventListener(MapMouseEvent.CLICK, onMarkerClick);
 						this.map.addOverlay(marker);
-						
+
 						trackMarkers.addItem({track: track, marker: marker});
 					}
 				}
@@ -86,7 +86,7 @@
 				this.map.setCenter(bb.getCenter(), zoomLevel, MapType.NORMAL_MAP_TYPE);
 				oldZoomLevel = zoomLevel;
 			}
-			
+
 			public function onMarkerClick(event: Event) : void {
 				var marker: Marker = Marker(event.target);
 
@@ -97,16 +97,16 @@
 						break;
 					}
 				}
-				
+
 				showInfoWindow(marker, track);
-				
+
 				dataGrid.selectedItem = track;
 				dataGrid.scrollToIndex(dataGrid.selectedIndex);
 			}
-			
+
 			protected function onItemClick(event: ListEvent) : void {
 				var track: Track = Track(dataGrid.selectedItem);
-				
+
 				var marker: Marker = null;
 				for each (var o: Object in trackMarkers) {
 					if (o.track == track) {
@@ -115,22 +115,22 @@
 					}
 				}
 				showInfoWindow(marker, track);
-				
+
 				if (event.columnIndex == 1) {
 					navigateToURL(new URLRequest(track.url), "_blank");
 				}
-				
+
 			}
-			
+
 			protected function showInfoWindow(marker: Marker, track: Track) : void {
 				var trackInfoWindow: TrackInfoWindow = new TrackInfoWindow();
 				trackInfoWindow.data = track;
-				
+
 				var infoWindowOptions: InfoWindowOptions = new InfoWindowOptions({
-					customContent: trackInfoWindow, 
-					width: 160, 
+					customContent: trackInfoWindow,
+					width: 160,
 					drawDefaultFrame:true})
-				
+
 				marker.openInfoWindow(infoWindowOptions);
 			}
 
@@ -139,7 +139,7 @@
 				this.map.setCenter(bb.getCenter(), zoomLevel);
 				oldZoomLevel = zoomLevel;
 			}
-			
+
 			protected function zoomIn() : void {
 				var track: Track = dataGrid.selectedItem as Track;
 				var center: LatLng = new LatLng(track.lat, track.lng);
@@ -147,7 +147,7 @@
 				this.map.setCenter(center, zoomLevel);
 				oldZoomLevel = zoomLevel;
 			}
-			
+
 			protected function onMapZoomChanged(event: MapZoomEvent) : void {
 				if (oldZoomLevel < event.zoomLevel && dataGrid.selectedIndex >= 0) {
 					var track: Track = dataGrid.selectedItem as Track;
@@ -156,42 +156,42 @@
 				}
 				oldZoomLevel = event.zoomLevel;
 			}
-			
+
 		]]>
 	</fx:Script>
-	
+
 	<fx:Declarations>
 		<s:CallResponder id="findAllResult" result="onDataReady(event)"/>
-		<trackservice:TrackService 
-			id="trackService" 
-			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" 
+		<trackservice:TrackService
+			id="trackService"
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
 			showBusyCursor="true"/>
 	</fx:Declarations>
-	
-	<s:Border>		
-		<maps:Map3D 
-			xmlns:maps="com.google.maps.*" 
-			id="map" 
-			mapevent_mapready="onMapReady(event)" 
-			width="640" height="480" 
+
+	<s:BorderContainer>
+		<maps:Map3D
+			xmlns:maps="com.google.maps.*"
+			id="map"
+			mapevent_mapready="onMapReady(event)"
+			width="640" height="480"
 			key="ABQIAAAARHlxm1tnIyh53Qky1yRvaxQRM90ZMLGmypNtl0aCSyUOIyb2sxQJCMaQB88DzEFGpMHAzTs5sB2Wpw"/>
-	</s:Border>
-	
+	</s:BorderContainer>
+
 	<s:HGroup width="100%">
-		<s:Button 
-			label="Overview" 
+		<s:Button
+			label="Overview"
 			click="zoomOut();" />
-		<s:Button 
+		<s:Button
 			label="Track"
 			enabled="{dataGrid.selectedIndex >= 0}"
 			click="zoomIn();"/>
 	</s:HGroup>
-	
-	<mx:DataGrid 
-		id="dataGrid" 
+
+	<mx:DataGrid
+		id="dataGrid"
 		width="640"
-		creationComplete="dataGrid_creationCompleteHandler(event)" 
-		dataProvider="{findAllResult.lastResult}" 
+		creationComplete="dataGrid_creationCompleteHandler(event)"
+		dataProvider="{findAllResult.lastResult}"
 		rowCount="5"
 		itemClick="onItemClick(event);">
 		<mx:columns>
@@ -204,5 +204,5 @@
 			<mx:DataGridColumn headerText="Longitude" dataField="lng" width="80"/>
 		</mx:columns>
 	</mx:DataGrid>
-	
+
 </s:VGroup>

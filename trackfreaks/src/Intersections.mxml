@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:HGroup
-	xmlns:fx="http://ns.adobe.com/mxml/2009" 
-	xmlns:s="library://ns.adobe.com/flex/spark" 
-	xmlns:mx="library://ns.adobe.com/flex/halo" 
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/halo"
 	xmlns:net="flash.net.*"
 	creationComplete="creationComplete()"
-	xmlns:trackservice="services.trackservice.*" 
+	xmlns:trackservice="services.trackservice.*"
 	xmlns:intersectionservice="services.intersectionservice.*">
-	
+
 	<fx:Script>
 		<![CDATA[
 			import com.google.maps.LatLngBounds;
@@ -21,35 +21,35 @@
 			import mx.events.FlexEvent;
 			import mx.controls.Alert;
 			import __AS3__.vec.Vector;
-			
+
 			public var projection: Projection;
 
-			[Bindable] 
+			[Bindable]
 			private var commands: Vector.<int> = new Vector.<int>();
 
-			[Bindable] 
+			[Bindable]
 			private var thedata: Vector.<Number> = new Vector.<Number>();
-			
+
 			[Bindable]
 			private var intersections: ArrayCollection;
 
 			private var markers: ArrayCollection;
-			
+
 			public function creationComplete() : void {
 				dataGrid_refresh();
 			}
-			
+
 			public function dataReady(s: String) : void {
 				if (s != null) {
 					var lines: Array = s.split("\n");
 					var i: int;
-					
+
 					var headings: Array = lines[0].split(",");
 					var latIndex: uint = headings.indexOf("LATITUDE");
 					var lngIndex: uint = headings.indexOf("LONGITUDE");
-					
+
 					var bounds: LatLngBounds = new LatLngBounds();
-					
+
 					var points: Array = new Array();
 					for (i = 1; i<lines.length; i++) {
 						var line: String = lines[i];
@@ -60,24 +60,24 @@
 							points.push(latLng);
 						}
 					}
-					
+
 					projection = new Projection();
 					projection.bounds = bounds;
 					projection.fit(640,640);
-					
+
 					thedata = new Vector.<Number>();
 					for each (var ll: LatLng in points) {
 						var p2: Point = projection.latLng2xy(ll);
 						thedata.push(p2.x);
 						thedata.push(p2.y);
 					}
-	
+
 					commands = new Vector.<int>();
 					commands.push(GraphicsPathCommand.MOVE_TO);
 					for (i = 2; i < thedata.length; i += 2) {
 						commands.push(GraphicsPathCommand.LINE_TO);
 					}
-					
+
 					c1.removeAllChildren();
 					c1.graphics.clear();
 					c1.graphics.lineStyle(1,0,1);
@@ -93,7 +93,7 @@
 			public function findNearest(event: MouseEvent) : void {
 				var min: Number = Number.MAX_VALUE;
 				var best: int = -1;
-				
+
 				for (var i:uint = 2; i < thedata.length-2; i += 2) {
 					var cd: Number = (thedata[i] - event.localX) * (thedata[i] - event.localX)
 						+ (thedata[i+1] - event.localY) * (thedata[i+1] - event.localY);
@@ -102,9 +102,9 @@
 						best = i;
 					}
 				}
-				
+
 				if (min <= 100) {
-				
+
 					var angle: Number = Math.atan2(thedata[best+3] - thedata[best-1], thedata[best+2] - thedata[best-2]);
 					var latLng: LatLng = projection.xy2latLng(thedata[best], thedata[best+1]);
 
@@ -115,7 +115,7 @@
 					marker.parent = c1;
 					marker.projection = projection;
 					marker.draw();
-					
+
 					markers.addItem(marker);
 
 					var intersection: Intersection = new Intersection();
@@ -125,16 +125,16 @@
 					intersection.angle = angle;
 
 					intersections.addItem(intersection);
-					
+
 					scan();
 				}
 			}
-			
+
 			public function scan() : void {
 				var i: int;
 				var ii: int;
 				var s1: ArrayCollection;
-				
+
 				s1 = new ArrayCollection();
 				s1.addAll(markers);
 				i = 0;
@@ -175,11 +175,11 @@
 					}
 					i += 2;
 				}
-				
+
 				markers = nm;
 				intersections = ni;
 			}
-			
+
 			public function click_remove() : void {
 				var intersection: Object = dataGrid.selectedItem;
 
@@ -189,7 +189,7 @@
 				marker.destroy();
 				scan();
 			}
-			
+
 			public function click_remove_all() : void {
 				intersections = new ArrayCollection();
 				for each (var marker: IntersectionMarker in markers) {
@@ -201,17 +201,17 @@
 			protected function cb_tracks_creationCompleteHandler(event:FlexEvent):void {
 				findAllResult.token = trackService.findAll();
 			}
-			
+
 			public function fault(event : FaultEvent) : void {
 				Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)
 			}
-			
+
 			public function result_findByTrack(event : ResultEvent) : void {
 				dataReady(event.result.data);
 				intersections = new ArrayCollection(event.result.intersections);
 				showmarkers();
 			}
-			
+
 			protected function dataGrid_refresh():void {
 				if (cb_tracks.selectedItem != null) {
 					var track_id: int = cb_tracks.selectedItem.track_id;
@@ -221,7 +221,7 @@
 					c1.graphics.clear();
 				}
 			}
-			
+
 			protected function click_save() : void {
 				var track_id: int = cb_tracks.selectedItem.track_id;
 				var ic: ArrayCollection = new ArrayCollection();
@@ -234,7 +234,7 @@
 				}
 				intersectionService.updateByTrack(track_id, ic);
 			}
-			
+
 			protected function showmarkers() : void {
 				markers = new ArrayCollection();
 				for each (var intersection: Object in intersections) {
@@ -249,130 +249,130 @@
 				}
 
 			}
-			
+
 			protected function labelFunction(item:Object, column:DataGridColumn): String {
 				return latLngFormatter.format(item[column.dataField]);
 			}
-			
+
 			protected function zoomSlider_changeHandler(event:Event):void {
 				var scaleFactor: Number = zoomSlider.value;
 				c1.scaleX = scaleFactor;
 				c1.scaleY = scaleFactor;
 			}
-			
+
 		]]>
 	</fx:Script>
-	
+
 	<fx:Declarations>
-		<s:CallResponder 
-			id="findByTrack" 
-			fault="fault(event)" 
+		<s:CallResponder
+			id="findByTrack"
+			fault="fault(event)"
 			result="result_findByTrack(event)"/>
-		<s:CallResponder 
-			id="findAllResult" 
-			fault="fault(event)" 
+		<s:CallResponder
+			id="findAllResult"
+			fault="fault(event)"
 			result="cb_tracks.selectedIndex = 0"/>
-		<trackservice:TrackService 
-			id="trackService" 
-			fault="fault(event)" 
+		<trackservice:TrackService
+			id="trackService"
+			fault="fault(event)"
 			showBusyCursor="true"/>
-		<intersectionservice:IntersectionService 
-			id="intersectionService" 
-			fault="fault(event)" 
+		<intersectionservice:IntersectionService
+			id="intersectionService"
+			fault="fault(event)"
 			showBusyCursor="true"/>
 		<mx:NumberFormatter id="latLngFormatter" precision="6" />
 		<mx:DateFormatter id="timeFormatter" formatString="NN:SS.QQQ" />
 	</fx:Declarations>
-	
+
 	<s:VGroup>
-		
+
 		<mx:Form>
 			<mx:FormItem label="Track">
 				<s:DropDownList
-					id="cb_tracks" 
+					id="cb_tracks"
 					width="160"
-					creationComplete="cb_tracks_creationCompleteHandler(event)" 
+					creationComplete="cb_tracks_creationCompleteHandler(event)"
 					dataProvider="{findAllResult.lastResult}"
 					change="dataGrid_refresh()"
 					labelField="name"/>
 			</mx:FormItem>
 		</mx:Form>
-		
-		<mx:DataGrid 
-			id="dataGrid" 
-			creationComplete="dataGrid_refresh()" 
+
+		<mx:DataGrid
+			id="dataGrid"
+			creationComplete="dataGrid_refresh()"
 			dataProvider="{intersections}">
 			<mx:columns>
-				<mx:DataGridColumn 
-					headerText="Index" 
-					dataField="index" 
+				<mx:DataGridColumn
+					headerText="Index"
+					dataField="index"
 					width="44"/>
-				<mx:DataGridColumn 
-					headerText="Latitude" 
-					dataField="lat" 
-					width="80" 
+				<mx:DataGridColumn
+					headerText="Latitude"
+					dataField="lat"
+					width="80"
 					labelFunction="labelFunction"/>
-				<mx:DataGridColumn 
-					headerText="Longitude" 
-					dataField="lng" 
-					width="80" 
+				<mx:DataGridColumn
+					headerText="Longitude"
+					dataField="lng"
+					width="80"
 					labelFunction="labelFunction"/>
-				<mx:DataGridColumn 
-					headerText="Angle" 
-					dataField="angle" 
-					width="80" 
+				<mx:DataGridColumn
+					headerText="Angle"
+					dataField="angle"
+					width="80"
 					labelFunction="labelFunction"/>
 			</mx:columns>
 		</mx:DataGrid>
-		
+
 		<s:HGroup>
-			<s:Button 
+			<s:Button
 				label="Reload"
 				click="dataGrid_refresh()"/>
-			<s:Button 
+			<s:Button
 				label="Remove all"
 				enabled="{intersections.length >= 0}"
 				click="click_remove_all()"/>
-			<s:Button 
+			<s:Button
 				label="Remove"
 				enabled="{dataGrid.selectedIndex >= 0}"
 				click="click_remove()"/>
-			<s:Button 
+			<s:Button
 				label="Save"
 				click="click_save()"/>
 		</s:HGroup>
-	
+
 	</s:VGroup>
 
 	<s:VGroup>
-		
-		<s:Border>
-			<s:Scroller 
+
+		<s:BorderContainer>
+			<s:Scroller
 				verticalScrollPolicy="on"
 				horizontalScrollPolicy="on">
-				<s:Group 
+				<s:Group
 					width="640" height="640">
-					<mx:Canvas 
+					<mx:Canvas
 						verticalScrollPolicy="off"
 						horizontalScrollPolicy="off"
-						width="640" height="640" 
-						id="c1" 
+						width="640" height="640"
+						id="c1"
 						mouseUp="findNearest(event);">
 					</mx:Canvas>
 				</s:Group>
 			</s:Scroller>
-		</s:Border>
-		
+		</s:BorderContainer>
+
 		<s:HGroup>
 			<s:Label text="Zoom" />
-			<s:HSlider 
+			<s:HSlider
 				id="zoomSlider"
 				change="zoomSlider_changeHandler(event)"
 				minimum="1"
 				maximum="4"
 				stepSize="0.1" snapInterval="0.1"/>
 		</s:HGroup>
-		
-	</s:VGroup>	
+
+	</s:VGroup>
 
 </s:HGroup>
