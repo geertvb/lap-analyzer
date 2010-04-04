@@ -1,6 +1,6 @@
 /**
  * This is a generated class and is not intended for modfication.  To customize behavior
- * of this value object you may modify the generated sub-class of this class - Rider.as.
+ * of this value object you may modify the generated sub-class of this class - Organization.as.
  */
 
 package valueObjects
@@ -20,20 +20,20 @@ import com.adobe.fiber.valueobjects.AvailablePropertyIterator;
 use namespace model_internal;
 
 [ExcludeClass]
-public class _Super_Rider extends flash.events.EventDispatcher implements com.adobe.fiber.valueobjects.IValueObject
+public class _Super_Organization extends flash.events.EventDispatcher implements com.adobe.fiber.valueobjects.IValueObject
 {
     model_internal static function initRemoteClassAliasSingle(cz:Class) : void 
     {
         try 
         {
-            if (flash.net.getClassByAlias("Rider") == null)
+            if (flash.net.getClassByAlias("Organization") == null)
             {
-                flash.net.registerClassAlias("Rider", cz);
+                flash.net.registerClassAlias("Organization", cz);
             } 
         }
         catch (e:Error) 
         {
-            flash.net.registerClassAlias("Rider", cz); 
+            flash.net.registerClassAlias("Organization", cz); 
         }
     }   
      
@@ -41,15 +41,14 @@ public class _Super_Rider extends flash.events.EventDispatcher implements com.ad
     {
     }
 
-	model_internal var _dminternal_model : _RiderEntityMetadata;
+	model_internal var _dminternal_model : _OrganizationEntityMetadata;
 
 	/**
 	 * properties
 	 */
-	private var _internal_rider_id : int;
-	private var _internal_firstname : String;
-	private var _internal_lastname : String;
-	private var _internal_picture_id : int;
+	private var _internal_organization_id : int;
+	private var _internal_name : String;
+	private var _internal_url : String;
 
     private static var emptyArray:Array = new Array();
 
@@ -60,9 +59,9 @@ public class _Super_Rider extends flash.events.EventDispatcher implements com.ad
     
 	model_internal var _changeWatcherArray:Array = new Array();   
 
-	public function _Super_Rider() 
+	public function _Super_Organization() 
 	{	
-		_model = new _RiderEntityMetadata(this);
+		_model = new _OrganizationEntityMetadata(this);
 	
 		// Bind to own data properties for cache invalidation triggering  
        
@@ -72,39 +71,34 @@ public class _Super_Rider extends flash.events.EventDispatcher implements com.ad
      * data property getters
      */
 	[Bindable(event="propertyChange")] 
-    public function get rider_id() : int    
+    public function get organization_id() : int    
     {
-            return _internal_rider_id;
+            return _internal_organization_id;
     }    
 	[Bindable(event="propertyChange")] 
-    public function get firstname() : String    
+    public function get name() : String    
     {
-            return _internal_firstname;
+            return _internal_name;
     }    
 	[Bindable(event="propertyChange")] 
-    public function get lastname() : String    
+    public function get url() : String    
     {
-            return _internal_lastname;
-    }    
-	[Bindable(event="propertyChange")] 
-    public function get picture_id() : int    
-    {
-            return _internal_picture_id;
+            return _internal_url;
     }    
 
     /**
      * data property setters
      */      
-    public function set rider_id(value:int) : void 
+    public function set organization_id(value:int) : void 
     {    	
         var recalcValid:Boolean = false;
     	
     	
-    	var oldValue:int = _internal_rider_id;               
+    	var oldValue:int = _internal_organization_id;               
         if (oldValue !== value)
         {
-            _internal_rider_id = value;
-        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "rider_id", oldValue, _internal_rider_id));
+            _internal_organization_id = value;
+        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "organization_id", oldValue, _internal_organization_id));
         }    	     
         
         if (recalcValid && model_internal::_cacheInitialized_isValid)
@@ -112,20 +106,20 @@ public class _Super_Rider extends flash.events.EventDispatcher implements com.ad
             model_internal::isValid_der = model_internal::calculateIsValid();
         }  
     }    
-    public function set firstname(value:String) : void 
+    public function set name(value:String) : void 
     {    	
         var recalcValid:Boolean = false;
-    	if (value == null || _internal_firstname == null)
+    	if (value == null || _internal_name == null)
     	{
     		recalcValid = true;
     	}	
     	
     	
-    	var oldValue:String = _internal_firstname;               
+    	var oldValue:String = _internal_name;               
         if (oldValue !== value)
         {
-            _internal_firstname = value;
-        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "firstname", oldValue, _internal_firstname));
+            _internal_name = value;
+        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "name", oldValue, _internal_name));
         }    	     
         
         if (recalcValid && model_internal::_cacheInitialized_isValid)
@@ -133,37 +127,20 @@ public class _Super_Rider extends flash.events.EventDispatcher implements com.ad
             model_internal::isValid_der = model_internal::calculateIsValid();
         }  
     }    
-    public function set lastname(value:String) : void 
+    public function set url(value:String) : void 
     {    	
         var recalcValid:Boolean = false;
-    	if (value == null || _internal_lastname == null)
+    	if (value == null || _internal_url == null)
     	{
     		recalcValid = true;
     	}	
     	
     	
-    	var oldValue:String = _internal_lastname;               
+    	var oldValue:String = _internal_url;               
         if (oldValue !== value)
         {
-            _internal_lastname = value;
-        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "lastname", oldValue, _internal_lastname));
-        }    	     
-        
-        if (recalcValid && model_internal::_cacheInitialized_isValid)
-        {
-            model_internal::isValid_der = model_internal::calculateIsValid();
-        }  
-    }    
-    public function set picture_id(value:int) : void 
-    {    	
-        var recalcValid:Boolean = false;
-    	
-    	
-    	var oldValue:int = _internal_picture_id;               
-        if (oldValue !== value)
-        {
-            _internal_picture_id = value;
-        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "picture_id", oldValue, _internal_picture_id));
+            _internal_url = value;
+        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "url", oldValue, _internal_url));
         }    	     
         
         if (recalcValid && model_internal::_cacheInitialized_isValid)
@@ -203,19 +180,18 @@ public class _Super_Rider extends flash.events.EventDispatcher implements com.ad
         var violatedConsts:Array = new Array();    
         var validationFailureMessages:Array = new Array();    
 
-		if (_model.isFirstnameAvailable && _internal_firstname == null)
+		if (_model.isNameAvailable && _internal_name == null)
 		{
-			violatedConsts.push("firstnameIsRequired");
-			validationFailureMessages.push("firstname is required");
+			violatedConsts.push("nameIsRequired");
+			validationFailureMessages.push("name is required");
 		}
-		if (_model.isLastnameAvailable && _internal_lastname == null)
+		if (_model.isUrlAvailable && _internal_url == null)
 		{
-			violatedConsts.push("lastnameIsRequired");
-			validationFailureMessages.push("lastname is required");
+			violatedConsts.push("urlIsRequired");
+			validationFailureMessages.push("url is required");
 		}
 
 		var styleValidity:Boolean = true;
-	
 	
 	
 	
@@ -246,14 +222,14 @@ public class _Super_Rider extends flash.events.EventDispatcher implements com.ad
 
     [Transient] 
 	[Bindable(event="propertyChange")] 
-    public function get _model() : _RiderEntityMetadata
+    public function get _model() : _OrganizationEntityMetadata
     {
 		return model_internal::_dminternal_model;              
     }	
     
-    public function set _model(value : _RiderEntityMetadata) : void       
+    public function set _model(value : _OrganizationEntityMetadata) : void       
     {
-    	var oldValue : _RiderEntityMetadata = model_internal::_dminternal_model;               
+    	var oldValue : _OrganizationEntityMetadata = model_internal::_dminternal_model;               
         if (oldValue !== value)
         {
         	model_internal::_dminternal_model = value;

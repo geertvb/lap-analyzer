@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" 
+		xmlns:trackdayservice="services.trackdayservice.*">
+	<fx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			
+			protected function dataGrid_creationCompleteHandler(event:FlexEvent):void
+			{
+				findAllRowsResult.token = trackdayService.findAllRows();
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<trackdayservice:TrackdayService
+			id="trackdayService"
+			/>
+		<s:CallResponder id="findAllRowsResult"/>
+	</fx:Declarations>
+
+	
+	<mx:DataGrid
+		id="dataGrid"
+		width="640"
+		rowCount="10" 
+		creationComplete="dataGrid_creationCompleteHandler(event)" 
+		dataProvider="{findAllRowsResult.lastResult}">
+		<mx:columns>
+			<mx:DataGridColumn headerText="trackday_id" dataField="trackday_id" visible="false"/>
+			<mx:DataGridColumn headerText="track_id" dataField="track_id" visible="false"/>
+			<mx:DataGridColumn headerText="organization_id" dataField="organization_id" visible="false"/>
+			<mx:DataGridColumn headerText="date" dataField="date"/>
+			<mx:DataGridColumn headerText="trackname" dataField="trackname"/>
+			<mx:DataGridColumn headerText="organizationname" dataField="organizationname"/>
+		</mx:columns>
+	</mx:DataGrid>
+
+</s:VGroup>

@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Application 
+<s:Application 
 	xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
-	xmlns:mx="library://ns.adobe.com/flex/halo" 
 	minWidth="1024"
 	minHeight="768" 
-	xmlns:local="*" layout="vertical" horizontalAlign="left">
+	xmlns:local="*" 
+	xmlns:mx="library://ns.adobe.com/flex/mx">
 
-	<mx:ApplicationControlBar
-		width="100%" 
-		dock="true" fillAlphas="[1.0, 1.0]" fillColors="[#ECECEC, #D7D7D7]">
+	<s:states>
+		<s:State name="Anonymous"/>
+		<s:State name="Login"/>
+		<s:State name="Authenticated"/>
+	</s:states>
+	
+	<s:layout>
+		<s:VerticalLayout horizontalAlign="left" />
+	</s:layout>
+
+	<s:controlBarContent>
 		
 		<mx:Label text="TrackFreaks.eu"  fontFamily="Arial" fontSize="18" fontWeight="bold"/>
 		
@@ -19,19 +27,42 @@
 			selectedIndex="0">
 		</mx:ToggleButtonBar>
 		
-	</mx:ApplicationControlBar>
+		<mx:Spacer width="100%" />
+		
+		<s:PopUpAnchor id="popup" popUpPosition="below" height="100%">
+			<s:BorderContainer>
+				<mx:Form>
+					<mx:FormItem label="Username">
+						<s:TextInput id="username" text="" />
+					</mx:FormItem>
+					<mx:FormItem label="Password">
+						<s:TextInput  id="password" text="" />
+					</mx:FormItem>
+					<s:HGroup>
+						<s:Button label="Login" click="popup.displayPopUp = false; currentState = 'Authenticated'" />
+						<s:Button label="Cancel" click="popup.displayPopUp = false; currentState = 'Anonymous'" />
+					</s:HGroup>
+				</mx:Form>
+			</s:BorderContainer>
+		</s:PopUpAnchor>
+		
+		<s:Label text="Welcome Geert" includeIn="Authenticated" verticalAlign="middle" height="100%"/>
+		<mx:Button includeIn="Anonymous,Login" label="Login" click="popup.displayPopUp = true" />
+		<mx:Image source="@Embed('assets/Shutdown.png')" includeIn="Authenticated" click="currentState = 'Anonymous'"  width="24" height="24"/>
+
+	</s:controlBarContent>
 	
 	<mx:ViewStack 
 		id="viewstack1" 
 		resizeToContent="true" >
 		<mx:Canvas label="Tracks"><local:Tracks /></mx:Canvas>
 		<mx:Canvas label="Riders"><local:Riders /></mx:Canvas>
-		<mx:Canvas label="Calendar" />
-		<mx:Canvas label="Organizations" />
+		<mx:Canvas label="Calendar"><local:Trackdays /></mx:Canvas>
+		<mx:Canvas label="Organizations"><local:Organizations /></mx:Canvas>
 		<mx:Canvas label="Hotels" />
 		<mx:Canvas label="Intersections"><local:Intersections /></mx:Canvas>
 		<mx:Canvas label="GPS Log Reader"><local:GpsLogReader /></mx:Canvas>
 		<mx:Canvas label="GPS Log"><local:GpsLog /></mx:Canvas>
 	</mx:ViewStack>
 
-</mx:Application>
+</s:Application>
