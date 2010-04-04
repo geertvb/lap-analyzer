@@ -1,8 +1,8 @@
 /**
  * This is a generated class and is not intended for modfication.  To customize behavior
- * of this service wrapper you may modify the generated sub-class of this class - RiderService.as.
+ * of this service wrapper you may modify the generated sub-class of this class - OrganizationService.as.
  */
-package services.riderservice
+package services.organizationservice
 {
 import com.adobe.fiber.core.model_internal;
 import com.adobe.fiber.services.wrapper.RemoteObjectServiceWrapper;
@@ -11,17 +11,17 @@ import mx.rpc.AbstractOperation;
 import mx.rpc.AsyncToken;
 import mx.rpc.remoting.Operation;
 import mx.rpc.remoting.RemoteObject;
-import valueObjects.Rider;
+import valueObjects.Organization;
 
 import mx.collections.ItemResponder;
 import com.adobe.fiber.valueobjects.AvailablePropertyIterator;
 
 [ExcludeClass]
-internal class _Super_RiderService extends com.adobe.fiber.services.wrapper.RemoteObjectServiceWrapper
+internal class _Super_OrganizationService extends com.adobe.fiber.services.wrapper.RemoteObjectServiceWrapper
 {      
        
     // Constructor
-    public function _Super_RiderService()
+    public function _Super_OrganizationService()
     {
         // initialize service control
         _serviceControl = new mx.rpc.remoting.RemoteObject();
@@ -30,21 +30,21 @@ internal class _Super_RiderService extends com.adobe.fiber.services.wrapper.Remo
         var operation:mx.rpc.remoting.Operation;
          
         operation = new mx.rpc.remoting.Operation(null, "findAll");
-		 operation.resultElementType = valueObjects.Rider;
+		 operation.resultElementType = valueObjects.Organization;
         operations["findAll"] = operation;
 
-        valueObjects.Rider._initRemoteClassAlias();
-        operation = new mx.rpc.remoting.Operation(null, "findByID");
-		 operation.resultType = valueObjects.Rider; 		 
-        operations["findByID"] = operation;
+        valueObjects.Organization._initRemoteClassAlias();
+        operation = new mx.rpc.remoting.Operation(null, "getOrganization");
+		 operation.resultType = valueObjects.Organization; 		 
+        operations["getOrganization"] = operation;
 
-        valueObjects.Rider._initRemoteClassAlias();
+        valueObjects.Organization._initRemoteClassAlias();
     
         _serviceControl.operations = operations;   
 		_serviceControl.convertResultHandler = com.adobe.serializers.utility.TypeUtility.convertResultHandler;
-        _serviceControl.source = "RiderService";
+        _serviceControl.source = "OrganizationService";
         _serviceControl.endpoint = "gateway.php";
-		destination = "RiderService";
+		destination = "OrganizationService";
         
     
                       
@@ -71,7 +71,7 @@ internal class _Super_RiderService extends com.adobe.fiber.services.wrapper.Remo
 	}   
 	 
 	/**
-	  * This method is a generated wrapper used to call the 'findByID' operation. It returns an mx.rpc.AsyncToken whose 
+	  * This method is a generated wrapper used to call the 'getOrganization' operation. It returns an mx.rpc.AsyncToken whose 
 	  * result property will be populated with the result of the operation when the server response is received. 
 	  * To use this result from MXML code, define a CallResponder component and assign its token property to this method's return value. 
 	  * You can then bind to CallResponder.lastResult or listen for the CallResponder.result or fault events.
@@ -81,10 +81,10 @@ internal class _Super_RiderService extends com.adobe.fiber.services.wrapper.Remo
       *
       * @return an mx.rpc.AsyncToken whose result property will be populated with the result of the operation when the server response is received.
 	  */          
-	public function findByID(rider_id:int) : mx.rpc.AsyncToken
+	public function getOrganization() : mx.rpc.AsyncToken
 	{
-		var _internal_operation:mx.rpc.AbstractOperation = _serviceControl.getOperation("findByID");
-		var _internal_token:mx.rpc.AsyncToken = _internal_operation.send(rider_id) ;
+		var _internal_operation:mx.rpc.AbstractOperation = _serviceControl.getOperation("getOrganization");
+		var _internal_token:mx.rpc.AsyncToken = _internal_operation.send() ;
 
 		return _internal_token;
 	}   

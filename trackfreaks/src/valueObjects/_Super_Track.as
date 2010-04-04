@@ -5,27 +5,22 @@
 
 package valueObjects
 {
+import com.adobe.fiber.services.IFiberManagingService;
+import com.adobe.fiber.valueobjects.IValueObject;
+import flash.events.Event;
 import flash.events.EventDispatcher;
+import mx.events.PropertyChangeEvent;
+
 import flash.net.registerClassAlias;
 import flash.net.getClassByAlias;
 import com.adobe.fiber.core.model_internal;
 import com.adobe.fiber.valueobjects.IPropertyIterator;
-import com.adobe.fiber.valueobjects.IValueObject;
 import com.adobe.fiber.valueobjects.AvailablePropertyIterator;
-import com.adobe.fiber.services.IFiberManagingService;
-import mx.binding.utils.ChangeWatcher;
-import mx.rpc.AbstractService;
-
-
-import flash.events.Event;
-import mx.events.CollectionEvent;
-import mx.events.PropertyChangeEvent;
-
 
 use namespace model_internal;
 
 [ExcludeClass]
-public class _Super_Track extends EventDispatcher implements IValueObject
+public class _Super_Track extends flash.events.EventDispatcher implements com.adobe.fiber.valueobjects.IValueObject
 {
     model_internal static function initRemoteClassAliasSingle(cz:Class) : void 
     {
@@ -40,7 +35,7 @@ public class _Super_Track extends EventDispatcher implements IValueObject
         {
             flash.net.registerClassAlias("Track", cz); 
         }
-     }   
+    }   
      
     model_internal static function initRemoteClassAliasAllRelated() : void 
     {
@@ -132,7 +127,7 @@ public class _Super_Track extends EventDispatcher implements IValueObject
     	var oldValue:int = _internal_track_id;               
         if (oldValue !== value)
         {
-        	_internal_track_id = value;
+            _internal_track_id = value;
         	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "track_id", oldValue, _internal_track_id));
         }    	     
         
@@ -153,7 +148,7 @@ public class _Super_Track extends EventDispatcher implements IValueObject
     	var oldValue:String = _internal_name;               
         if (oldValue !== value)
         {
-        	_internal_name = value;
+            _internal_name = value;
         	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "name", oldValue, _internal_name));
         }    	     
         
@@ -174,7 +169,7 @@ public class _Super_Track extends EventDispatcher implements IValueObject
     	var oldValue:String = _internal_url;               
         if (oldValue !== value)
         {
-        	_internal_url = value;
+            _internal_url = value;
         	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "url", oldValue, _internal_url));
         }    	     
         
@@ -191,7 +186,7 @@ public class _Super_Track extends EventDispatcher implements IValueObject
     	var oldValue:Number = _internal_lat;               
         if (oldValue !== value)
         {
-        	_internal_lat = value;
+            _internal_lat = value;
         	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "lat", oldValue, _internal_lat));
         }    	     
         
@@ -208,7 +203,7 @@ public class _Super_Track extends EventDispatcher implements IValueObject
     	var oldValue:Number = _internal_lng;               
         if (oldValue !== value)
         {
-        	_internal_lng = value;
+            _internal_lng = value;
         	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "lng", oldValue, _internal_lng));
         }    	     
         
@@ -229,7 +224,7 @@ public class _Super_Track extends EventDispatcher implements IValueObject
     	var oldValue:String = _internal_country;               
         if (oldValue !== value)
         {
-        	_internal_country = value;
+            _internal_country = value;
         	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "country", oldValue, _internal_country));
         }    	     
         
@@ -246,7 +241,7 @@ public class _Super_Track extends EventDispatcher implements IValueObject
     	var oldValue:int = _internal_length;               
         if (oldValue !== value)
         {
-        	_internal_length = value;
+            _internal_length = value;
         	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "length", oldValue, _internal_length));
         }    	     
         
@@ -263,7 +258,7 @@ public class _Super_Track extends EventDispatcher implements IValueObject
     	var oldValue:int = _internal_picture_id;               
         if (oldValue !== value)
         {
-        	_internal_picture_id = value;
+            _internal_picture_id = value;
         	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "picture_id", oldValue, _internal_picture_id));
         }    	     
         
@@ -277,7 +272,7 @@ public class _Super_Track extends EventDispatcher implements IValueObject
      * data property setter listeners
      */   
 
-   model_internal function setterListenerAnyConstraint(value:Event):void
+   model_internal function setterListenerAnyConstraint(value:flash.events.Event):void
    {
         if (model_internal::_cacheInitialized_isValid)
         {
@@ -379,9 +374,9 @@ public class _Super_Track extends EventDispatcher implements IValueObject
     /**
      *  services
      */                  
-     private var _managingService:IFiberManagingService;
+     private var _managingService:com.adobe.fiber.services.IFiberManagingService;
     
-     public function set managingService(managingService:IFiberManagingService):void
+     public function set managingService(managingService:com.adobe.fiber.services.IFiberManagingService):void
      {
          _managingService = managingService;
      }                      

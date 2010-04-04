@@ -5,27 +5,22 @@
 
 package valueObjects
 {
+import com.adobe.fiber.services.IFiberManagingService;
+import com.adobe.fiber.valueobjects.IValueObject;
+import flash.events.Event;
 import flash.events.EventDispatcher;
+import mx.events.PropertyChangeEvent;
+
 import flash.net.registerClassAlias;
 import flash.net.getClassByAlias;
 import com.adobe.fiber.core.model_internal;
 import com.adobe.fiber.valueobjects.IPropertyIterator;
-import com.adobe.fiber.valueobjects.IValueObject;
 import com.adobe.fiber.valueobjects.AvailablePropertyIterator;
-import com.adobe.fiber.services.IFiberManagingService;
-import mx.binding.utils.ChangeWatcher;
-import mx.rpc.AbstractService;
-
-
-import flash.events.Event;
-import mx.events.CollectionEvent;
-import mx.events.PropertyChangeEvent;
-
 
 use namespace model_internal;
 
 [ExcludeClass]
-public class _Super_Intersection extends EventDispatcher implements IValueObject
+public class _Super_Intersection extends flash.events.EventDispatcher implements com.adobe.fiber.valueobjects.IValueObject
 {
     model_internal static function initRemoteClassAliasSingle(cz:Class) : void 
     {
@@ -40,7 +35,7 @@ public class _Super_Intersection extends EventDispatcher implements IValueObject
         {
             flash.net.registerClassAlias("Intersection", cz); 
         }
-     }   
+    }   
      
     model_internal static function initRemoteClassAliasAllRelated() : void 
     {
@@ -108,7 +103,7 @@ public class _Super_Intersection extends EventDispatcher implements IValueObject
     	var oldValue:Number = _internal_lat;               
         if (oldValue !== value)
         {
-        	_internal_lat = value;
+            _internal_lat = value;
         	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "lat", oldValue, _internal_lat));
         }    	     
         
@@ -125,7 +120,7 @@ public class _Super_Intersection extends EventDispatcher implements IValueObject
     	var oldValue:Number = _internal_lng;               
         if (oldValue !== value)
         {
-        	_internal_lng = value;
+            _internal_lng = value;
         	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "lng", oldValue, _internal_lng));
         }    	     
         
@@ -142,7 +137,7 @@ public class _Super_Intersection extends EventDispatcher implements IValueObject
     	var oldValue:Number = _internal_angle;               
         if (oldValue !== value)
         {
-        	_internal_angle = value;
+            _internal_angle = value;
         	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "angle", oldValue, _internal_angle));
         }    	     
         
@@ -159,7 +154,7 @@ public class _Super_Intersection extends EventDispatcher implements IValueObject
     	var oldValue:int = _internal_index;               
         if (oldValue !== value)
         {
-        	_internal_index = value;
+            _internal_index = value;
         	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "index", oldValue, _internal_index));
         }    	     
         
@@ -173,7 +168,7 @@ public class _Super_Intersection extends EventDispatcher implements IValueObject
      * data property setter listeners
      */   
 
-   model_internal function setterListenerAnyConstraint(value:Event):void
+   model_internal function setterListenerAnyConstraint(value:flash.events.Event):void
    {
         if (model_internal::_cacheInitialized_isValid)
         {
@@ -256,9 +251,9 @@ public class _Super_Intersection extends EventDispatcher implements IValueObject
     /**
      *  services
      */                  
-     private var _managingService:IFiberManagingService;
+     private var _managingService:com.adobe.fiber.services.IFiberManagingService;
     
-     public function set managingService(managingService:IFiberManagingService):void
+     public function set managingService(managingService:com.adobe.fiber.services.IFiberManagingService):void
      {
          _managingService = managingService;
      }                      

@@ -16,49 +16,43 @@ import mx.events.PropertyChangeEvent;
 use namespace model_internal;
 
 [ExcludeClass]
-internal class _GpslogEntityMetadata extends com.adobe.fiber.valueobjects.AbstractEntityMetadata
+internal class _OrganizationEntityMetadata extends com.adobe.fiber.valueobjects.AbstractEntityMetadata
 {
 	private static var emptyArray:Array = new Array();
 
-    model_internal static var allProperties:Array = new Array("gpslog_id", "track_id", "track_name", "rider_id", "rider_firstname", "rider_lastname", "date", "start_time", "end_time");
+    model_internal static var allProperties:Array = new Array("organization_id", "name", "url");
     model_internal static var allAssociationProperties:Array = new Array();
-    model_internal static var allRequiredProperties:Array = new Array("gpslog_id", "track_id", "track_name", "rider_id", "rider_firstname", "rider_lastname", "date", "start_time", "end_time");
-    model_internal static var allAlwaysAvailableProperties:Array = new Array("gpslog_id", "track_id", "track_name", "rider_id", "rider_firstname", "rider_lastname", "date", "start_time", "end_time");
+    model_internal static var allRequiredProperties:Array = new Array("organization_id", "name", "url");
+    model_internal static var allAlwaysAvailableProperties:Array = new Array("organization_id", "name", "url");
     model_internal static var guardedProperties:Array = new Array();
-    model_internal static var dataProperties:Array = new Array("gpslog_id", "track_id", "track_name", "rider_id", "rider_firstname", "rider_lastname", "date", "start_time", "end_time");
+    model_internal static var dataProperties:Array = new Array("organization_id", "name", "url");
     model_internal static var derivedProperties:Array = new Array();
     model_internal static var collectionProperties:Array = new Array();
     model_internal static var collectionBaseMap:Object;    
-    model_internal static var entityName:String = "Gpslog";
+    model_internal static var entityName:String = "Organization";
     model_internal static var dependentsOnMap:Object;    
     model_internal static var dependedOnServices:Array =  new Array();
     
     
-    model_internal var _instance:_Super_Gpslog;
+    model_internal var _instance:_Super_Organization;
     model_internal static var _nullStyle:com.adobe.fiber.styles.Style = new com.adobe.fiber.styles.Style();
     
-    public function _GpslogEntityMetadata(gpslog : _Super_Gpslog)
+    public function _OrganizationEntityMetadata(organization : _Super_Organization)
     {
         // initialize property maps
         if (model_internal::dependentsOnMap == null)
         {
             // depenents map
             model_internal::dependentsOnMap = new Object();
-            model_internal::dependentsOnMap["gpslog_id"] = new Array();
-            model_internal::dependentsOnMap["track_id"] = new Array();
-            model_internal::dependentsOnMap["track_name"] = new Array();
-            model_internal::dependentsOnMap["rider_id"] = new Array();
-            model_internal::dependentsOnMap["rider_firstname"] = new Array();
-            model_internal::dependentsOnMap["rider_lastname"] = new Array();
-            model_internal::dependentsOnMap["date"] = new Array();
-            model_internal::dependentsOnMap["start_time"] = new Array();
-            model_internal::dependentsOnMap["end_time"] = new Array();
+            model_internal::dependentsOnMap["organization_id"] = new Array();
+            model_internal::dependentsOnMap["name"] = new Array();
+            model_internal::dependentsOnMap["url"] = new Array();
                         
             // collection base map
             model_internal::collectionBaseMap = new Object()
         }                        
         
-        model_internal::_instance = gpslog;     
+        model_internal::_instance = organization;     
     }
     
     override public function getEntityName():String
@@ -99,7 +93,7 @@ internal class _GpslogEntityMetadata extends com.adobe.fiber.valueobjects.Abstra
     override public function getDependants(propertyName:String):Array
     {
        if (model_internal::dataProperties.indexOf(propertyName) == -1)
-            throw new Error(propertyName + " is not a data property of entity Gpslog");  
+            throw new Error(propertyName + " is not a data property of entity Organization");  
             
        return model_internal::dependentsOnMap[propertyName] as Array;  
     }
@@ -117,7 +111,7 @@ internal class _GpslogEntityMetadata extends com.adobe.fiber.valueobjects.Abstra
     override public function getCollectionBase(propertyName:String):String
     {
        if (model_internal::collectionProperties.indexOf(propertyName) == -1)
-            throw new Error(propertyName + " is not a collection property of entity Gpslog");  
+            throw new Error(propertyName + " is not a collection property of entity Organization");  
             
        return model_internal::collectionBaseMap[propertyName];
     }                
@@ -131,7 +125,7 @@ internal class _GpslogEntityMetadata extends com.adobe.fiber.valueobjects.Abstra
      {
          if (model_internal::allProperties.indexOf(propertyName) == -1)
          {
-         	throw new Error(propertyName + " does not exist for entity Gpslog");
+         	throw new Error(propertyName + " does not exist for entity Organization");
          }     
            
          return model_internal::_instance[propertyName];
@@ -141,7 +135,7 @@ internal class _GpslogEntityMetadata extends com.adobe.fiber.valueobjects.Abstra
      {
          if (model_internal::dataProperties.indexOf(propertyName) == -1)
          {
-              throw new Error(propertyName + " is not a data property of entity Gpslog");
+              throw new Error(propertyName + " is not a data property of entity Organization");
          }  
                                                      
          model_internal::_instance[propertyName] = value;
@@ -173,7 +167,7 @@ internal class _GpslogEntityMetadata extends com.adobe.fiber.valueobjects.Abstra
      {         
          if (model_internal::allProperties.indexOf(propertyName) == -1)
          {
-         	throw new Error(propertyName + " does not exist for entity Gpslog");
+         	throw new Error(propertyName + " does not exist for entity Organization");
          }   
                 
          if (model_internal::allAlwaysAvailableProperties.indexOf(propertyName) != -1)
@@ -270,55 +264,19 @@ internal class _GpslogEntityMetadata extends com.adobe.fiber.valueobjects.Abstra
     }       
      
      [Bindable(event="propertyChange")] 
-     public function get isGpslog_idAvailable():Boolean
+     public function get isOrganization_idAvailable():Boolean
      {
         return true;
      }                       
                   
      [Bindable(event="propertyChange")] 
-     public function get isTrack_idAvailable():Boolean
+     public function get isNameAvailable():Boolean
      {
         return true;
      }                       
                   
      [Bindable(event="propertyChange")] 
-     public function get isTrack_nameAvailable():Boolean
-     {
-        return true;
-     }                       
-                  
-     [Bindable(event="propertyChange")] 
-     public function get isRider_idAvailable():Boolean
-     {
-        return true;
-     }                       
-                  
-     [Bindable(event="propertyChange")] 
-     public function get isRider_firstnameAvailable():Boolean
-     {
-        return true;
-     }                       
-                  
-     [Bindable(event="propertyChange")] 
-     public function get isRider_lastnameAvailable():Boolean
-     {
-        return true;
-     }                       
-                  
-     [Bindable(event="propertyChange")] 
-     public function get isDateAvailable():Boolean
-     {
-        return true;
-     }                       
-                  
-     [Bindable(event="propertyChange")] 
-     public function get isStart_timeAvailable():Boolean
-     {
-        return true;
-     }                       
-                  
-     [Bindable(event="propertyChange")] 
-     public function get isEnd_timeAvailable():Boolean
+     public function get isUrlAvailable():Boolean
      {
         return true;
      }                       
@@ -334,55 +292,19 @@ internal class _GpslogEntityMetadata extends com.adobe.fiber.valueobjects.Abstra
      }
 
     [Bindable(event="propertyChange")]   
-    public function get gpslog_idStyle():com.adobe.fiber.styles.Style
+    public function get organization_idStyle():com.adobe.fiber.styles.Style
     {
 		return model_internal::_nullStyle;		
     }      
     
     [Bindable(event="propertyChange")]   
-    public function get track_idStyle():com.adobe.fiber.styles.Style
+    public function get nameStyle():com.adobe.fiber.styles.Style
     {
 		return model_internal::_nullStyle;		
     }      
     
     [Bindable(event="propertyChange")]   
-    public function get track_nameStyle():com.adobe.fiber.styles.Style
-    {
-		return model_internal::_nullStyle;		
-    }      
-    
-    [Bindable(event="propertyChange")]   
-    public function get rider_idStyle():com.adobe.fiber.styles.Style
-    {
-		return model_internal::_nullStyle;		
-    }      
-    
-    [Bindable(event="propertyChange")]   
-    public function get rider_firstnameStyle():com.adobe.fiber.styles.Style
-    {
-		return model_internal::_nullStyle;		
-    }      
-    
-    [Bindable(event="propertyChange")]   
-    public function get rider_lastnameStyle():com.adobe.fiber.styles.Style
-    {
-		return model_internal::_nullStyle;		
-    }      
-    
-    [Bindable(event="propertyChange")]   
-    public function get dateStyle():com.adobe.fiber.styles.Style
-    {
-		return model_internal::_nullStyle;		
-    }      
-    
-    [Bindable(event="propertyChange")]   
-    public function get start_timeStyle():com.adobe.fiber.styles.Style
-    {
-		return model_internal::_nullStyle;		
-    }      
-    
-    [Bindable(event="propertyChange")]   
-    public function get end_timeStyle():com.adobe.fiber.styles.Style
+    public function get urlStyle():com.adobe.fiber.styles.Style
     {
 		return model_internal::_nullStyle;		
     }      

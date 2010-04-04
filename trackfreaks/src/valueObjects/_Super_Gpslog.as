@@ -5,27 +5,22 @@
 
 package valueObjects
 {
+import com.adobe.fiber.services.IFiberManagingService;
+import com.adobe.fiber.valueobjects.IValueObject;
+import flash.events.Event;
 import flash.events.EventDispatcher;
+import mx.events.PropertyChangeEvent;
+
 import flash.net.registerClassAlias;
 import flash.net.getClassByAlias;
 import com.adobe.fiber.core.model_internal;
 import com.adobe.fiber.valueobjects.IPropertyIterator;
-import com.adobe.fiber.valueobjects.IValueObject;
 import com.adobe.fiber.valueobjects.AvailablePropertyIterator;
-import com.adobe.fiber.services.IFiberManagingService;
-import mx.binding.utils.ChangeWatcher;
-import mx.rpc.AbstractService;
-
-
-import flash.events.Event;
-import mx.events.CollectionEvent;
-import mx.events.PropertyChangeEvent;
-
 
 use namespace model_internal;
 
 [ExcludeClass]
-public class _Super_Gpslog extends EventDispatcher implements IValueObject
+public class _Super_Gpslog extends flash.events.EventDispatcher implements com.adobe.fiber.valueobjects.IValueObject
 {
     model_internal static function initRemoteClassAliasSingle(cz:Class) : void 
     {
@@ -40,7 +35,7 @@ public class _Super_Gpslog extends EventDispatcher implements IValueObject
         {
             flash.net.registerClassAlias("Gpslog", cz); 
         }
-     }   
+    }   
      
     model_internal static function initRemoteClassAliasAllRelated() : void 
     {
@@ -138,7 +133,7 @@ public class _Super_Gpslog extends EventDispatcher implements IValueObject
     	var oldValue:int = _internal_gpslog_id;               
         if (oldValue !== value)
         {
-        	_internal_gpslog_id = value;
+            _internal_gpslog_id = value;
         	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "gpslog_id", oldValue, _internal_gpslog_id));
         }    	     
         
@@ -155,7 +150,7 @@ public class _Super_Gpslog extends EventDispatcher implements IValueObject
     	var oldValue:int = _internal_track_id;               
         if (oldValue !== value)
         {
-        	_internal_track_id = value;
+            _internal_track_id = value;
         	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "track_id", oldValue, _internal_track_id));
         }    	     
         
@@ -176,7 +171,7 @@ public class _Super_Gpslog extends EventDispatcher implements IValueObject
     	var oldValue:String = _internal_track_name;               
         if (oldValue !== value)
         {
-        	_internal_track_name = value;
+            _internal_track_name = value;
         	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "track_name", oldValue, _internal_track_name));
         }    	     
         
@@ -193,7 +188,7 @@ public class _Super_Gpslog extends EventDispatcher implements IValueObject
     	var oldValue:int = _internal_rider_id;               
         if (oldValue !== value)
         {
-        	_internal_rider_id = value;
+            _internal_rider_id = value;
         	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "rider_id", oldValue, _internal_rider_id));
         }    	     
         
@@ -214,7 +209,7 @@ public class _Super_Gpslog extends EventDispatcher implements IValueObject
     	var oldValue:String = _internal_rider_firstname;               
         if (oldValue !== value)
         {
-        	_internal_rider_firstname = value;
+            _internal_rider_firstname = value;
         	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "rider_firstname", oldValue, _internal_rider_firstname));
         }    	     
         
@@ -235,7 +230,7 @@ public class _Super_Gpslog extends EventDispatcher implements IValueObject
     	var oldValue:String = _internal_rider_lastname;               
         if (oldValue !== value)
         {
-        	_internal_rider_lastname = value;
+            _internal_rider_lastname = value;
         	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "rider_lastname", oldValue, _internal_rider_lastname));
         }    	     
         
@@ -256,7 +251,7 @@ public class _Super_Gpslog extends EventDispatcher implements IValueObject
     	var oldValue:String = _internal_date;               
         if (oldValue !== value)
         {
-        	_internal_date = value;
+            _internal_date = value;
         	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "date", oldValue, _internal_date));
         }    	     
         
@@ -277,7 +272,7 @@ public class _Super_Gpslog extends EventDispatcher implements IValueObject
     	var oldValue:String = _internal_start_time;               
         if (oldValue !== value)
         {
-        	_internal_start_time = value;
+            _internal_start_time = value;
         	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "start_time", oldValue, _internal_start_time));
         }    	     
         
@@ -298,7 +293,7 @@ public class _Super_Gpslog extends EventDispatcher implements IValueObject
     	var oldValue:String = _internal_end_time;               
         if (oldValue !== value)
         {
-        	_internal_end_time = value;
+            _internal_end_time = value;
         	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "end_time", oldValue, _internal_end_time));
         }    	     
         
@@ -312,7 +307,7 @@ public class _Super_Gpslog extends EventDispatcher implements IValueObject
      * data property setter listeners
      */   
 
-   model_internal function setterListenerAnyConstraint(value:Event):void
+   model_internal function setterListenerAnyConstraint(value:flash.events.Event):void
    {
         if (model_internal::_cacheInitialized_isValid)
         {
@@ -430,9 +425,9 @@ public class _Super_Gpslog extends EventDispatcher implements IValueObject
     /**
      *  services
      */                  
-     private var _managingService:IFiberManagingService;
+     private var _managingService:com.adobe.fiber.services.IFiberManagingService;
     
-     public function set managingService(managingService:IFiberManagingService):void
+     public function set managingService(managingService:com.adobe.fiber.services.IFiberManagingService):void
      {
          _managingService = managingService;
      }                      
