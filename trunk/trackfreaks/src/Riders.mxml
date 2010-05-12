@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:VGroup 
+<s:HGroup 
 	xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/mx"
@@ -43,7 +43,7 @@
 	
 	<mx:TileList 
 		itemRenderer="RiderTile" 
-		columnCount="4" 
+		columnCount="3" 
 		columnWidth="160"
 		rowCount="3" 
 		rowHeight="150"
@@ -53,21 +53,28 @@
 		dataProvider="{findAllResult.lastResult}">
 	</mx:TileList>
 
-	<mx:DataGrid
-		id="datagrid"
-		rowCount="5"
-		change="datagrid_changeHandler(event)"
-		dataProvider="{findAllResult.lastResult}">
-		<mx:columns>
-			<mx:DataGridColumn headerText="First name" dataField="firstname" width="80" />
-			<mx:DataGridColumn headerText="Last name" dataField="lastname" width="100" />
-			<mx:DataGridColumn headerText="Street" width="80" />
-			<mx:DataGridColumn headerText="No" width="40"/>
-			<mx:DataGridColumn headerText="Zip" width="40"/>
-			<mx:DataGridColumn headerText="City" width="80"/>
-			<mx:DataGridColumn headerText="Phone" width="80"/>
-			<mx:DataGridColumn headerText="Email" width="80"/>
-		</mx:columns>
-	</mx:DataGrid>
-	
-</s:VGroup>
+	<s:VGroup>
+		
+		<mx:DataGrid
+			id="datagrid"
+			rowCount="8"
+			change="datagrid_changeHandler(event)"
+			dataProvider="{findAllResult.lastResult}">
+			<mx:columns>
+				<mx:DataGridColumn headerText="First name" dataField="firstname" width="80" />
+				<mx:DataGridColumn headerText="Last name" dataField="lastname" width="100" />
+			</mx:columns>
+		</mx:DataGrid>
+		
+		<mx:Form>
+			<mx:FormItem label="First name">
+				<s:Label text="{datagrid.selectedItem.firstname}" />
+			</mx:FormItem>
+			<mx:FormItem label="Last name">
+				<s:Label text="{datagrid.selectedItem.lastname}" />
+			</mx:FormItem>
+		</mx:Form>
+
+	</s:VGroup>
+
+</s:HGroup>

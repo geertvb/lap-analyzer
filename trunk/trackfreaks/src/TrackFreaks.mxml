@@ -14,12 +14,25 @@
 	</s:states>
 	
 	<s:layout>
-		<s:VerticalLayout horizontalAlign="left" />
+		<s:VerticalLayout
+			paddingBottom="6"
+			paddingLeft="6"
+			paddingRight="6"
+			paddingTop="6"
+			horizontalAlign="left" />
 	</s:layout>
 
+	<s:controlBarLayout>
+		<s:HorizontalLayout 
+			paddingTop="4" 
+			paddingBottom="4"
+			paddingLeft="8"
+			paddingRight="8"
+			verticalAlign="middle" />
+	</s:controlBarLayout>
 	<s:controlBarContent>
 		
-		<mx:Label text="TrackFreaks.eu"  fontFamily="Arial" fontSize="18" fontWeight="bold"/>
+		<mx:Label text="TrackFreaks.eu" paddingTop="3" fontFamily="Arial" fontSize="18" fontWeight="bold"/>
 		
 		<mx:ToggleButtonBar 
 			creationPolicy="all"
@@ -46,9 +59,9 @@
 			</s:BorderContainer>
 		</s:PopUpAnchor>
 		
-		<s:Label text="Welcome Geert" includeIn="Authenticated" verticalAlign="middle" height="100%"/>
+		<s:Label text="Welcome Geert" includeIn="Authenticated" verticalAlign="middle" paddingTop="3"/>
 		<mx:Button includeIn="Anonymous,Login" label="Login" click="popup.displayPopUp = true" />
-		<mx:Image source="@Embed('assets/Shutdown.png')" includeIn="Authenticated" click="currentState = 'Anonymous'"  width="24" height="24"/>
+		<mx:Image click="currentState = 'Anonymous'" source="@Embed('assets/Shutdown-20x20.png')" width="20" height="20" includeIn="Authenticated"/>
 
 	</s:controlBarContent>
 	
