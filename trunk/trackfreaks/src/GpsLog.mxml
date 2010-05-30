@@ -249,6 +249,7 @@
 					
 					var data: Vector.<Number> = new Vector.<Number>();
 					var cmd: Vector.<int> = new Vector.<int>();
+					var xcoo: Number = 0.0;
 					for (var i: int = o.i0; i < o.i1; i++) {
 						if (i == o.i0) {
 							cmd.push(GraphicsPathCommand.MOVE_TO);
@@ -256,8 +257,9 @@
 							cmd.push(GraphicsPathCommand.LINE_TO);
 						}
 						var gpsLine: GpsLine = gpsLines[i];
-						data.push(i - o.i0);
+						data.push(xcoo);
 						data.push(c2.height - gpsLine.speed / 2);
+						xcoo = xcoo + gpsLine.speed / 100.0;
 					}
 
 					c2.removeAllChildren();
@@ -378,6 +380,10 @@
 				<mx:DataGridColumn headerText="End time" dataField="end_time" width="64" />
 			</mx:columns>
 		</mx:DataGrid>
+		<s:Button 
+			label="Calculate laptimes"
+			enabled="{dataGrid.selectedIndex >= 0}"
+			click="loadLaptimes()"/>
 		
 		<mx:DataGrid
 			id="laptimesGrid"
@@ -397,14 +403,9 @@
 			</mx:columns>
 		</mx:DataGrid>
 	
-		<s:Button 
-			label="Laptimes"
-			enabled="{dataGrid.selectedIndex >= 0}"
-			click="loadLaptimes()"/>
-	
 		</s:VGroup>
 		
-		<s:VGroup>
+		<s:HGroup>
 			
 			<s:BorderContainer>
 				<s:Scroller 
@@ -422,8 +423,7 @@
 			</s:BorderContainer>
 			
 			<s:HGroup>
-				<s:Label text="Zoom" />
-				<s:HSlider 
+				<s:VSlider 
 					id="zoomSlider"
 					change="zoomSlider_changeHandler(event)"
 					minimum="1"
@@ -431,7 +431,7 @@
 					stepSize="0.1" snapInterval="0.1"/>
 			</s:HGroup>
 	
-		</s:VGroup>
+		</s:HGroup>
 	</s:HGroup>
 	
 	<s:BorderContainer>
