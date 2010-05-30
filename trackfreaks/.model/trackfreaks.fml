@@ -4,75 +4,6 @@
   <annotation name="ActionScriptGeneration">
     <item name="FullyQualifyReferences">true</item>
   </annotation>
-  <service name="OrganizationService">
-    <annotation name="ActionScriptGeneration">
-      <item name="Source">OrganizationService</item>
-      <item name="ServiceType">RemoteObject</item>
-      <item name="Package">services.organizationservice</item>
-      <item name="Endpoint">gateway.php</item>
-      <item name="Destination">OrganizationService</item>
-    </annotation>
-    <annotation name="ASFilesGenerated">
-      <item name="ServiceFilesGenerated">services/organizationservice/_Super_OrganizationService.as~#~services/organizationservice/OrganizationService.as~#~</item>
-    </annotation>
-    <annotation name="ServiceTypeGroup">
-      <item name="ServiceBackendType">PHP</item>
-    </annotation>
-    <annotation name="ServiceConfig">
-      <item name="PHP_RELATIVE_LOCATION">trackfreaks-debug/services/OrganizationService.php</item>
-      <item name="PHP_SERVER_ROOT">/Library/WebServer/Documents</item>
-      <item name="DEFAULT_ENTITY_PACKAGE">valueObjects</item>
-      <item name="PHP_SERVICES_FOLDER">/Library/WebServer/Documents/trackfreaks-debug/services</item>
-      <item name="PHP_LOCATION">/Library/WebServer/Documents/trackfreaks-debug/services/OrganizationService.php</item>
-      <item name="LINKED_FILE">OrganizationService.php</item>
-      <item name="PHP_SERVER_ROOT_URL">http://develop.trackfreaks.eu/</item>
-      <item name="ABSOLUTE_ENDPOINT">http://develop.trackfreaks.eu/trackfreaks-debug/gateway.php</item>
-      <item name="PHP_CLASS_NAME">OrganizationService</item>
-    </annotation>
-    <function name="findAll" return-type="Organization[]">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="ValidProperties">
-        <item name="propertySpecifier">organization_id,name,url</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="returnType">opaque</item>
-      </annotation>
-    </function>
-    <function name="getOrganization" return-type="Organization">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="returnType">Organization</item>
-      </annotation>
-    </function>
-  </service>
-  <entity name="Organization">
-    <annotation name="EntityProperties">
-      <item name="EntityOriginalName">Organization</item>
-    </annotation>
-    <annotation name="ServerProperties">
-      <item name="RemoteClass">Organization</item>
-      <item name="IncludeRemoteClass">nonempty</item>
-    </annotation>
-    <annotation name="service Group">
-      <item name="service">OrganizationService</item>
-    </annotation>
-    <annotation name="ActionScriptGeneration">
-      <item name="Package">valueObjects</item>
-    </annotation>
-    <annotation name="ASFilesGenerated">
-      <item name="EntityFilesGenerated">valueObjects/_OrganizationEntityMetadata.as~#~valueObjects/_Super_Organization.as~#~valueObjects/Organization.as~#~</item>
-    </annotation>
-    <annotation name="findAll">
-      <item name="propertySpecifier">organization_id,name,url</item>
-    </annotation>
-    <property name="organization_id" type="integer" required="true"/>
-    <property name="name" type="string" required="true"/>
-    <property name="url" type="string" required="true"/>
-  </entity>
   <service name="TrackdayService">
     <annotation name="ActionScriptGeneration">
       <item name="Source">TrackdayService</item>
@@ -135,7 +66,7 @@
       <item name="IncludeRemoteClass">nonempty</item>
     </annotation>
     <annotation name="service Group">
-      <item name="service">TrackdayService</item>
+      <item name="service">TrackdayService,TrackdayServiceDummy</item>
     </annotation>
     <annotation name="ActionScriptGeneration">
       <item name="Package">valueObjects</item>
@@ -157,7 +88,7 @@
       <item name="IncludeRemoteClass">nonempty</item>
     </annotation>
     <annotation name="service Group">
-      <item name="service">TrackdayService</item>
+      <item name="service">TrackdayService,TrackdayServiceDummy</item>
     </annotation>
     <annotation name="ActionScriptGeneration">
       <item name="Package">valueObjects</item>
@@ -174,94 +105,6 @@
     <property name="date" type="string" required="true"/>
     <property name="trackname" type="string" required="true"/>
     <property name="organizationname" type="string" required="true"/>
-  </entity>
-  <service name="IntersectionService">
-    <annotation name="ActionScriptGeneration">
-      <item name="Source">IntersectionService</item>
-      <item name="ServiceType">RemoteObject</item>
-      <item name="Package">services.intersectionservice</item>
-      <item name="Endpoint">gateway.php</item>
-      <item name="Destination">IntersectionService</item>
-    </annotation>
-    <annotation name="ASFilesGenerated">
-      <item name="ASFilesGenerated">services/intersectionservice/_Super_IntersectionService.as~#~services/intersectionservice/_Super_IntersectionService.as;services/intersectionservice/IntersectionService.as;~#~</item>
-      <item name="ServiceFilesGenerated">services/intersectionservice/_Super_IntersectionService.as~#~</item>
-    </annotation>
-    <annotation name="ServiceTypeGroup">
-      <item name="ServiceBackendType">PHP</item>
-    </annotation>
-    <annotation name="ServiceConfig">
-      <item name="PHP_RELATIVE_LOCATION">trackfreaks-debug/services/IntersectionService.php</item>
-      <item name="PHP_SERVER_ROOT">/Library/WebServer/Documents</item>
-      <item name="DEFAULT_ENTITY_PACKAGE">valueObjects</item>
-      <item name="PHP_SERVICES_FOLDER">/Library/WebServer/Documents/trackfreaks-debug/services</item>
-      <item name="PHP_LOCATION">/Library/WebServer/Documents/trackfreaks-debug/services/IntersectionService.php</item>
-      <item name="LINKED_FILE">IntersectionService.php</item>
-      <item name="PHP_SERVER_ROOT_URL">http://develop.trackfreaks.eu/</item>
-      <item name="ABSOLUTE_ENDPOINT">http://develop.trackfreaks.eu/trackfreaks-debug/gateway.php</item>
-      <item name="PHP_CLASS_NAME">IntersectionService</item>
-    </annotation>
-    <function name="getIntersection" return-type="Intersection">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="returnType">Intersection</item>
-      </annotation>
-      <annotation name="ValidProperties">
-        <item name="propertySpecifier">lat,lng,angle,index</item>
-      </annotation>
-    </function>
-    <function name="updateByTrack" arguments="track_id:integer,intersections:Intersection[]" return-type="void">
-      <annotation name="original signature">
-        <item name="inputParams">integer,opaque</item>
-        <item name="returnType">opaque</item>
-      </annotation>
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-    </function>
-    <function name="findByTrack" arguments="track_id:integer" return-type="opaque">
-      <annotation name="analyze group">
-        <item name="analyzed">false</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="inputParams">integer</item>
-        <item name="returnType">opaque</item>
-      </annotation>
-      <annotation name="ValidProperties">
-        <item name="propertySpecifier">lat,lng,angle,index</item>
-      </annotation>
-    </function>
-  </service>
-  <entity name="Intersection">
-    <annotation name="EntityProperties">
-      <item name="EntityOriginalName">Intersection</item>
-    </annotation>
-    <annotation name="ServerProperties">
-      <item name="RemoteClass">Intersection</item>
-      <item name="IncludeRemoteClass">nonempty</item>
-    </annotation>
-    <annotation name="service Group">
-      <item name="service">IntersectionService</item>
-    </annotation>
-    <annotation name="ActionScriptGeneration">
-      <item name="Package">valueObjects</item>
-    </annotation>
-    <annotation name="ASFilesGenerated">
-      <item name="ASFilesGenerated">valueObjects/_IntersectionEntityMetadata.as~#~valueObjects/_IntersectionEntityMetadata.as;valueObjects/_Super_Intersection.as;valueObjects/Intersection.as;~#~valueObjects/_Super_Intersection.as~#~valueObjects/Intersection.as~#~</item>
-      <item name="EntityFilesGenerated">valueObjects/_IntersectionEntityMetadata.as~#~valueObjects/_Super_Intersection.as~#~</item>
-    </annotation>
-    <annotation name="findByTrack">
-      <item name="propertySpecifier">lat,lng,angle,index</item>
-    </annotation>
-    <annotation name="getIntersection">
-      <item name="propertySpecifier">lat,lng,angle,index</item>
-    </annotation>
-    <property name="lat" type="float" required="true"/>
-    <property name="lng" type="float" required="true"/>
-    <property name="angle" type="float" required="true"/>
-    <property name="index" type="integer" required="true"/>
   </entity>
   <service name="TimingService">
     <annotation name="ActionScriptGeneration">
@@ -299,161 +142,74 @@
       </annotation>
     </function>
   </service>
-  <service name="RiderService">
+  <service name="OrganizationService">
     <annotation name="ActionScriptGeneration">
-      <item name="Source">RiderService</item>
+      <item name="Source">OrganizationService</item>
       <item name="ServiceType">RemoteObject</item>
-      <item name="Package">services.riderservice</item>
+      <item name="Package">services.organizationservice</item>
       <item name="Endpoint">gateway.php</item>
-      <item name="Destination">RiderService</item>
+      <item name="Destination">OrganizationService</item>
     </annotation>
     <annotation name="ASFilesGenerated">
-      <item name="ASFilesGenerated">services/riderservice/_Super_RiderService.as~#~services/riderservice/_Super_RiderService.as;services/riderservice/RiderService.as;~#~</item>
-      <item name="ServiceFilesGenerated">services/riderservice/_Super_RiderService.as~#~</item>
+      <item name="ServiceFilesGenerated">services/organizationservice/_Super_OrganizationService.as~#~services/organizationservice/OrganizationService.as~#~</item>
     </annotation>
     <annotation name="ServiceTypeGroup">
       <item name="ServiceBackendType">PHP</item>
     </annotation>
     <annotation name="ServiceConfig">
-      <item name="PHP_RELATIVE_LOCATION">trackfreaks-debug/services/RiderService.php</item>
+      <item name="PHP_RELATIVE_LOCATION">trackfreaks-debug/services/OrganizationService.php</item>
       <item name="PHP_SERVER_ROOT">/Library/WebServer/Documents</item>
       <item name="DEFAULT_ENTITY_PACKAGE">valueObjects</item>
       <item name="PHP_SERVICES_FOLDER">/Library/WebServer/Documents/trackfreaks-debug/services</item>
-      <item name="PHP_LOCATION">/Library/WebServer/Documents/trackfreaks-debug/services/RiderService.php</item>
-      <item name="LINKED_FILE">RiderService.php</item>
+      <item name="PHP_LOCATION">/Library/WebServer/Documents/trackfreaks-debug/services/OrganizationService.php</item>
+      <item name="LINKED_FILE">OrganizationService.php</item>
       <item name="PHP_SERVER_ROOT_URL">http://develop.trackfreaks.eu/</item>
       <item name="ABSOLUTE_ENDPOINT">http://develop.trackfreaks.eu/trackfreaks-debug/gateway.php</item>
-      <item name="PHP_CLASS_NAME">RiderService</item>
+      <item name="PHP_CLASS_NAME">OrganizationService</item>
     </annotation>
-    <function name="findAll" return-type="Rider[]">
+    <function name="findAll" return-type="Organization[]">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="ValidProperties">
+        <item name="propertySpecifier">organization_id,name,url</item>
+      </annotation>
       <annotation name="original signature">
         <item name="returnType">opaque</item>
       </annotation>
-      <annotation name="ValidProperties">
-        <item name="propertySpecifier">picture_id,lastname,firstname,rider_id</item>
-      </annotation>
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
     </function>
-    <function name="findByID" arguments="rider_id:integer" return-type="Rider">
+    <function name="getOrganization" return-type="Organization">
       <annotation name="analyze group">
         <item name="analyzed">true</item>
       </annotation>
       <annotation name="original signature">
-        <item name="inputParams">integer</item>
-        <item name="returnType">Rider</item>
+        <item name="returnType">Organization</item>
       </annotation>
     </function>
   </service>
-  <entity name="Rider">
+  <entity name="Organization">
     <annotation name="EntityProperties">
-      <item name="EntityOriginalName">Rider</item>
-    </annotation>
-    <annotation name="service Group">
-      <item name="service">RiderService</item>
+      <item name="EntityOriginalName">Organization</item>
     </annotation>
     <annotation name="ServerProperties">
+      <item name="RemoteClass">Organization</item>
       <item name="IncludeRemoteClass">nonempty</item>
-      <item name="RemoteClass">Rider</item>
     </annotation>
-    <annotation name="findAll">
-      <item name="propertySpecifier">picture_id,lastname,firstname,rider_id</item>
+    <annotation name="service Group">
+      <item name="service">OrganizationService,OrganizationServiceDummy</item>
     </annotation>
     <annotation name="ActionScriptGeneration">
       <item name="Package">valueObjects</item>
     </annotation>
     <annotation name="ASFilesGenerated">
-      <item name="ASFilesGenerated">valueObjects/_RiderEntityMetadata.as~#~valueObjects/_RiderEntityMetadata.as;valueObjects/_Super_Rider.as;valueObjects/Rider.as;~#~valueObjects/_Super_Rider.as~#~valueObjects/Rider.as~#~</item>
-      <item name="EntityFilesGenerated">valueObjects/_RiderEntityMetadata.as~#~valueObjects/_Super_Rider.as~#~</item>
-    </annotation>
-    <property name="rider_id" type="integer" required="true"/>
-    <property name="firstname" type="string" required="true"/>
-    <property name="lastname" type="string" required="true"/>
-    <property name="picture_id" type="integer" required="true"/>
-  </entity>
-  <service name="TrackService">
-    <annotation name="ActionScriptGeneration">
-      <item name="Source">TrackService</item>
-      <item name="ServiceType">RemoteObject</item>
-      <item name="Package">services.trackservice</item>
-      <item name="Endpoint">gateway.php</item>
-      <item name="Destination">TrackService</item>
-    </annotation>
-    <annotation name="ASFilesGenerated">
-      <item name="ASFilesGenerated">services/trackservice/_Super_TrackService.as~#~services/trackservice/_Super_TrackService.as;services/trackservice/TrackService.as;~#~</item>
-      <item name="ServiceFilesGenerated">services/trackservice/_Super_TrackService.as~#~</item>
-    </annotation>
-    <annotation name="ServiceTypeGroup">
-      <item name="ServiceBackendType">PHP</item>
-    </annotation>
-    <annotation name="ServiceConfig">
-      <item name="PHP_RELATIVE_LOCATION">trackfreaks-debug/services/TrackService.php</item>
-      <item name="PHP_SERVER_ROOT">/Library/WebServer/Documents</item>
-      <item name="DEFAULT_ENTITY_PACKAGE">valueObjects</item>
-      <item name="PHP_SERVICES_FOLDER">/Library/WebServer/Documents/trackfreaks-debug/services</item>
-      <item name="PHP_LOCATION">/Library/WebServer/Documents/trackfreaks-debug/services/TrackService.php</item>
-      <item name="LINKED_FILE">TrackService.php</item>
-      <item name="PHP_SERVER_ROOT_URL">http://develop.trackfreaks.eu/</item>
-      <item name="ABSOLUTE_ENDPOINT">http://develop.trackfreaks.eu/trackfreaks-debug/gateway.php</item>
-      <item name="PHP_CLASS_NAME">TrackService</item>
-    </annotation>
-    <function name="findAll" return-type="Track[]">
-      <annotation name="original signature">
-        <item name="returnType">opaque</item>
-      </annotation>
-      <annotation name="ValidProperties">
-        <item name="propertySpecifier">name,picture_id,length,lng,lat,url,track_id,country</item>
-      </annotation>
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-    </function>
-    <function name="findByLatLng" arguments="minlat:float,minlng:float,maxlat:float,maxlng:float" return-type="Track">
-      <annotation name="original signature">
-        <item name="inputParams">float,float,float,float</item>
-        <item name="returnType">Track</item>
-      </annotation>
-      <annotation name="ValidProperties">
-        <item name="propertySpecifier">track_id,name,url,lat,lng,country,length,picture_id</item>
-      </annotation>
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-    </function>
-  </service>
-  <entity name="Track">
-    <annotation name="EntityProperties">
-      <item name="EntityOriginalName">Track</item>
-    </annotation>
-    <annotation name="service Group">
-      <item name="service">TrackService</item>
-    </annotation>
-    <annotation name="ServerProperties">
-      <item name="IncludeRemoteClass">nonempty</item>
-      <item name="RemoteClass">Track</item>
+      <item name="EntityFilesGenerated">valueObjects/_OrganizationEntityMetadata.as~#~valueObjects/_Super_Organization.as~#~valueObjects/Organization.as~#~</item>
     </annotation>
     <annotation name="findAll">
-      <item name="propertySpecifier">name,picture_id,length,lng,lat,url,track_id,country</item>
+      <item name="propertySpecifier">organization_id,name,url</item>
     </annotation>
-    <annotation name="ActionScriptGeneration">
-      <item name="Package">valueObjects</item>
-    </annotation>
-    <annotation name="ASFilesGenerated">
-      <item name="ASFilesGenerated">valueObjects/_Super_Track.as~#~valueObjects/_Super_Track.as;valueObjects/_TrackEntityMetadata.as;valueObjects/Track.as;~#~valueObjects/_TrackEntityMetadata.as~#~valueObjects/Track.as~#~</item>
-      <item name="EntityFilesGenerated">valueObjects/_Super_Track.as~#~valueObjects/_TrackEntityMetadata.as~#~</item>
-    </annotation>
-    <annotation name="findByLatLng">
-      <item name="propertySpecifier">name,picture_id,length,lng,lat,url,track_id,country</item>
-    </annotation>
-    <property name="track_id" type="integer" required="true"/>
+    <property name="organization_id" type="integer" required="true"/>
     <property name="name" type="string" required="true"/>
     <property name="url" type="string" required="true"/>
-    <property name="lat" type="float" required="true"/>
-    <property name="lng" type="float" required="true"/>
-    <property name="country" type="string" required="true"/>
-    <property name="length" type="integer" required="true"/>
-    <property name="picture_id" type="integer" required="true"/>
   </entity>
   <service name="GpslogService">
     <annotation name="ActionScriptGeneration">
@@ -532,7 +288,7 @@
       <item name="EntityOriginalName">Gpslog</item>
     </annotation>
     <annotation name="service Group">
-      <item name="service">GpslogService</item>
+      <item name="service">GpslogService,GpslogServiceDummy</item>
     </annotation>
     <annotation name="ServerProperties">
       <item name="IncludeRemoteClass">nonempty</item>
@@ -557,5 +313,306 @@
     <property name="date" type="string" required="true"/>
     <property name="start_time" type="string" required="true"/>
     <property name="end_time" type="string" required="true"/>
+  </entity>
+  <service name="IntersectionService">
+    <annotation name="ActionScriptGeneration">
+      <item name="Source">IntersectionService</item>
+      <item name="ServiceType">RemoteObject</item>
+      <item name="Package">services.intersectionservice</item>
+      <item name="Endpoint">gateway.php</item>
+      <item name="Destination">IntersectionService</item>
+    </annotation>
+    <annotation name="ASFilesGenerated">
+      <item name="ASFilesGenerated">services/intersectionservice/_Super_IntersectionService.as~#~services/intersectionservice/_Super_IntersectionService.as;services/intersectionservice/IntersectionService.as;~#~</item>
+      <item name="ServiceFilesGenerated">services/intersectionservice/_Super_IntersectionService.as~#~</item>
+    </annotation>
+    <annotation name="ServiceTypeGroup">
+      <item name="ServiceBackendType">PHP</item>
+    </annotation>
+    <annotation name="ServiceConfig">
+      <item name="PHP_RELATIVE_LOCATION">trackfreaks-debug/services/IntersectionService.php</item>
+      <item name="PHP_SERVER_ROOT">/Library/WebServer/Documents</item>
+      <item name="DEFAULT_ENTITY_PACKAGE">valueObjects</item>
+      <item name="PHP_SERVICES_FOLDER">/Library/WebServer/Documents/trackfreaks-debug/services</item>
+      <item name="PHP_LOCATION">/Library/WebServer/Documents/trackfreaks-debug/services/IntersectionService.php</item>
+      <item name="LINKED_FILE">IntersectionService.php</item>
+      <item name="PHP_SERVER_ROOT_URL">http://develop.trackfreaks.eu/</item>
+      <item name="ABSOLUTE_ENDPOINT">http://develop.trackfreaks.eu/trackfreaks-debug/gateway.php</item>
+      <item name="PHP_CLASS_NAME">IntersectionService</item>
+    </annotation>
+    <function name="getIntersection" return-type="Intersection">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="returnType">Intersection</item>
+      </annotation>
+      <annotation name="ValidProperties">
+        <item name="propertySpecifier">lat,lng,angle,index</item>
+      </annotation>
+    </function>
+    <function name="updateByTrack" arguments="track_id:integer,intersections:Intersection[]" return-type="void">
+      <annotation name="original signature">
+        <item name="inputParams">integer,opaque</item>
+        <item name="returnType">opaque</item>
+      </annotation>
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+    </function>
+    <function name="findByTrack" arguments="track_id:integer" return-type="opaque">
+      <annotation name="analyze group">
+        <item name="analyzed">false</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">integer</item>
+        <item name="returnType">opaque</item>
+      </annotation>
+      <annotation name="ValidProperties">
+        <item name="propertySpecifier">lat,lng,angle,index</item>
+      </annotation>
+    </function>
+  </service>
+  <entity name="Intersection">
+    <annotation name="EntityProperties">
+      <item name="EntityOriginalName">Intersection</item>
+    </annotation>
+    <annotation name="ServerProperties">
+      <item name="RemoteClass">Intersection</item>
+      <item name="IncludeRemoteClass">nonempty</item>
+    </annotation>
+    <annotation name="service Group">
+      <item name="service">IntersectionService,IntersectionServiceDummy</item>
+    </annotation>
+    <annotation name="ActionScriptGeneration">
+      <item name="Package">valueObjects</item>
+    </annotation>
+    <annotation name="ASFilesGenerated">
+      <item name="ASFilesGenerated">valueObjects/_IntersectionEntityMetadata.as~#~valueObjects/_IntersectionEntityMetadata.as;valueObjects/_Super_Intersection.as;valueObjects/Intersection.as;~#~valueObjects/_Super_Intersection.as~#~valueObjects/Intersection.as~#~</item>
+      <item name="EntityFilesGenerated">valueObjects/_IntersectionEntityMetadata.as~#~valueObjects/_Super_Intersection.as~#~</item>
+    </annotation>
+    <annotation name="findByTrack">
+      <item name="propertySpecifier">lat,lng,angle,index</item>
+    </annotation>
+    <annotation name="getIntersection">
+      <item name="propertySpecifier">lat,lng,angle,index</item>
+    </annotation>
+    <property name="lat" type="float" required="true"/>
+    <property name="lng" type="float" required="true"/>
+    <property name="angle" type="float" required="true"/>
+    <property name="index" type="integer" required="true"/>
+  </entity>
+  <service name="TrackService">
+    <annotation name="ActionScriptGeneration">
+      <item name="Source">TrackService</item>
+      <item name="ServiceType">RemoteObject</item>
+      <item name="Package">services.trackservice</item>
+      <item name="Endpoint">gateway.php</item>
+      <item name="Destination">TrackService</item>
+    </annotation>
+    <annotation name="ASFilesGenerated">
+      <item name="ASFilesGenerated">services/trackservice/_Super_TrackService.as~#~services/trackservice/_Super_TrackService.as;services/trackservice/TrackService.as;~#~</item>
+      <item name="ServiceFilesGenerated">services/trackservice/_Super_TrackService.as~#~</item>
+    </annotation>
+    <annotation name="ServiceTypeGroup">
+      <item name="ServiceBackendType">PHP</item>
+    </annotation>
+    <annotation name="ServiceConfig">
+      <item name="PHP_RELATIVE_LOCATION">trackfreaks-debug/services/TrackService.php</item>
+      <item name="PHP_SERVER_ROOT">/Library/WebServer/Documents</item>
+      <item name="DEFAULT_ENTITY_PACKAGE">valueObjects</item>
+      <item name="PHP_SERVICES_FOLDER">/Library/WebServer/Documents/trackfreaks-debug/services</item>
+      <item name="PHP_LOCATION">/Library/WebServer/Documents/trackfreaks-debug/services/TrackService.php</item>
+      <item name="LINKED_FILE">TrackService.php</item>
+      <item name="PHP_SERVER_ROOT_URL">http://develop.trackfreaks.eu/</item>
+      <item name="ABSOLUTE_ENDPOINT">http://develop.trackfreaks.eu/trackfreaks-debug/gateway.php</item>
+      <item name="PHP_CLASS_NAME">TrackService</item>
+    </annotation>
+    <function name="findAll" return-type="Track[]">
+      <annotation name="original signature">
+        <item name="returnType">opaque</item>
+      </annotation>
+      <annotation name="ValidProperties">
+        <item name="propertySpecifier">name,picture_id,length,lng,lat,url,track_id,country</item>
+      </annotation>
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+    </function>
+    <function name="findByLatLng" arguments="minlat:float,minlng:float,maxlat:float,maxlng:float" return-type="Track">
+      <annotation name="original signature">
+        <item name="inputParams">float,float,float,float</item>
+        <item name="returnType">Track</item>
+      </annotation>
+      <annotation name="ValidProperties">
+        <item name="propertySpecifier">track_id,name,url,lat,lng,country,length,picture_id</item>
+      </annotation>
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+    </function>
+  </service>
+  <entity name="Track">
+    <annotation name="EntityProperties">
+      <item name="EntityOriginalName">Track</item>
+    </annotation>
+    <annotation name="service Group">
+      <item name="service">TrackService,TrackServiceDummy</item>
+    </annotation>
+    <annotation name="ServerProperties">
+      <item name="IncludeRemoteClass">nonempty</item>
+      <item name="RemoteClass">Track</item>
+    </annotation>
+    <annotation name="findAll">
+      <item name="propertySpecifier">name,picture_id,length,lng,lat,url,track_id,country</item>
+    </annotation>
+    <annotation name="ActionScriptGeneration">
+      <item name="Package">valueObjects</item>
+    </annotation>
+    <annotation name="ASFilesGenerated">
+      <item name="ASFilesGenerated">valueObjects/_Super_Track.as~#~valueObjects/_Super_Track.as;valueObjects/_TrackEntityMetadata.as;valueObjects/Track.as;~#~valueObjects/_TrackEntityMetadata.as~#~valueObjects/Track.as~#~</item>
+      <item name="EntityFilesGenerated">valueObjects/_Super_Track.as~#~valueObjects/_TrackEntityMetadata.as~#~</item>
+    </annotation>
+    <annotation name="findByLatLng">
+      <item name="propertySpecifier">name,picture_id,length,lng,lat,url,track_id,country</item>
+    </annotation>
+    <property name="track_id" type="integer" required="true"/>
+    <property name="name" type="string" required="true"/>
+    <property name="url" type="string" required="true"/>
+    <property name="lat" type="float" required="true"/>
+    <property name="lng" type="float" required="true"/>
+    <property name="country" type="string" required="true"/>
+    <property name="length" type="integer" required="true"/>
+    <property name="picture_id" type="integer" required="true"/>
+  </entity>
+  <service name="RiderService">
+    <annotation name="ActionScriptGeneration">
+      <item name="Source">RiderService</item>
+      <item name="ServiceType">RemoteObject</item>
+      <item name="Package">services.riderservice</item>
+      <item name="Endpoint">gateway.php</item>
+      <item name="Destination">RiderService</item>
+    </annotation>
+    <annotation name="ASFilesGenerated">
+      <item name="ASFilesGenerated">services/riderservice/_Super_RiderService.as~#~services/riderservice/_Super_RiderService.as;services/riderservice/RiderService.as;~#~</item>
+      <item name="ServiceFilesGenerated">services/riderservice/_Super_RiderService.as~#~</item>
+    </annotation>
+    <annotation name="ServiceTypeGroup">
+      <item name="ServiceBackendType">PHP</item>
+    </annotation>
+    <annotation name="ServiceConfig">
+      <item name="PHP_RELATIVE_LOCATION">trackfreaks-debug/services/RiderService.php</item>
+      <item name="PHP_SERVER_ROOT">/Library/WebServer/Documents</item>
+      <item name="DEFAULT_ENTITY_PACKAGE">valueObjects</item>
+      <item name="PHP_SERVICES_FOLDER">/Library/WebServer/Documents/trackfreaks-debug/services</item>
+      <item name="PHP_LOCATION">/Library/WebServer/Documents/trackfreaks-debug/services/RiderService.php</item>
+      <item name="LINKED_FILE">RiderService.php</item>
+      <item name="PHP_SERVER_ROOT_URL">http://develop.trackfreaks.eu/</item>
+      <item name="ABSOLUTE_ENDPOINT">http://develop.trackfreaks.eu/trackfreaks-debug/gateway.php</item>
+      <item name="PHP_CLASS_NAME">RiderService</item>
+    </annotation>
+    <function name="findAll" return-type="Rider[]">
+      <annotation name="original signature">
+        <item name="returnType">opaque</item>
+      </annotation>
+      <annotation name="ValidProperties">
+        <item name="propertySpecifier">picture_id,lastname,firstname,rider_id</item>
+      </annotation>
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+    </function>
+    <function name="findByID" arguments="rider_id:integer" return-type="Rider">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">integer</item>
+        <item name="returnType">Rider</item>
+      </annotation>
+    </function>
+  </service>
+  <entity name="Rider">
+    <annotation name="EntityProperties">
+      <item name="EntityOriginalName">Rider</item>
+    </annotation>
+    <annotation name="service Group">
+      <item name="service">RiderService,RiderServiceDummy</item>
+    </annotation>
+    <annotation name="ServerProperties">
+      <item name="IncludeRemoteClass">nonempty</item>
+      <item name="RemoteClass">Rider</item>
+    </annotation>
+    <annotation name="findAll">
+      <item name="propertySpecifier">picture_id,lastname,firstname,rider_id</item>
+    </annotation>
+    <annotation name="ActionScriptGeneration">
+      <item name="Package">valueObjects</item>
+    </annotation>
+    <annotation name="ASFilesGenerated">
+      <item name="ASFilesGenerated">valueObjects/_RiderEntityMetadata.as~#~valueObjects/_RiderEntityMetadata.as;valueObjects/_Super_Rider.as;valueObjects/Rider.as;~#~valueObjects/_Super_Rider.as~#~valueObjects/Rider.as~#~</item>
+      <item name="EntityFilesGenerated">valueObjects/_RiderEntityMetadata.as~#~valueObjects/_Super_Rider.as~#~</item>
+    </annotation>
+    <property name="rider_id" type="integer" required="true"/>
+    <property name="firstname" type="string" required="true"/>
+    <property name="lastname" type="string" required="true"/>
+    <property name="picture_id" type="integer" required="true"/>
+  </entity>
+  <service name="UserService">
+    <annotation name="ActionScriptGeneration">
+      <item name="Source">UserService</item>
+      <item name="ServiceType">RemoteObject</item>
+      <item name="Package">services</item>
+      <item name="Endpoint">gateway.php</item>
+      <item name="Destination">UserService</item>
+    </annotation>
+    <annotation name="ServiceTypeGroup">
+      <item name="ServiceBackendType">PHP</item>
+    </annotation>
+    <annotation name="ServiceConfig">
+      <item name="PHP_RELATIVE_LOCATION">trackfreaks-debug/services/UserService.php</item>
+      <item name="PHP_SERVER_ROOT">/Library/WebServer/Documents</item>
+      <item name="DEFAULT_ENTITY_PACKAGE">services</item>
+      <item name="PHP_SERVICES_FOLDER">/Library/WebServer/Documents/trackfreaks-debug/services</item>
+      <item name="PHP_LOCATION">/Library/WebServer/Documents/trackfreaks-debug/services/UserService.php</item>
+      <item name="LINKED_FILE">UserService.php</item>
+      <item name="PHP_SERVER_ROOT_URL">http://develop.trackfreaks.eu/</item>
+      <item name="ABSOLUTE_ENDPOINT">http://develop.trackfreaks.eu/trackfreaks-debug/gateway.php</item>
+      <item name="PHP_CLASS_NAME">UserService</item>
+    </annotation>
+    <function name="findByUsername" arguments="username:string" return-type="User">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="ValidProperties">
+        <item name="propertySpecifier">user_id,username,password,role</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">string</item>
+        <item name="returnType">User</item>
+      </annotation>
+    </function>
+  </service>
+  <entity name="User">
+    <annotation name="EntityProperties">
+      <item name="EntityOriginalName">User</item>
+    </annotation>
+    <annotation name="ServerProperties">
+      <item name="RemoteClass">User</item>
+      <item name="IncludeRemoteClass">nonempty</item>
+    </annotation>
+    <annotation name="service Group">
+      <item name="service">UserService</item>
+    </annotation>
+    <annotation name="findByUsername">
+      <item name="propertySpecifier">user_id,username,password,role</item>
+    </annotation>
+    <annotation name="ActionScriptGeneration">
+      <item name="Package">services</item>
+    </annotation>
+    <property name="user_id" type="integer" required="true"/>
+    <property name="username" type="string" required="true"/>
+    <property name="password" type="string" required="true"/>
+    <property name="role" type="string" required="true"/>
   </entity>
 </model>
