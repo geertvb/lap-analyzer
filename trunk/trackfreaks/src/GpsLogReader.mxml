@@ -8,6 +8,8 @@
 	<fx:Script>
 		<![CDATA[
 			import mx.collections.ArrayCollection;
+			import mx.messaging.config.ServerConfig;
+			
 			import valueObjects.Track;
 			private var processGpsLine: Function;
 			
@@ -249,14 +251,17 @@
 		<s:CallResponder id="findAllRiders"/>
 		<trackservice:TrackService 
 			id="trackService" 
+			channelSet="{ServerConfig.getChannelSet(null)}"
 			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" 
 			showBusyCursor="true" />
 		<gpslogservice:GpslogService 
 			id="gpslogService" 
+			channelSet="{ServerConfig.getChannelSet(null)}"
 			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" 
 			showBusyCursor="true" />
 		<riderservice:RiderService
 			id="riderService"
+			channelSet="{ServerConfig.getChannelSet(null)}"
 			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" 
 			showBusyCursor="true" />
 		<net:FileReference 

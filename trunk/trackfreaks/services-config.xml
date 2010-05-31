@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services-config>
+
+	<services>
+	
+		<default-channels>
+            <channel ref="amfChannel"/>
+        </default-channels>
+		
+	</services>
+	
+	<channels>
+		<channel-definition id="amfChannel" class="mx.messaging.channels.AMFChannel">
+			<endpoint uri="gateway.php" class="flex.messaging.endpoints.AMFEndpoint"/>
+		</channel-definition>
+	</channels>
+	
+</services-config>

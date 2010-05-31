@@ -2,7 +2,7 @@
  * This is a generated class and is not intended for modfication.  To customize behavior
  * of this service wrapper you may modify the generated sub-class of this class - UserService.as.
  */
-package services
+package services.userservice
 {
 import com.adobe.fiber.core.model_internal;
 import com.adobe.fiber.services.wrapper.RemoteObjectServiceWrapper;
@@ -11,7 +11,7 @@ import mx.rpc.AbstractOperation;
 import mx.rpc.AsyncToken;
 import mx.rpc.remoting.Operation;
 import mx.rpc.remoting.RemoteObject;
-import services.User;
+import valueObjects.User;
 
 import mx.collections.ItemResponder;
 import com.adobe.fiber.valueobjects.AvailablePropertyIterator;
@@ -30,10 +30,10 @@ internal class _Super_UserService extends com.adobe.fiber.services.wrapper.Remot
         var operation:mx.rpc.remoting.Operation;
          
         operation = new mx.rpc.remoting.Operation(null, "findByUsername");
-		 operation.resultType = services.User; 		 
+		 operation.resultType = valueObjects.User; 		 
         operations["findByUsername"] = operation;
 
-        services.User._initRemoteClassAlias();
+        valueObjects.User._initRemoteClassAlias();
     
         _serviceControl.operations = operations;   
 		_serviceControl.convertResultHandler = com.adobe.serializers.utility.TypeUtility.convertResultHandler;

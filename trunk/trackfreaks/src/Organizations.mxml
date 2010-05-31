@@ -9,6 +9,7 @@
 			import mx.controls.Alert;
 			import mx.events.FlexEvent;
 			import mx.events.ListEvent;
+			import mx.messaging.config.ServerConfig;
 
 			protected function dataGrid_creationCompleteHandler(event:FlexEvent):void {
 				findAllResult.token = organizationService.findAll();
@@ -20,6 +21,7 @@
 	<fx:Declarations>
 		<organizationservice:OrganizationService
 			id="organizationService"
+			channelSet="{ServerConfig.getChannelSet(null)}"
 			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
 			showBusyCursor="true"/>
 		<s:CallResponder id="findAllResult"/>

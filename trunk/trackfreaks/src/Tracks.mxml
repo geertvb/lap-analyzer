@@ -18,12 +18,13 @@
 			import com.google.maps.controls.ZoomControl;
 			import com.google.maps.overlays.Marker;
 			import com.google.maps.overlays.MarkerOptions;
-
+			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.events.FlexEvent;
 			import mx.events.ListEvent;
-
+			import mx.messaging.config.ServerConfig;
+			
 			import valueObjects.Track;
 
 			private var oldZoomLevel: Number;
@@ -164,6 +165,7 @@
 		<s:CallResponder id="findAllResult" result="onDataReady(event)"/>
 		<trackservice:TrackService
 			id="trackService"
+			channelSet="{ServerConfig.getChannelSet(null)}"
 			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
 			showBusyCursor="true"/>
 	</fx:Declarations>

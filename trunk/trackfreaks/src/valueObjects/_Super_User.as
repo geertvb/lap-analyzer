@@ -3,7 +3,7 @@
  * of this value object you may modify the generated sub-class of this class - User.as.
  */
 
-package services
+package valueObjects
 {
 import com.adobe.fiber.services.IFiberManagingService;
 import com.adobe.fiber.valueobjects.IValueObject;
