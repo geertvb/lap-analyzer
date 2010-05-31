@@ -17,6 +17,7 @@
 			import mx.controls.Alert;
 			import mx.events.FlexEvent;
 			import mx.events.ListEvent;
+			import mx.messaging.config.ServerConfig;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			
@@ -306,18 +307,22 @@
 
 		<timingservice:TimingService
 			id="timingService"
+			channelSet="{ServerConfig.getChannelSet(null)}"
 			fault="fault(event)" 
 			showBusyCursor="true"/>
 		<gpslogservice:GpslogService 
 			id="gpslogService" 
+			channelSet="{ServerConfig.getChannelSet(null)}"
 			fault="fault(event)" 
 			showBusyCursor="true"/>
 		<trackservice:TrackService 
 			id="trackService" 
+			channelSet="{ServerConfig.getChannelSet(null)}"
 			fault="fault(event)" 
 			showBusyCursor="true" />
 		<riderservice:RiderService
 			id="riderService"
+			channelSet="{ServerConfig.getChannelSet(null)}"
 			fault="fault(event)" 
 			showBusyCursor="true" />
 		

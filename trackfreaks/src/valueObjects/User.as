@@ -10,7 +10,7 @@
  * corresponding entity 
  **/ 
  
-package services
+package valueObjects
 {
 
 import com.adobe.fiber.core.model_internal;
@@ -30,17 +30,17 @@ public class User extends _Super_User
      */     
     public static function _initRemoteClassAlias() : void
     {
-        _Super_User.model_internal::initRemoteClassAliasSingle(services.User);
+        _Super_User.model_internal::initRemoteClassAliasSingle(valueObjects.User);
         _Super_User.model_internal::initRemoteClassAliasAllRelated();
     }
      
     model_internal static function initRemoteClassAliasSingleChild() : void
     {
-        _Super_User.model_internal::initRemoteClassAliasSingle(services.User);
+        _Super_User.model_internal::initRemoteClassAliasSingle(valueObjects.User);
     }
     
     {
-        _Super_User.model_internal::initRemoteClassAliasSingle(services.User);
+        _Super_User.model_internal::initRemoteClassAliasSingle(valueObjects.User);
     }
     /** 
      * END OF DO NOT MODIFY SECTION

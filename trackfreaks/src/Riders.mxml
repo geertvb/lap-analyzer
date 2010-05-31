@@ -7,9 +7,10 @@
 
 	<fx:Script>
 		<![CDATA[
-			import mx.events.ListEvent;
-			import mx.events.FlexEvent;
 			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.messaging.config.ServerConfig;
 
 			protected function tileList_creationCompleteHandler(event:FlexEvent):void {
 				findAllResult.token = riderService.findAll();
@@ -37,6 +38,7 @@
 		<s:CallResponder id="findAllResult"/>
 		<riderservice:RiderService 
 			id="riderService" 
+			channelSet="{ServerConfig.getChannelSet(null)}"
 			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" 
 			showBusyCursor="true"/>
 	</fx:Declarations>
@@ -74,6 +76,8 @@
 				<s:Label text="{datagrid.selectedItem.lastname}" />
 			</mx:FormItem>
 		</mx:Form>
+		
+		<s:Button label="test" click="Alert.show('' + riderService.channelSet.authenticated)" />
 
 	</s:VGroup>
 

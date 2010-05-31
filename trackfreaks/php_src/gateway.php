@@ -32,6 +32,8 @@ $default_config->merge(new Zend_Config_Ini($configfile, 'zendamf'));
 $default_config->setReadOnly();
 $amf = $default_config->amf;
 
+require_once 'services/User.php';
+
 // Store configuration in the registry
 Zend_Registry::set("amf-config", $amf);
 // Initialize AMF Server

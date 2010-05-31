@@ -5,7 +5,7 @@
  * of the super-class. 
  **/
  
-package services
+package services.userservice
 {
 
 public class UserService extends _Super_UserService

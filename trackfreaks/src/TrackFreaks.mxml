@@ -5,7 +5,55 @@
 	minWidth="1024"
 	minHeight="768" 
 	xmlns:local="*" 
-	xmlns:mx="library://ns.adobe.com/flex/mx">
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	xmlns:userservice="services.userservice.*">
+
+	<fx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.core.Application;
+			import mx.messaging.ChannelSet;
+			import mx.messaging.config.ServerConfig;
+			import mx.rpc.AsyncToken;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			protected function login_clickHandler(event:MouseEvent):void {
+				// Trick to initialize channelSet
+				var cs: ChannelSet = ServerConfig.getChannelSet("gateway.php");
+				//userService.findByUsername("???");
+
+				//var cs:ChannelSet = userService.channelSet;
+				login.token = cs.login(username.text,password.text);
+			}
+			
+			private function Login_resultHandler(event:ResultEvent):void  {
+				popup.displayPopUp = false;
+				currentState = 'Authenticated';
+			}
+
+			protected function login_faultHandler(event:FaultEvent):void {
+				Alert.show("Login failed");
+			}
+
+
+			protected function image1_clickHandler(event:MouseEvent):void
+			{
+				var cs: ChannelSet = ServerConfig.getChannelSet("gateway.php");
+				cs.logout();
+				currentState = 'Anonymous';
+			}
+
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		<userservice:UserService 
+			id="userService" />
+		
+		<s:CallResponder id="login" 
+			fault="login_faultHandler(event)"
+			result="Login_resultHandler(event)" />
+	</fx:Declarations>
 
 	<s:states>
 		<s:State name="Anonymous"/>
@@ -49,10 +97,10 @@
 						<s:TextInput id="username" text="" />
 					</mx:FormItem>
 					<mx:FormItem label="Password">
-						<s:TextInput  id="password" text="" />
+						<s:TextInput  id="password" text="" displayAsPassword="true" />
 					</mx:FormItem>
 					<s:HGroup>
-						<s:Button label="Login" click="popup.displayPopUp = false; currentState = 'Authenticated'" />
+						<s:Button label="Login" click="login_clickHandler(event)" />
 						<s:Button label="Cancel" click="popup.displayPopUp = false; currentState = 'Anonymous'" />
 					</s:HGroup>
 				</mx:Form>
@@ -61,7 +109,7 @@
 		
 		<s:Label text="Welcome Geert" includeIn="Authenticated" verticalAlign="middle" paddingTop="3"/>
 		<mx:Button includeIn="Anonymous,Login" label="Login" click="popup.displayPopUp = true" />
-		<mx:Image click="currentState = 'Anonymous'" source="@Embed('assets/Shutdown-20x20.png')" width="20" height="20" includeIn="Authenticated"/>
+		<mx:Image click="image1_clickHandler(event)" source="@Embed('assets/Shutdown-20x20.png')" width="20" height="20" includeIn="Authenticated"/>
 
 	</s:controlBarContent>
 	

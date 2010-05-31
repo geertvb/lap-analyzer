@@ -10,17 +10,22 @@
 
 	<fx:Script>
 		<![CDATA[
-			import com.google.maps.LatLngBounds;
-			import valueObjects.Intersection;
-			import util.IntersectionUtils;
-			import com.google.maps.LatLng;
-			import mx.utils.ArrayUtil;
-			import mx.rpc.events.FaultEvent;
-			import mx.collections.ArrayCollection;
-			import mx.rpc.events.ResultEvent;
-			import mx.events.FlexEvent;
-			import mx.controls.Alert;
 			import __AS3__.vec.Vector;
+			
+			import com.google.maps.LatLng;
+			import com.google.maps.LatLngBounds;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.messaging.config.ServerConfig;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.utils.ArrayUtil;
+			
+			import util.IntersectionUtils;
+			
+			import valueObjects.Intersection;
 
 			public var projection: Projection;
 
@@ -274,10 +279,12 @@
 			result="cb_tracks.selectedIndex = 0"/>
 		<trackservice:TrackService
 			id="trackService"
+			channelSet="{ServerConfig.getChannelSet(null)}"
 			fault="fault(event)"
 			showBusyCursor="true"/>
 		<intersectionservice:IntersectionService
 			id="intersectionService"
+			channelSet="{ServerConfig.getChannelSet(null)}"
 			fault="fault(event)"
 			showBusyCursor="true"/>
 		<mx:NumberFormatter id="latLngFormatter" precision="6" />
