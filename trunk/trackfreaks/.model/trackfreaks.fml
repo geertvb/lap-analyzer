@@ -175,42 +175,6 @@
     <property name="name" type="string" required="true"/>
     <property name="url" type="string" required="true"/>
   </entity>
-  <service name="TimingService">
-    <annotation name="ActionScriptGeneration">
-      <item name="Source">TimingService</item>
-      <item name="ServiceType">RemoteObject</item>
-      <item name="Package">services.timingservice</item>
-      <item name="Endpoint">gateway.php</item>
-      <item name="Destination">TimingService</item>
-    </annotation>
-    <annotation name="ASFilesGenerated">
-      <item name="ASFilesGenerated">services/timingservice/_Super_TimingService.as~#~services/timingservice/_Super_TimingService.as;services/timingservice/TimingService.as;~#~</item>
-      <item name="ServiceFilesGenerated">services/timingservice/_Super_TimingService.as~#~</item>
-    </annotation>
-    <annotation name="ServiceTypeGroup">
-      <item name="ServiceBackendType">PHP</item>
-    </annotation>
-    <annotation name="ServiceConfig">
-      <item name="PHP_RELATIVE_LOCATION">trackfreaks-debug/services/TimingService.php</item>
-      <item name="PHP_SERVER_ROOT">/Library/WebServer/Documents</item>
-      <item name="DEFAULT_ENTITY_PACKAGE">valueObjects</item>
-      <item name="PHP_SERVICES_FOLDER">/Library/WebServer/Documents/trackfreaks-debug/services</item>
-      <item name="PHP_LOCATION">/Library/WebServer/Documents/trackfreaks-debug/services/TimingService.php</item>
-      <item name="LINKED_FILE">TimingService.php</item>
-      <item name="PHP_SERVER_ROOT_URL">http://develop.trackfreaks.eu/</item>
-      <item name="ABSOLUTE_ENDPOINT">http://develop.trackfreaks.eu/trackfreaks-debug/gateway.php</item>
-      <item name="PHP_CLASS_NAME">TimingService</item>
-    </annotation>
-    <function name="findByGpslogID" arguments="gpslog_id:integer" return-type="opaque">
-      <annotation name="original signature">
-        <item name="inputParams">integer</item>
-        <item name="returnType">opaque</item>
-      </annotation>
-      <annotation name="analyze group">
-        <item name="analyzed">false</item>
-      </annotation>
-    </function>
-  </service>
   <service name="IntersectionService">
     <annotation name="ActionScriptGeneration">
       <item name="Source">IntersectionService</item>
@@ -298,6 +262,196 @@
     <property name="lng" type="float" required="true"/>
     <property name="angle" type="float" required="true"/>
     <property name="index" type="integer" required="true"/>
+  </entity>
+  <service name="TimingService">
+    <annotation name="ActionScriptGeneration">
+      <item name="Source">TimingService</item>
+      <item name="ServiceType">RemoteObject</item>
+      <item name="Package">services.timingservice</item>
+      <item name="Endpoint">gateway.php</item>
+      <item name="Destination">TimingService</item>
+    </annotation>
+    <annotation name="ASFilesGenerated">
+      <item name="ASFilesGenerated">services/timingservice/_Super_TimingService.as~#~services/timingservice/_Super_TimingService.as;services/timingservice/TimingService.as;~#~</item>
+      <item name="ServiceFilesGenerated">services/timingservice/_Super_TimingService.as~#~</item>
+    </annotation>
+    <annotation name="ServiceTypeGroup">
+      <item name="ServiceBackendType">PHP</item>
+    </annotation>
+    <annotation name="ServiceConfig">
+      <item name="PHP_RELATIVE_LOCATION">trackfreaks-debug/services/TimingService.php</item>
+      <item name="PHP_SERVER_ROOT">/Library/WebServer/Documents</item>
+      <item name="DEFAULT_ENTITY_PACKAGE">valueObjects</item>
+      <item name="PHP_SERVICES_FOLDER">/Library/WebServer/Documents/trackfreaks-debug/services</item>
+      <item name="PHP_LOCATION">/Library/WebServer/Documents/trackfreaks-debug/services/TimingService.php</item>
+      <item name="LINKED_FILE">TimingService.php</item>
+      <item name="PHP_SERVER_ROOT_URL">http://develop.trackfreaks.eu/</item>
+      <item name="ABSOLUTE_ENDPOINT">http://develop.trackfreaks.eu/trackfreaks-debug/gateway.php</item>
+      <item name="PHP_CLASS_NAME">TimingService</item>
+    </annotation>
+    <function name="findByGpslogID" arguments="gpslog_id:integer" return-type="opaque">
+      <annotation name="original signature">
+        <item name="inputParams">integer</item>
+        <item name="returnType">opaque</item>
+      </annotation>
+      <annotation name="analyze group">
+        <item name="analyzed">false</item>
+      </annotation>
+    </function>
+  </service>
+  <service name="UserService">
+    <annotation name="ActionScriptGeneration">
+      <item name="Source">UserService</item>
+      <item name="ServiceType">RemoteObject</item>
+      <item name="Package">services.userservice</item>
+      <item name="Endpoint">gateway.php</item>
+      <item name="Destination">UserService</item>
+    </annotation>
+    <annotation name="ServiceTypeGroup">
+      <item name="ServiceBackendType">PHP</item>
+    </annotation>
+    <annotation name="ServiceConfig">
+      <item name="PHP_RELATIVE_LOCATION">trackfreaks-debug/services/UserService.php</item>
+      <item name="PHP_SERVER_ROOT">/Library/WebServer/Documents</item>
+      <item name="DEFAULT_ENTITY_PACKAGE">valueObjects</item>
+      <item name="PHP_SERVICES_FOLDER">/Library/WebServer/Documents/trackfreaks-debug/services</item>
+      <item name="PHP_LOCATION">/Library/WebServer/Documents/trackfreaks-debug/services/UserService.php</item>
+      <item name="LINKED_FILE">UserService.php</item>
+      <item name="PHP_SERVER_ROOT_URL">http://develop.trackfreaks.eu/</item>
+      <item name="ABSOLUTE_ENDPOINT">http://develop.trackfreaks.eu/trackfreaks-debug/gateway.php</item>
+      <item name="PHP_CLASS_NAME">UserService</item>
+    </annotation>
+    <function name="findByUsername" arguments="username:string" return-type="User">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">string</item>
+        <item name="returnType">User</item>
+      </annotation>
+    </function>
+  </service>
+  <entity name="User">
+    <annotation name="EntityProperties">
+      <item name="EntityOriginalName">User</item>
+    </annotation>
+    <annotation name="ServerProperties">
+      <item name="RemoteClass">User</item>
+      <item name="IncludeRemoteClass">nonempty</item>
+    </annotation>
+    <annotation name="service Group">
+      <item name="service">UserService</item>
+    </annotation>
+    <annotation name="ActionScriptGeneration">
+      <item name="Package">valueObjects</item>
+    </annotation>
+    <property name="user_id" type="integer" required="true"/>
+    <property name="username" type="string" required="true"/>
+    <property name="password" type="string" required="true"/>
+    <property name="role" type="string" required="true"/>
+  </entity>
+  <service name="GpslogService">
+    <annotation name="ActionScriptGeneration">
+      <item name="Source">GpslogService</item>
+      <item name="ServiceType">RemoteObject</item>
+      <item name="Package">services.gpslogservice</item>
+      <item name="Endpoint">gateway.php</item>
+      <item name="Destination">GpslogService</item>
+    </annotation>
+    <annotation name="ASFilesGenerated">
+      <item name="ASFilesGenerated">services/gpslogservice/_Super_GpslogService.as~#~services/gpslogservice/_Super_GpslogService.as;services/gpslogservice/GpslogService.as;~#~</item>
+      <item name="ServiceFilesGenerated">services/gpslogservice/_Super_GpslogService.as~#~</item>
+    </annotation>
+    <annotation name="ServiceTypeGroup">
+      <item name="ServiceBackendType">PHP</item>
+    </annotation>
+    <annotation name="ServiceConfig">
+      <item name="PHP_RELATIVE_LOCATION">trackfreaks-debug/services/GpslogService.php</item>
+      <item name="PHP_SERVER_ROOT">/Library/WebServer/Documents</item>
+      <item name="DEFAULT_ENTITY_PACKAGE">valueObjects</item>
+      <item name="PHP_SERVICES_FOLDER">/Library/WebServer/Documents/trackfreaks-debug/services</item>
+      <item name="PHP_LOCATION">/Library/WebServer/Documents/trackfreaks-debug/services/GpslogService.php</item>
+      <item name="LINKED_FILE">GpslogService.php</item>
+      <item name="PHP_SERVER_ROOT_URL">http://develop.trackfreaks.eu/</item>
+      <item name="ABSOLUTE_ENDPOINT">http://develop.trackfreaks.eu/trackfreaks-debug/gateway.php</item>
+      <item name="PHP_CLASS_NAME">GpslogService</item>
+    </annotation>
+    <function name="findAll" return-type="Gpslog[]">
+      <annotation name="original signature">
+        <item name="returnType">opaque</item>
+      </annotation>
+      <annotation name="ValidProperties">
+        <item name="propertySpecifier">gpslog_id,end_time,rider_lastname,start_time,rider_firstname,rider_id,date,track_id,track_name</item>
+      </annotation>
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+    </function>
+    <function name="createGpslog" arguments="rider_id:integer,track_id:integer,date:string,start_time:string,end_time:string,data:string" return-type="opaque">
+      <annotation name="original signature">
+        <item name="inputParams">integer,integer,string,string,string,string</item>
+        <item name="returnType">opaque</item>
+      </annotation>
+      <annotation name="analyze group">
+        <item name="analyzed">false</item>
+      </annotation>
+    </function>
+    <function name="findAllDates" return-type="date[]">
+      <annotation name="original signature">
+        <item name="returnType">opaque</item>
+      </annotation>
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+    </function>
+    <function name="findSampleTrackData" arguments="track_id:integer" return-type="string">
+      <annotation name="original signature">
+        <item name="inputParams">opaque</item>
+        <item name="returnType">opaque</item>
+      </annotation>
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+    </function>
+    <function name="getGpslog" return-type="Gpslog">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="returnType">Gpslog</item>
+      </annotation>
+    </function>
+  </service>
+  <entity name="Gpslog">
+    <annotation name="EntityProperties">
+      <item name="EntityOriginalName">Gpslog</item>
+    </annotation>
+    <annotation name="service Group">
+      <item name="service">GpslogService,GpslogServiceDummy</item>
+    </annotation>
+    <annotation name="ServerProperties">
+      <item name="IncludeRemoteClass">nonempty</item>
+      <item name="RemoteClass">Gpslog</item>
+    </annotation>
+    <annotation name="findAll">
+      <item name="propertySpecifier">gpslog_id,end_time,rider_lastname,start_time,rider_firstname,rider_id,date,track_id,track_name</item>
+    </annotation>
+    <annotation name="ActionScriptGeneration">
+      <item name="Package">valueObjects</item>
+    </annotation>
+    <annotation name="ASFilesGenerated">
+      <item name="ASFilesGenerated">valueObjects/_GpslogEntityMetadata.as~#~valueObjects/_GpslogEntityMetadata.as;valueObjects/_Super_Gpslog.as;valueObjects/Gpslog.as;~#~valueObjects/_Super_Gpslog.as~#~valueObjects/Gpslog.as~#~</item>
+      <item name="EntityFilesGenerated">valueObjects/_GpslogEntityMetadata.as~#~valueObjects/_Super_Gpslog.as~#~</item>
+    </annotation>
+    <property name="gpslog_id" type="integer" required="true"/>
+    <property name="track_id" type="integer" required="true"/>
+    <property name="track_name" type="string" required="true"/>
+    <property name="rider_id" type="integer" required="true"/>
+    <property name="rider_firstname" type="string" required="true"/>
+    <property name="rider_lastname" type="string" required="true"/>
+    <property name="date" type="string" required="true"/>
+    <property name="start_time" type="string" required="true"/>
+    <property name="end_time" type="string" required="true"/>
   </entity>
   <service name="TrackService">
     <annotation name="ActionScriptGeneration">
@@ -454,159 +608,5 @@
     <property name="firstname" type="string" required="true"/>
     <property name="lastname" type="string" required="true"/>
     <property name="picture_id" type="integer" required="true"/>
-  </entity>
-  <service name="GpslogService">
-    <annotation name="ActionScriptGeneration">
-      <item name="Source">GpslogService</item>
-      <item name="ServiceType">RemoteObject</item>
-      <item name="Package">services.gpslogservice</item>
-      <item name="Endpoint">gateway.php</item>
-      <item name="Destination">GpslogService</item>
-    </annotation>
-    <annotation name="ASFilesGenerated">
-      <item name="ASFilesGenerated">services/gpslogservice/_Super_GpslogService.as~#~services/gpslogservice/_Super_GpslogService.as;services/gpslogservice/GpslogService.as;~#~</item>
-      <item name="ServiceFilesGenerated">services/gpslogservice/_Super_GpslogService.as~#~</item>
-    </annotation>
-    <annotation name="ServiceTypeGroup">
-      <item name="ServiceBackendType">PHP</item>
-    </annotation>
-    <annotation name="ServiceConfig">
-      <item name="PHP_RELATIVE_LOCATION">trackfreaks-debug/services/GpslogService.php</item>
-      <item name="PHP_SERVER_ROOT">/Library/WebServer/Documents</item>
-      <item name="DEFAULT_ENTITY_PACKAGE">valueObjects</item>
-      <item name="PHP_SERVICES_FOLDER">/Library/WebServer/Documents/trackfreaks-debug/services</item>
-      <item name="PHP_LOCATION">/Library/WebServer/Documents/trackfreaks-debug/services/GpslogService.php</item>
-      <item name="LINKED_FILE">GpslogService.php</item>
-      <item name="PHP_SERVER_ROOT_URL">http://develop.trackfreaks.eu/</item>
-      <item name="ABSOLUTE_ENDPOINT">http://develop.trackfreaks.eu/trackfreaks-debug/gateway.php</item>
-      <item name="PHP_CLASS_NAME">GpslogService</item>
-    </annotation>
-    <function name="findAll" return-type="Gpslog[]">
-      <annotation name="original signature">
-        <item name="returnType">opaque</item>
-      </annotation>
-      <annotation name="ValidProperties">
-        <item name="propertySpecifier">gpslog_id,end_time,rider_lastname,start_time,rider_firstname,rider_id,date,track_id,track_name</item>
-      </annotation>
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-    </function>
-    <function name="createGpslog" arguments="rider_id:integer,track_id:integer,date:string,start_time:string,end_time:string,data:string" return-type="opaque">
-      <annotation name="original signature">
-        <item name="inputParams">integer,integer,string,string,string,string</item>
-        <item name="returnType">opaque</item>
-      </annotation>
-      <annotation name="analyze group">
-        <item name="analyzed">false</item>
-      </annotation>
-    </function>
-    <function name="findAllDates" return-type="date[]">
-      <annotation name="original signature">
-        <item name="returnType">opaque</item>
-      </annotation>
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-    </function>
-    <function name="findSampleTrackData" arguments="track_id:integer" return-type="string">
-      <annotation name="original signature">
-        <item name="inputParams">opaque</item>
-        <item name="returnType">opaque</item>
-      </annotation>
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-    </function>
-    <function name="getGpslog" return-type="Gpslog">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="returnType">Gpslog</item>
-      </annotation>
-    </function>
-  </service>
-  <entity name="Gpslog">
-    <annotation name="EntityProperties">
-      <item name="EntityOriginalName">Gpslog</item>
-    </annotation>
-    <annotation name="service Group">
-      <item name="service">GpslogService,GpslogServiceDummy</item>
-    </annotation>
-    <annotation name="ServerProperties">
-      <item name="IncludeRemoteClass">nonempty</item>
-      <item name="RemoteClass">Gpslog</item>
-    </annotation>
-    <annotation name="findAll">
-      <item name="propertySpecifier">gpslog_id,end_time,rider_lastname,start_time,rider_firstname,rider_id,date,track_id,track_name</item>
-    </annotation>
-    <annotation name="ActionScriptGeneration">
-      <item name="Package">valueObjects</item>
-    </annotation>
-    <annotation name="ASFilesGenerated">
-      <item name="ASFilesGenerated">valueObjects/_GpslogEntityMetadata.as~#~valueObjects/_GpslogEntityMetadata.as;valueObjects/_Super_Gpslog.as;valueObjects/Gpslog.as;~#~valueObjects/_Super_Gpslog.as~#~valueObjects/Gpslog.as~#~</item>
-      <item name="EntityFilesGenerated">valueObjects/_GpslogEntityMetadata.as~#~valueObjects/_Super_Gpslog.as~#~</item>
-    </annotation>
-    <property name="gpslog_id" type="integer" required="true"/>
-    <property name="track_id" type="integer" required="true"/>
-    <property name="track_name" type="string" required="true"/>
-    <property name="rider_id" type="integer" required="true"/>
-    <property name="rider_firstname" type="string" required="true"/>
-    <property name="rider_lastname" type="string" required="true"/>
-    <property name="date" type="string" required="true"/>
-    <property name="start_time" type="string" required="true"/>
-    <property name="end_time" type="string" required="true"/>
-  </entity>
-  <service name="UserService">
-    <annotation name="ActionScriptGeneration">
-      <item name="Source">UserService</item>
-      <item name="ServiceType">RemoteObject</item>
-      <item name="Package">services.userservice</item>
-      <item name="Endpoint">gateway.php</item>
-      <item name="Destination">UserService</item>
-    </annotation>
-    <annotation name="ServiceTypeGroup">
-      <item name="ServiceBackendType">PHP</item>
-    </annotation>
-    <annotation name="ServiceConfig">
-      <item name="PHP_RELATIVE_LOCATION">trackfreaks-debug/services/UserService.php</item>
-      <item name="PHP_SERVER_ROOT">/Library/WebServer/Documents</item>
-      <item name="DEFAULT_ENTITY_PACKAGE">valueObjects</item>
-      <item name="PHP_SERVICES_FOLDER">/Library/WebServer/Documents/trackfreaks-debug/services</item>
-      <item name="PHP_LOCATION">/Library/WebServer/Documents/trackfreaks-debug/services/UserService.php</item>
-      <item name="LINKED_FILE">UserService.php</item>
-      <item name="PHP_SERVER_ROOT_URL">http://develop.trackfreaks.eu/</item>
-      <item name="ABSOLUTE_ENDPOINT">http://develop.trackfreaks.eu/trackfreaks-debug/gateway.php</item>
-      <item name="PHP_CLASS_NAME">UserService</item>
-    </annotation>
-    <function name="findByUsername" arguments="username:string" return-type="User">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="inputParams">string</item>
-        <item name="returnType">User</item>
-      </annotation>
-    </function>
-  </service>
-  <entity name="User">
-    <annotation name="EntityProperties">
-      <item name="EntityOriginalName">User</item>
-    </annotation>
-    <annotation name="ServerProperties">
-      <item name="RemoteClass">User</item>
-      <item name="IncludeRemoteClass">nonempty</item>
-    </annotation>
-    <annotation name="service Group">
-      <item name="service">UserService</item>
-    </annotation>
-    <annotation name="ActionScriptGeneration">
-      <item name="Package">valueObjects</item>
-    </annotation>
-    <property name="user_id" type="integer" required="true"/>
-    <property name="username" type="string" required="true"/>
-    <property name="password" type="string" required="true"/>
-    <property name="role" type="string" required="true"/>
   </entity>
 </model>
