@@ -25,31 +25,28 @@ class TrackService {
 	public function findByLatLng($minlat, $minlng, $maxlat, $maxlng) {
 		$connection = mysqli_connect($this->server, $this->username, $this->password, $this->databasename, $this->port);
 		$this->throwExceptionOnError($connection);
-		
-		$cols = array();
-		$cols[] = "track_id";
-		$cols[] = "name";
-		$cols[] = "url";
-		$cols[] = "lat";
-		$cols[] = "lng";
-		$cols[] = "country";
-		$cols[] = "length";
-		$cols[] = "picture_id";
-		
-		$sql = array();
-		$sql[] = "SELECT";
-		$sql[] = implode(", ", $cols);
-		$sql[] = "FROM";
-		$sql[] = $this->tablename;
 
-		$sql[] = "WHERE";
-		$sql[] = "lat >= $minlat AND";
-		$sql[] = "lat <= $maxlat AND";
-		$sql[] = "lng >= $minlng AND";
-		$sql[] = "lng <= $maxlng";
-		$sql[] = "LIMIT 1";
-				
-		$stmt = mysqli_prepare($connection, implode(" ", $sql));		
+		$sql = <<<SQL
+SELECT
+  track.track_id,
+  track.name,
+  track.url,
+  track.lat,
+  track.lng,
+  country.name country,
+  track.length,
+  track.picture_id
+FROM
+  track LEFT JOIN country using (country_id)
+WHERE
+  lat >= $minlat AND
+  lat <= $maxlat AND
+  lng >= $minlng AND
+  lng <= $maxlng
+LIMIT 1
+SQL;
+
+		$stmt = mysqli_prepare($connection, $sql);		
 		$this->throwExceptionOnError($connection);
 		
 		mysqli_stmt_execute($stmt);
@@ -81,25 +78,23 @@ class TrackService {
 		$connection = mysqli_connect($this->server, $this->username, $this->password, $this->databasename, $this->port);
 		$this->throwExceptionOnError($connection);
 		
-		$cols = array();
-		$cols[] = "track_id";
-		$cols[] = "name";
-		$cols[] = "url";
-		$cols[] = "lat";
-		$cols[] = "lng";
-		$cols[] = "country";
-		$cols[] = "length";
-		$cols[] = "picture_id";
-
-		$sql = array();
-		$sql[] = "SELECT";
-		$sql[] = implode(", ", $cols);
-		$sql[] = "FROM";
-		$sql[] = $this->tablename;
-		$sql[] = "ORDER BY";
-		$sql[] = "name asc";
+		$sql = <<<SQL
+SELECT
+  track.track_id,
+  track.name,
+  track.url,
+  track.lat,
+  track.lng,
+  country.name country,
+  track.length,
+  track.picture_id
+FROM
+  track LEFT JOIN country using (country_id)
+ORDER BY
+  name asc
+SQL;
 	
-		$stmt = mysqli_prepare($connection, implode(" ", $sql));		
+		$stmt = mysqli_prepare($connection, $sql);		
 		$this->throwExceptionOnError($connection);
 		
 		mysqli_stmt_execute($stmt);

@@ -6,19 +6,25 @@
 	minHeight="768" 
 	xmlns:local="*" 
 	xmlns:mx="library://ns.adobe.com/flex/mx"
-	xmlns:userservice="services.userservice.*">
+	xmlns:userservice="services.userservice.*" xmlns:riderservice="services.riderservice.*">
 
 	<fx:Script>
 		<![CDATA[
 			import mx.controls.Alert;
 			import mx.core.Application;
+			import mx.events.CloseEvent;
 			import mx.messaging.ChannelSet;
 			import mx.messaging.config.ServerConfig;
 			import mx.rpc.AsyncToken;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			
+			import valueObjects.Rider;
+			
 			private static var cs: ChannelSet = null;
+			
+			[Bindable]
+			public var rider: Rider;
 			
 			public static function get channelSet() : ChannelSet {
 				if (cs == null) {
@@ -31,29 +37,28 @@
 				login.token = channelSet.login(username.text,password.text);
 			}
 			
-			private function Login_resultHandler(event:ResultEvent):void  {
+			protected function Login_resultHandler(event:ResultEvent):void  {
 				popup.displayPopUp = false;
 				currentState = channelSet.authenticated ? 'Authenticated' : 'Anonymous';
+				findByUsername.token = riderService.findByUsername(username.text);
 			}
 			
 			protected function login_faultHandler(event:FaultEvent):void {
-				var message: String = event.fault.faultString;
-				if (event.fault.faultCode == "-1") {
-					message += "Identity not found";
-				} else if (event.fault.faultCode == "-3") {
-					message += "Credential invalid";
-				} else {
-					message += event.fault.faultCode;
-				}
-				Alert.show(message);
+				Alert.show(event.fault.faultString);
 				currentState = channelSet.authenticated ? 'Authenticated' : 'Anonymous';
 			}
 
 			protected function logout_clickHandler(event:MouseEvent):void {
-				logout.token = channelSet.logout();
+				Alert.show("Are you sure you want to log out?","Logout",Alert.YES | Alert.NO,null,logout_AlertHandler,null,Alert.YES);
+			}
+			
+			protected function logout_AlertHandler(evt:CloseEvent):void {
+				if (evt.detail == Alert.YES) {
+					logout.token = channelSet.logout();
+				}
 			}
 
-			private function Logout_resultHandler(event:ResultEvent):void  {
+			protected function Logout_resultHandler(event:ResultEvent):void  {
 				currentState = channelSet.authenticated ? 'Authenticated' : 'Anonymous';
 			}
 			
@@ -62,17 +67,28 @@
 				currentState = channelSet.authenticated ? 'Authenticated' : 'Anonymous';
 			}
 			
+			protected function findByUsername_resultHandler(event:ResultEvent):void  {
+				rider = event.result as Rider;
+			}
+			
+			protected function findByUsername_faultHandler(event:FaultEvent):void {
+				Alert.show(event.fault.faultString);
+			}
+			
 		]]>
 	</fx:Script>
 
 	<fx:Declarations>
-		<userservice:UserService 
-			id="userService" />
+		<riderservice:RiderService id="riderService" />
+		
+		<s:CallResponder id="findByUsername" 
+						 fault="findByUsername_faultHandler(event)"
+						 result="findByUsername_resultHandler(event)" />
 		
 		<s:CallResponder id="login" 
 						 fault="login_faultHandler(event)"
 						 result="Login_resultHandler(event)" />
-
+		
 		<s:CallResponder id="logout" 
 						 fault="logout_faultHandler(event)"
 						 result="Logout_resultHandler(event)" />
@@ -80,7 +96,6 @@
 
 	<s:states>
 		<s:State name="Anonymous"/>
-		<s:State name="Login"/>
 		<s:State name="Authenticated"/>
 	</s:states>
 	
@@ -130,8 +145,8 @@
 			</s:BorderContainer>
 		</s:PopUpAnchor>
 		
-		<s:Label text="Welcome Geert" includeIn="Authenticated" verticalAlign="middle" paddingTop="3"/>
-		<mx:Button includeIn="Anonymous,Login" label="Login" click="popup.displayPopUp = true" />
+		<s:Label text="{ rider ? 'Welcome ' + rider.firstname : ''}" includeIn="Authenticated" verticalAlign="middle" paddingTop="3"/>
+		<mx:Button includeIn="Anonymous" label="Login" click="popup.displayPopUp = true" />
 		<mx:Image click="logout_clickHandler(event)" source="@Embed('assets/Shutdown-20x20.png')" width="20" height="20" includeIn="Authenticated"/>
 
 	</s:controlBarContent>

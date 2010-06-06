@@ -17,6 +17,11 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>Zend</name>
+			<type>2</type>
+			<location>/java/ZendFramework-1.10.5/library/Zend</location>
+		</link>
+		<link>
 			<name>bin-debug</name>
 			<type>2</type>
 			<location>/Library/WebServer/Documents/trackfreaks-debug</location>
@@ -50,11 +55,6 @@
 			<name>services/TrackService.php</name>
 			<type>1</type>
 			<location>/Library/WebServer/Documents/trackfreaks-debug/services/TrackService.php</location>
-		</link>
-		<link>
-			<name>services/UserService.php</name>
-			<type>1</type>
-			<location>/Library/WebServer/Documents/trackfreaks-debug/services/UserService.php</location>
 		</link>
 	</linkedResources>
 </projectDescription>

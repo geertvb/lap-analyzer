@@ -39,6 +39,9 @@ internal class _Super_RiderService extends com.adobe.fiber.services.wrapper.Remo
         operations["findByID"] = operation;
 
         valueObjects.Rider._initRemoteClassAlias();
+        operation = new mx.rpc.remoting.Operation(null, "findByUsername");
+        operations["findByUsername"] = operation;
+
     
         _serviceControl.operations = operations;   
 		_serviceControl.convertResultHandler = com.adobe.serializers.utility.TypeUtility.convertResultHandler;
@@ -85,6 +88,25 @@ internal class _Super_RiderService extends com.adobe.fiber.services.wrapper.Remo
 	{
 		var _internal_operation:mx.rpc.AbstractOperation = _serviceControl.getOperation("findByID");
 		var _internal_token:mx.rpc.AsyncToken = _internal_operation.send(rider_id) ;
+
+		return _internal_token;
+	}   
+	 
+	/**
+	  * This method is a generated wrapper used to call the 'findByUsername' operation. It returns an mx.rpc.AsyncToken whose 
+	  * result property will be populated with the result of the operation when the server response is received. 
+	  * To use this result from MXML code, define a CallResponder component and assign its token property to this method's return value. 
+	  * You can then bind to CallResponder.lastResult or listen for the CallResponder.result or fault events.
+      *
+      * @see mx.rpc.AsyncToken
+      * @see mx.rpc.CallResponder 
+      *
+      * @return an mx.rpc.AsyncToken whose result property will be populated with the result of the operation when the server response is received.
+	  */          
+	public function findByUsername(username:String) : mx.rpc.AsyncToken
+	{
+		var _internal_operation:mx.rpc.AbstractOperation = _serviceControl.getOperation("findByUsername");
+		var _internal_token:mx.rpc.AsyncToken = _internal_operation.send(username) ;
 
 		return _internal_token;
 	}   
