@@ -12,15 +12,17 @@ class DB_Auth extends Zend_Amf_Auth_Abstract {
 			require_once 'services/UserService.php';
 			$userService = new UserService();
 			$user = $userService->findByUsername($this->_username);
-			if ($user->password == $this->_password) {
-				return new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $user, array());
+			if ($user != null) {
+				if ($user->password == $this->_password) {
+					return new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $user, array());
+				} else {
+					return new Zend_Auth_Result(Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID, null, array());
+				}
 			} else {
-				return new Zend_Auth_Result(Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID, null, array());
+				return new Zend_Auth_Result(Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND, null, array());
 			}
 		} else {
-			$identity = new stdClass();
-			$identity->role = 'member';
-			return new Zend_Auth_Result(Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND, null, array());
+			return new Zend_Auth_Result(Zend_Auth_Result::FAILURE, null, array());
 		}
 	}
 
