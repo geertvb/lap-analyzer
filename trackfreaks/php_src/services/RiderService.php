@@ -1,6 +1,7 @@
 <?php
 
 require_once 'Rider.php';
+require_once 'mysqliUtils.php';
 
 class RiderService {
 
@@ -32,22 +33,20 @@ class RiderService {
 		$connection = mysqli_connect($this->server, $this->username, $this->password, $this->databasename, $this->port);
 		$this->throwExceptionOnError($connection);
 		
-		$cols = array();
-		$cols[] = "rider_id";
-		$cols[] = "firstname";
-		$cols[] = "lastname";
-		$cols[] = "picture_id";
-
-		$sql = array();
-		$sql[] = "SELECT";
-		$sql[] = implode(", ", $cols);
-		$sql[] = "FROM";
-		$sql[] = $this->tablename;
-		$sql[] = "ORDER BY";
-		$sql[] = "firstname asc,";
-		$sql[] = "lastname asc";
+		$sql = <<<SQL
+SELECT
+  `rider`.`rider_id`,
+  `rider`.`firstname`,
+  `rider`.`lastname`,
+  `rider`.`picture_id`
+FROM
+  `rider`
+ORDER BY
+  `firstname` asc,
+  `lastname` asc
+SQL;
 	
-		$stmt = mysqli_prepare($connection, implode(" ", $sql));		
+		$stmt = mysqli_prepare($connection, $sql);		
 		$this->throwExceptionOnError($connection);
 		
 		mysqli_stmt_execute($stmt);
@@ -88,6 +87,42 @@ class RiderService {
 		}		
 	}
 
+	/**
+	 * 
+	 * @param string $username
+	 * @return User
+	 */
+	public function findByUsername($username) {
+				
+		$sql = <<<SQL
+SELECT
+  rider.user_id,
+  rider.username,
+  rider.password,
+  rider.role,
+  rider.firstname,
+  rider.lastname,
+  rider.birthdate,
+  rider.email 
+FROM
+  rider
+WHERE
+  rider.username = ?
+SQL;
+
+		$mysqli = newMysqli();
+		
+		$stmt = mysqli_prepare($mysqli, $sql);
+		$stmt->bind_param("s", $username);
+		mysqli_stmt_execute($stmt);	
+		$result = getSingleResult($stmt, "Rider");
+		$stmt->close();
+		
+		$mysqli->close();
+		
+		return $result;
+	}
+	
 }
 
 ?>

@@ -116,11 +116,6 @@
 					}
 				}
 				showInfoWindow(marker, track);
-
-				if (event.columnIndex == 1) {
-					navigateToURL(new URLRequest(track.url), "_blank");
-				}
-
 			}
 
 			protected function showInfoWindow(marker: Marker, track: Track) : void {

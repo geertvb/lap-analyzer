@@ -77,8 +77,6 @@
 			</mx:FormItem>
 		</mx:Form>
 		
-		<s:Button label="test" click="Alert.show('' + riderService.channelSet.authenticated)" />
-
 	</s:VGroup>
 
 </s:HGroup>
