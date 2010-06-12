@@ -1,52 +1,45 @@
 <?php
 
-include 'resizeimage.php';
-
 $filename = $_FILES["file"]["name"];
 $mimetype = $_FILES["file"]["type"];
 $size = $_FILES["file"]["size"];
 $image_file = $_FILES["file"]["tmp_name"];
-
 $content = NULL;
-$thumb_content = NULL;
 
-$thumb_file = tempnam(sys_get_temp_dir(), 'thumb');
-
-list($thumb_width, $thumb_height, $width, $height) = createthumb($image_file, $thumb_file);
-
-$thumb_mimetype = "image/jpeg";
-$thumb_size = filesize($thumb_file);
+//TODO Validation:
+// type: Only jpeg files (check extension and mimetype)
+// size: Smaller than 2MB
+// is uploaded file?
 
 $mysqli = new mysqli("localhost", "trackfreaks_eu", "wBpjP8Ft", "trackfreaks_eu");
 
-$sql = "INSERT INTO picture (";
-$sql .= "`filename`,";
-$sql .= "`mimetype`,";
-$sql .= "`size`,";
-$sql .= "`width`,";
-$sql .= "`height`,";
-$sql .= "`content`,";
-$sql .= "`thumb_mimetype`,";
-$sql .= "`thumb_size`,";
-$sql .= "`thumb_width`,";
-$sql .= "`thumb_height`,";
-$sql .= "`thumb_content`";
-$sql .= ") VALUES ";
-$sql .= "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+$sql = <<<SQL
+INSERT INTO picture (
+	`filename`,
+	`mimetype`,
+	`size`,
+	`width`,
+	`height`,
+	`content`
+) VALUES (
+	?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+)
+SQL;
 
 $stmt = $mysqli->prepare($sql);
 
-$stmt->bind_param('ssiiibsiiib', $filename, $mimetype, $size, $width, $height, $content, $thumb_mimetype, $thumb_size, $thumb_width, $thumb_height, $thumb_content);
+$stmt->bind_param(
+	'ssiiib', 
+	$filename, 
+	$mimetype, 
+	$size, 
+	$width, 
+	$height, 
+	$content);
 
 $fp = fopen($image_file, "r");
 while (!feof($fp)) {
 	$stmt->send_long_data(5, fread($fp, 4096));
-}
-fclose($fp);
-
-$fp = fopen($thumb_file, "r");
-while (!feof($fp)) {
-	$stmt->send_long_data(10, fread($fp, 4096));
 }
 fclose($fp);
 
@@ -62,8 +55,6 @@ if ($result = $mysqli->query("SELECT LAST_INSERT_ID()")) {
 }
 
 $mysqli->close();
-
-unlink($thumb_file);
 
 $xml = new XMLWriter();
 $xml->openMemory();
