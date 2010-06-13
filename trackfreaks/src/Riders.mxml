@@ -100,12 +100,27 @@
 						text="{datagrid.selectedItem.birthdate}" />
 				</mx:FormItem>
 				<mx:FormItem label="Blood type">
+					<s:DropDownList
+						enabled="{editAllowed(parentDocument.rider, datagrid.selectedItem as Rider)}" >
+						
+					</s:DropDownList>
+					<!--
 					<s:TextInput 
 						width="120"
 						editable="{editAllowed(parentDocument.rider, datagrid.selectedItem as Rider)}" 
 						text="{datagrid.selectedItem.bloodtype}" />
+					-->
 				</mx:FormItem>
 			</mx:Form>
+			<s:NavigatorContent label="Pictures" width="100%" height="100%">
+				<s:List
+>
+					<s:layout>
+						<s:TileLayout orientation="rows" requestedRowCount="2" requestedColumnCount="4" rowHeight="120" columnWidth="90"/>
+					</s:layout>
+					
+				</s:List>
+			</s:NavigatorContent>
 			<mx:HBox label="Address">
 				<mx:Form>
 					<mx:FormItem label="Street &amp; Number" direction="horizontal">
