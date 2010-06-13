@@ -60,6 +60,7 @@
 
 			protected function Logout_resultHandler(event:ResultEvent):void  {
 				currentState = channelSet.authenticated ? 'Authenticated' : 'Anonymous';
+				rider = null;
 			}
 			
 			protected function logout_faultHandler(event:FaultEvent):void {
