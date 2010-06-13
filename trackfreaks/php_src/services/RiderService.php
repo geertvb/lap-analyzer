@@ -90,19 +90,18 @@ SQL;
 	/**
 	 * 
 	 * @param string $username
-	 * @return User
+	 * @return Rider
 	 */
 	public function findByUsername($username) {
 				
 		$sql = <<<SQL
 SELECT
-  rider.user_id,
+  rider.rider_id,
   rider.username,
   rider.password,
   rider.role,
   rider.firstname,
   rider.lastname,
-  rider.birthdate,
   rider.email 
 FROM
   rider
@@ -112,11 +111,14 @@ SQL;
 
 		$mysqli = newMysqli();
 		
-		$stmt = mysqli_prepare($mysqli, $sql);
-		$stmt->bind_param("s", $username);
-		mysqli_stmt_execute($stmt);	
-		$result = getSingleResult($stmt, "Rider");
-		$stmt->close();
+		if ($stmt = $mysqli->prepare($sql)) {
+			$stmt->bind_param("s", $username);
+			mysqli_stmt_execute($stmt);	
+			$result = getSingleResult($stmt, "Rider");
+			$stmt->close();
+		} else {
+			throwExceptionOnError($mysqli);
+		}
 		
 		$mysqli->close();
 		

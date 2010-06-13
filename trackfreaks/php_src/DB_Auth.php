@@ -9,12 +9,12 @@ class DB_Auth extends Zend_Amf_Auth_Abstract {
 	
 	public function authenticate() {
 		if ($this->_username) {
-			require_once 'services/UserService.php';
-			$userService = new UserService();
-			$user = $userService->findByUsername($this->_username);
-			if ($user != null) {
-				if ($user->password == $this->_password) {
-					return new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $user, array("Login successful"));
+			require_once 'services/RiderService.php';
+			$riderService = new RiderService();
+			$rider = $riderService->findByUsername($this->_username);
+			if ($rider != null) {
+				if ($rider->password == $this->_password) {
+					return new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $rider, array("Login successful"));
 				} else {
 					return new Zend_Auth_Result(Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID, null, array("Invalid password"));
 				}

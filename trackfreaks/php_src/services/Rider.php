@@ -29,10 +29,6 @@ class Rider {
 	/**
 	 * @var string
 	 */
-	var $birthdate;
-	/**
-	 * @var string
-	 */
 	var $email;
 	/**
 	 * @var int

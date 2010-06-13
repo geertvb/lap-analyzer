@@ -20,12 +20,12 @@ internal class _RiderEntityMetadata extends com.adobe.fiber.valueobjects.Abstrac
 {
 	private static var emptyArray:Array = new Array();
 
-    model_internal static var allProperties:Array = new Array("rider_id", "firstname", "lastname", "picture_id");
+    model_internal static var allProperties:Array = new Array("rider_id", "username", "password", "role", "firstname", "lastname", "email", "picture_id");
     model_internal static var allAssociationProperties:Array = new Array();
-    model_internal static var allRequiredProperties:Array = new Array("rider_id", "firstname", "lastname", "picture_id");
-    model_internal static var allAlwaysAvailableProperties:Array = new Array("rider_id", "firstname", "lastname", "picture_id");
+    model_internal static var allRequiredProperties:Array = new Array("rider_id", "username", "password", "role", "firstname", "lastname", "email", "picture_id");
+    model_internal static var allAlwaysAvailableProperties:Array = new Array("rider_id", "username", "password", "role", "firstname", "lastname", "email", "picture_id");
     model_internal static var guardedProperties:Array = new Array();
-    model_internal static var dataProperties:Array = new Array("rider_id", "firstname", "lastname", "picture_id");
+    model_internal static var dataProperties:Array = new Array("rider_id", "username", "password", "role", "firstname", "lastname", "email", "picture_id");
     model_internal static var derivedProperties:Array = new Array();
     model_internal static var collectionProperties:Array = new Array();
     model_internal static var collectionBaseMap:Object;    
@@ -45,8 +45,12 @@ internal class _RiderEntityMetadata extends com.adobe.fiber.valueobjects.Abstrac
             // depenents map
             model_internal::dependentsOnMap = new Object();
             model_internal::dependentsOnMap["rider_id"] = new Array();
+            model_internal::dependentsOnMap["username"] = new Array();
+            model_internal::dependentsOnMap["password"] = new Array();
+            model_internal::dependentsOnMap["role"] = new Array();
             model_internal::dependentsOnMap["firstname"] = new Array();
             model_internal::dependentsOnMap["lastname"] = new Array();
+            model_internal::dependentsOnMap["email"] = new Array();
             model_internal::dependentsOnMap["picture_id"] = new Array();
                         
             // collection base map
@@ -271,6 +275,24 @@ internal class _RiderEntityMetadata extends com.adobe.fiber.valueobjects.Abstrac
      }                       
                   
      [Bindable(event="propertyChange")] 
+     public function get isUsernameAvailable():Boolean
+     {
+        return true;
+     }                       
+                  
+     [Bindable(event="propertyChange")] 
+     public function get isPasswordAvailable():Boolean
+     {
+        return true;
+     }                       
+                  
+     [Bindable(event="propertyChange")] 
+     public function get isRoleAvailable():Boolean
+     {
+        return true;
+     }                       
+                  
+     [Bindable(event="propertyChange")] 
      public function get isFirstnameAvailable():Boolean
      {
         return true;
@@ -278,6 +300,12 @@ internal class _RiderEntityMetadata extends com.adobe.fiber.valueobjects.Abstrac
                   
      [Bindable(event="propertyChange")] 
      public function get isLastnameAvailable():Boolean
+     {
+        return true;
+     }                       
+                  
+     [Bindable(event="propertyChange")] 
+     public function get isEmailAvailable():Boolean
      {
         return true;
      }                       
@@ -305,6 +333,24 @@ internal class _RiderEntityMetadata extends com.adobe.fiber.valueobjects.Abstrac
     }      
     
     [Bindable(event="propertyChange")]   
+    public function get usernameStyle():com.adobe.fiber.styles.Style
+    {
+		return model_internal::_nullStyle;		
+    }      
+    
+    [Bindable(event="propertyChange")]   
+    public function get passwordStyle():com.adobe.fiber.styles.Style
+    {
+		return model_internal::_nullStyle;		
+    }      
+    
+    [Bindable(event="propertyChange")]   
+    public function get roleStyle():com.adobe.fiber.styles.Style
+    {
+		return model_internal::_nullStyle;		
+    }      
+    
+    [Bindable(event="propertyChange")]   
     public function get firstnameStyle():com.adobe.fiber.styles.Style
     {
 		return model_internal::_nullStyle;		
@@ -312,6 +358,12 @@ internal class _RiderEntityMetadata extends com.adobe.fiber.valueobjects.Abstrac
     
     [Bindable(event="propertyChange")]   
     public function get lastnameStyle():com.adobe.fiber.styles.Style
+    {
+		return model_internal::_nullStyle;		
+    }      
+    
+    [Bindable(event="propertyChange")]   
+    public function get emailStyle():com.adobe.fiber.styles.Style
     {
 		return model_internal::_nullStyle;		
     }      
