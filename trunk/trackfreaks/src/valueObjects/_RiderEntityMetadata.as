@@ -20,12 +20,12 @@ internal class _RiderEntityMetadata extends com.adobe.fiber.valueobjects.Abstrac
 {
 	private static var emptyArray:Array = new Array();
 
-    model_internal static var allProperties:Array = new Array("rider_id", "username", "password", "role", "firstname", "lastname", "email", "picture_id");
+    model_internal static var allProperties:Array = new Array("birthdate", "rider_id", "username", "password", "role", "firstname", "lastname", "email", "picture_id");
     model_internal static var allAssociationProperties:Array = new Array();
-    model_internal static var allRequiredProperties:Array = new Array("rider_id", "username", "password", "role", "firstname", "lastname", "email", "picture_id");
-    model_internal static var allAlwaysAvailableProperties:Array = new Array("rider_id", "username", "password", "role", "firstname", "lastname", "email", "picture_id");
+    model_internal static var allRequiredProperties:Array = new Array("birthdate", "rider_id", "username", "password", "role", "firstname", "lastname", "email", "picture_id");
+    model_internal static var allAlwaysAvailableProperties:Array = new Array("birthdate", "rider_id", "username", "password", "role", "firstname", "lastname", "email", "picture_id");
     model_internal static var guardedProperties:Array = new Array();
-    model_internal static var dataProperties:Array = new Array("rider_id", "username", "password", "role", "firstname", "lastname", "email", "picture_id");
+    model_internal static var dataProperties:Array = new Array("birthdate", "rider_id", "username", "password", "role", "firstname", "lastname", "email", "picture_id");
     model_internal static var derivedProperties:Array = new Array();
     model_internal static var collectionProperties:Array = new Array();
     model_internal static var collectionBaseMap:Object;    
@@ -44,6 +44,7 @@ internal class _RiderEntityMetadata extends com.adobe.fiber.valueobjects.Abstrac
         {
             // depenents map
             model_internal::dependentsOnMap = new Object();
+            model_internal::dependentsOnMap["birthdate"] = new Array();
             model_internal::dependentsOnMap["rider_id"] = new Array();
             model_internal::dependentsOnMap["username"] = new Array();
             model_internal::dependentsOnMap["password"] = new Array();
@@ -269,6 +270,12 @@ internal class _RiderEntityMetadata extends com.adobe.fiber.valueobjects.Abstrac
     }       
      
      [Bindable(event="propertyChange")] 
+     public function get isBirthdateAvailable():Boolean
+     {
+        return true;
+     }                       
+                  
+     [Bindable(event="propertyChange")] 
      public function get isRider_idAvailable():Boolean
      {
         return true;
@@ -326,6 +333,12 @@ internal class _RiderEntityMetadata extends com.adobe.fiber.valueobjects.Abstrac
      	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, propertyName, oldValue, newValue));
      }
 
+    [Bindable(event="propertyChange")]   
+    public function get birthdateStyle():com.adobe.fiber.styles.Style
+    {
+		return model_internal::_nullStyle;		
+    }      
+    
     [Bindable(event="propertyChange")]   
     public function get rider_idStyle():com.adobe.fiber.styles.Style
     {

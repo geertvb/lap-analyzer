@@ -11,6 +11,8 @@
 			import mx.events.FlexEvent;
 			import mx.events.ListEvent;
 			import mx.messaging.config.ServerConfig;
+			
+			import valueObjects.Rider;
 
 			protected function tileList_creationCompleteHandler(event:FlexEvent):void {
 				findAllResult.token = riderService.findAll();
@@ -30,6 +32,10 @@
 					datagrid.selectedItem = tileList.selectedItem;
 					datagrid.scrollToIndex(datagrid.selectedIndex);
 				}
+			}
+			
+			protected function editAllowed(user: Rider, rider: Rider) : Boolean {
+				return user && rider && user.username == rider.username;
 			}
 
 		]]>
@@ -63,19 +69,145 @@
 			change="datagrid_changeHandler(event)"
 			dataProvider="{findAllResult.lastResult}">
 			<mx:columns>
+				<mx:DataGridColumn headerText="Display name" dataField="nickname" width="80" />
 				<mx:DataGridColumn headerText="First name" dataField="firstname" width="80" />
 				<mx:DataGridColumn headerText="Last name" dataField="lastname" width="100" />
+				<mx:DataGridColumn headerText="e-mail" dataField="email" width="100" />
 			</mx:columns>
 		</mx:DataGrid>
 		
-		<mx:Form>
-			<mx:FormItem label="First name">
-				<s:Label text="{datagrid.selectedItem.firstname}" />
-			</mx:FormItem>
-			<mx:FormItem label="Last name">
-				<s:Label text="{datagrid.selectedItem.lastname}" />
-			</mx:FormItem>
-		</mx:Form>
+		<mx:TabNavigator resizeToContent="true">
+			<mx:Form label="Personal">
+				<mx:FormItem label="Display name">
+					<s:TextInput 
+						width="120"
+						editable="{editAllowed(parentDocument.rider, datagrid.selectedItem as Rider)}" 
+						text="{datagrid.selectedItem.nickname}" />
+				</mx:FormItem>
+				<mx:FormItem label="First &amp; last name" direction="horizontal">
+					<s:TextInput 
+						width="120"
+						editable="{editAllowed(parentDocument.rider, datagrid.selectedItem as Rider)}" 
+						text="{datagrid.selectedItem.firstname}" />
+					<s:TextInput 
+						width="160"
+						editable="{editAllowed(parentDocument.rider, datagrid.selectedItem as Rider)}" 
+						text="{datagrid.selectedItem.lastname}" />
+				</mx:FormItem>
+				<mx:FormItem label="Birthdate">
+					<mx:DateField 
+						editable="{editAllowed(parentDocument.rider, datagrid.selectedItem as Rider)}" 
+						text="{datagrid.selectedItem.birthdate}" />
+				</mx:FormItem>
+				<mx:FormItem label="Blood type">
+					<s:TextInput 
+						width="120"
+						editable="{editAllowed(parentDocument.rider, datagrid.selectedItem as Rider)}" 
+						text="{datagrid.selectedItem.bloodtype}" />
+				</mx:FormItem>
+			</mx:Form>
+			<mx:HBox label="Address">
+				<mx:Form>
+					<mx:FormItem label="Street &amp; Number" direction="horizontal">
+						<s:TextInput 
+							width="160"
+							editable="{editAllowed(parentDocument.rider, datagrid.selectedItem as Rider)}" 
+							text="{datagrid.selectedItem.street}" />
+						<s:TextInput 
+							width="64"
+							editable="{editAllowed(parentDocument.rider, datagrid.selectedItem as Rider)}" 
+							text="{datagrid.selectedItem.number}" />
+					</mx:FormItem>
+					<mx:FormItem label="Zip code &amp; City" direction="horizontal">
+						<s:TextInput 
+							width="64"
+							editable="{editAllowed(parentDocument.rider, datagrid.selectedItem as Rider)}" 
+							text="{datagrid.selectedItem.zipcode}" />
+						<s:TextInput 
+							width="160"
+							editable="{editAllowed(parentDocument.rider, datagrid.selectedItem as Rider)}" 
+							text="{datagrid.selectedItem.city}" />
+					</mx:FormItem>
+					<mx:FormItem label="Country">
+						<s:TextInput 
+							width="120"
+							editable="{editAllowed(parentDocument.rider, datagrid.selectedItem as Rider)}" 
+							text="{datagrid.selectedItem.country}" />
+					</mx:FormItem>
+					<mx:FormItem label="Lat &amp; Lng" direction="horizontal">
+						<s:TextInput 
+							width="100"
+							editable="{editAllowed(parentDocument.rider, datagrid.selectedItem as Rider)}" 
+							text="{datagrid.selectedItem.lat}" />
+						<s:TextInput 
+							width="100"
+							editable="{editAllowed(parentDocument.rider, datagrid.selectedItem as Rider)}" 
+							text="{datagrid.selectedItem.lng}" />
+					</mx:FormItem>
+					<mx:FormItem label="e-mail">
+						<s:TextInput 
+							width="120"
+							editable="{editAllowed(parentDocument.rider, datagrid.selectedItem as Rider)}" 
+							text="{datagrid.selectedItem.email}" />
+					</mx:FormItem>
+					<mx:FormItem label="Phone" direction="horizontal">
+						<s:TextInput 
+							width="120"
+							editable="{editAllowed(parentDocument.rider, datagrid.selectedItem as Rider)}" 
+							text="{datagrid.selectedItem.phone}" />
+					</mx:FormItem>
+					<mx:FormItem label="GSM" direction="horizontal">
+						<s:TextInput 
+							width="120"
+							editable="{editAllowed(parentDocument.rider, datagrid.selectedItem as Rider)}" 
+							text="{datagrid.selectedItem.mobile}" />
+					</mx:FormItem>
+					
+					<mx:FormItem>
+						<s:Button 
+							enabled="{editAllowed(parentDocument.rider, datagrid.selectedItem as Rider)}" 
+							label="Submit" />
+					</mx:FormItem>
+					
+				</mx:Form>
+				<s:BorderContainer>
+					<maps:Map3D
+						xmlns:maps="com.google.maps.*"
+						id="map"
+						width="160" height="160"
+						key="ABQIAAAARHlxm1tnIyh53Qky1yRvaxQRM90ZMLGmypNtl0aCSyUOIyb2sxQJCMaQB88DzEFGpMHAzTs5sB2Wpw"/>
+				</s:BorderContainer>
+			</mx:HBox>
+			<mx:Form label="Login">
+				
+				<mx:FormItem label="Username">
+					<s:TextInput 
+						editable="false" 
+						text="{datagrid.selectedItem.username}" />
+				</mx:FormItem>
+				<mx:FormItem label="Password">
+					<s:TextInput 
+						editable="{editAllowed(parentDocument.rider, datagrid.selectedItem as Rider)}" 
+						displayAsPassword="true"
+						text="" />
+				</mx:FormItem>
+				<mx:FormItem label="Confirm password">
+					<s:TextInput 
+						editable="{editAllowed(parentDocument.rider, datagrid.selectedItem as Rider)}" 
+						displayAsPassword="true"
+						text="" />
+				</mx:FormItem>
+				
+				<mx:FormItem>
+					<s:Button 
+						enabled="{editAllowed(parentDocument.rider, datagrid.selectedItem as Rider)}" 
+						label="Change password" />
+				</mx:FormItem>
+				
+			</mx:Form>			
+		</mx:TabNavigator>
+		
+
 		
 	</s:VGroup>
 

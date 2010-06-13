@@ -36,8 +36,10 @@ class RiderService {
 		$sql = <<<SQL
 SELECT
   `rider`.`rider_id`,
+  `rider`.`username`,
   `rider`.`firstname`,
   `rider`.`lastname`,
+  `rider`.`email`,
   `rider`.`picture_id`
 FROM
   `rider`
@@ -57,8 +59,10 @@ SQL;
 		$row = new Rider();
 		mysqli_stmt_bind_result($stmt, 
 			$row->rider_id, 
+			$row->username, 
 			$row->firstname, 
 			$row->lastname,
+			$row->email,
 			$row->picture_id
 			);
 		
@@ -66,9 +70,11 @@ SQL;
 	      $rows[] = $row;
 	      $row = new Rider();
 	      mysqli_stmt_bind_result($stmt,  
-			$row->rider_id,
-			$row->firstname,
+	      	$row->rider_id,
+			$row->username, 
+	      	$row->firstname,
 			$row->lastname,
+			$row->email,
 			$row->picture_id
 			);
 	    }

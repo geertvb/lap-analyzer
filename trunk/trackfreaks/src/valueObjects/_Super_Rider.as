@@ -46,6 +46,7 @@ public class _Super_Rider extends flash.events.EventDispatcher implements com.ad
 	/**
 	 * properties
 	 */
+	private var _internal_birthdate : String;
 	private var _internal_rider_id : int;
 	private var _internal_username : String;
 	private var _internal_password : String;
@@ -75,6 +76,11 @@ public class _Super_Rider extends flash.events.EventDispatcher implements com.ad
     /**
      * data property getters
      */
+	[Bindable(event="propertyChange")] 
+    public function get birthdate() : String    
+    {
+            return _internal_birthdate;
+    }    
 	[Bindable(event="propertyChange")] 
     public function get rider_id() : int    
     {
@@ -119,6 +125,27 @@ public class _Super_Rider extends flash.events.EventDispatcher implements com.ad
     /**
      * data property setters
      */      
+    public function set birthdate(value:String) : void 
+    {    	
+        var recalcValid:Boolean = false;
+    	if (value == null || _internal_birthdate == null)
+    	{
+    		recalcValid = true;
+    	}	
+    	
+    	
+    	var oldValue:String = _internal_birthdate;               
+        if (oldValue !== value)
+        {
+            _internal_birthdate = value;
+        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "birthdate", oldValue, _internal_birthdate));
+        }    	     
+        
+        if (recalcValid && model_internal::_cacheInitialized_isValid)
+        {
+            model_internal::isValid_der = model_internal::calculateIsValid();
+        }  
+    }    
     public function set rider_id(value:int) : void 
     {    	
         var recalcValid:Boolean = false;
@@ -311,6 +338,11 @@ public class _Super_Rider extends flash.events.EventDispatcher implements com.ad
         var violatedConsts:Array = new Array();    
         var validationFailureMessages:Array = new Array();    
 
+		if (_model.isBirthdateAvailable && _internal_birthdate == null)
+		{
+			violatedConsts.push("birthdateIsRequired");
+			validationFailureMessages.push("birthdate is required");
+		}
 		if (_model.isUsernameAvailable && _internal_username == null)
 		{
 			violatedConsts.push("usernameIsRequired");
@@ -343,6 +375,7 @@ public class _Super_Rider extends flash.events.EventDispatcher implements com.ad
 		}
 
 		var styleValidity:Boolean = true;
+	
 	
 	
 	

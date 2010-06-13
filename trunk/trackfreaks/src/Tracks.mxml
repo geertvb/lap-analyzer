@@ -119,12 +119,11 @@
 			}
 
 			protected function showInfoWindow(marker: Marker, track: Track) : void {
-				var trackInfoWindow: TrackInfoWindow = new TrackInfoWindow();
-				trackInfoWindow.data = track;
+				//var trackInfoWindow: TrackInfoWindow = new TrackInfoWindow();
+				//trackInfoWindow.data = track;
 
 				var infoWindowOptions: InfoWindowOptions = new InfoWindowOptions({
-					customContent: trackInfoWindow,
-					width: 160,
+					title: track.name,
 					drawDefaultFrame:true})
 
 				marker.openInfoWindow(infoWindowOptions);
