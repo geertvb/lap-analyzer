@@ -40,8 +40,10 @@ internal class _Super_RiderService extends com.adobe.fiber.services.wrapper.Remo
 
         valueObjects.Rider._initRemoteClassAlias();
         operation = new mx.rpc.remoting.Operation(null, "findByUsername");
+		 operation.resultType = valueObjects.Rider; 		 
         operations["findByUsername"] = operation;
 
+        valueObjects.Rider._initRemoteClassAlias();
     
         _serviceControl.operations = operations;   
 		_serviceControl.convertResultHandler = com.adobe.serializers.utility.TypeUtility.convertResultHandler;

@@ -32,7 +32,7 @@ $default_config->merge(new Zend_Config_Ini($configfile, 'zendamf'));
 $default_config->setReadOnly();
 $amf = $default_config->amf;
 
-require_once 'services/User.php';
+require_once 'services/Rider.php';
 
 // Store configuration in the registry
 Zend_Registry::set("amf-config", $amf);

@@ -47,8 +47,12 @@ public class _Super_Rider extends flash.events.EventDispatcher implements com.ad
 	 * properties
 	 */
 	private var _internal_rider_id : int;
+	private var _internal_username : String;
+	private var _internal_password : String;
+	private var _internal_role : String;
 	private var _internal_firstname : String;
 	private var _internal_lastname : String;
+	private var _internal_email : String;
 	private var _internal_picture_id : int;
 
     private static var emptyArray:Array = new Array();
@@ -77,6 +81,21 @@ public class _Super_Rider extends flash.events.EventDispatcher implements com.ad
             return _internal_rider_id;
     }    
 	[Bindable(event="propertyChange")] 
+    public function get username() : String    
+    {
+            return _internal_username;
+    }    
+	[Bindable(event="propertyChange")] 
+    public function get password() : String    
+    {
+            return _internal_password;
+    }    
+	[Bindable(event="propertyChange")] 
+    public function get role() : String    
+    {
+            return _internal_role;
+    }    
+	[Bindable(event="propertyChange")] 
     public function get firstname() : String    
     {
             return _internal_firstname;
@@ -85,6 +104,11 @@ public class _Super_Rider extends flash.events.EventDispatcher implements com.ad
     public function get lastname() : String    
     {
             return _internal_lastname;
+    }    
+	[Bindable(event="propertyChange")] 
+    public function get email() : String    
+    {
+            return _internal_email;
     }    
 	[Bindable(event="propertyChange")] 
     public function get picture_id() : int    
@@ -105,6 +129,69 @@ public class _Super_Rider extends flash.events.EventDispatcher implements com.ad
         {
             _internal_rider_id = value;
         	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "rider_id", oldValue, _internal_rider_id));
+        }    	     
+        
+        if (recalcValid && model_internal::_cacheInitialized_isValid)
+        {
+            model_internal::isValid_der = model_internal::calculateIsValid();
+        }  
+    }    
+    public function set username(value:String) : void 
+    {    	
+        var recalcValid:Boolean = false;
+    	if (value == null || _internal_username == null)
+    	{
+    		recalcValid = true;
+    	}	
+    	
+    	
+    	var oldValue:String = _internal_username;               
+        if (oldValue !== value)
+        {
+            _internal_username = value;
+        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "username", oldValue, _internal_username));
+        }    	     
+        
+        if (recalcValid && model_internal::_cacheInitialized_isValid)
+        {
+            model_internal::isValid_der = model_internal::calculateIsValid();
+        }  
+    }    
+    public function set password(value:String) : void 
+    {    	
+        var recalcValid:Boolean = false;
+    	if (value == null || _internal_password == null)
+    	{
+    		recalcValid = true;
+    	}	
+    	
+    	
+    	var oldValue:String = _internal_password;               
+        if (oldValue !== value)
+        {
+            _internal_password = value;
+        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "password", oldValue, _internal_password));
+        }    	     
+        
+        if (recalcValid && model_internal::_cacheInitialized_isValid)
+        {
+            model_internal::isValid_der = model_internal::calculateIsValid();
+        }  
+    }    
+    public function set role(value:String) : void 
+    {    	
+        var recalcValid:Boolean = false;
+    	if (value == null || _internal_role == null)
+    	{
+    		recalcValid = true;
+    	}	
+    	
+    	
+    	var oldValue:String = _internal_role;               
+        if (oldValue !== value)
+        {
+            _internal_role = value;
+        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "role", oldValue, _internal_role));
         }    	     
         
         if (recalcValid && model_internal::_cacheInitialized_isValid)
@@ -147,6 +234,27 @@ public class _Super_Rider extends flash.events.EventDispatcher implements com.ad
         {
             _internal_lastname = value;
         	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "lastname", oldValue, _internal_lastname));
+        }    	     
+        
+        if (recalcValid && model_internal::_cacheInitialized_isValid)
+        {
+            model_internal::isValid_der = model_internal::calculateIsValid();
+        }  
+    }    
+    public function set email(value:String) : void 
+    {    	
+        var recalcValid:Boolean = false;
+    	if (value == null || _internal_email == null)
+    	{
+    		recalcValid = true;
+    	}	
+    	
+    	
+    	var oldValue:String = _internal_email;               
+        if (oldValue !== value)
+        {
+            _internal_email = value;
+        	this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "email", oldValue, _internal_email));
         }    	     
         
         if (recalcValid && model_internal::_cacheInitialized_isValid)
@@ -203,6 +311,21 @@ public class _Super_Rider extends flash.events.EventDispatcher implements com.ad
         var violatedConsts:Array = new Array();    
         var validationFailureMessages:Array = new Array();    
 
+		if (_model.isUsernameAvailable && _internal_username == null)
+		{
+			violatedConsts.push("usernameIsRequired");
+			validationFailureMessages.push("username is required");
+		}
+		if (_model.isPasswordAvailable && _internal_password == null)
+		{
+			violatedConsts.push("passwordIsRequired");
+			validationFailureMessages.push("password is required");
+		}
+		if (_model.isRoleAvailable && _internal_role == null)
+		{
+			violatedConsts.push("roleIsRequired");
+			validationFailureMessages.push("role is required");
+		}
 		if (_model.isFirstnameAvailable && _internal_firstname == null)
 		{
 			violatedConsts.push("firstnameIsRequired");
@@ -213,8 +336,17 @@ public class _Super_Rider extends flash.events.EventDispatcher implements com.ad
 			violatedConsts.push("lastnameIsRequired");
 			validationFailureMessages.push("lastname is required");
 		}
+		if (_model.isEmailAvailable && _internal_email == null)
+		{
+			violatedConsts.push("emailIsRequired");
+			validationFailureMessages.push("email is required");
+		}
 
 		var styleValidity:Boolean = true;
+	
+	
+	
+	
 	
 	
 	
