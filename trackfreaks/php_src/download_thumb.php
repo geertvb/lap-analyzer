@@ -5,11 +5,11 @@ $picture_id = $_GET["picture_id"];
 $mysqli = new mysqli("localhost", "trackfreaks_eu", "wBpjP8Ft", "trackfreaks_eu");
 if ($mysqli) {
 
-	$sql = "SELECT `filename`, `mimetype`, `size` FROM `picture` WHERE `picture_id` = ?";
+	$sql = "SELECT `filename`, `mimetype`, `thumb_size` FROM `picture` WHERE `picture_id` = ?";
 	if ($stmt = $mysqli->prepare($sql)) {
 		$stmt->bind_param('i', $picture_id);
 		if ($stmt->execute()) {
-			$stmt->bind_result($filename, $mimetype, $size);
+			$stmt->bind_result($filename, $mimetype, $thumb_size);
 			$result = $stmt->fetch();
 		}
 		$stmt->close();
@@ -48,7 +48,7 @@ if ($mysqli) {
     }
 
 	header("Content-type: $ctype");
-	header("Content-length: $size");
+	header("Content-length: $thumb_size");
 	header("Content-Disposition: inline; filename=$filename");
 	header("Content-Description: PHP Generated Data");
 	
