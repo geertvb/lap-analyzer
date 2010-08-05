@@ -295,7 +295,7 @@ public class MtkService {
         qlh.open();
 
         int start = 0;
-        int block = 0x10000;
+        int block = 0x800;
         while (memoryUsed > 0) {
             int size = Math.min(memoryUsed, block);
             write(createPacket(PMTK_LOG_REQ_DATA, IntegerUtils.toHexString(start, 8), IntegerUtils.toHexString(size, 8)));
@@ -326,7 +326,7 @@ public class MtkService {
         int memoryUsed = getMemoryUsed();
 
         if (memoryUsed > 0) {
-            // getLogData(memoryUsed);
+             getLogData(memoryUsed);
             /*
              * eraseLogData();
              */
